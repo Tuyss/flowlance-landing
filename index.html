@@ -1506,6 +1506,8 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       </label>
       <div class="am-err" id="login-err"></div>
       <button class="am-submit" id="login-btn">Entrar</button>
+      <div class="am-divider">ou</div>
+      <button id="google-login-btn" style="height:46px;border-radius:12px;border:1.5px solid #E2E8F0;background:#fff;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:#374151;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;width:100%" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background='#fff'"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Continuar com Google</button>
       <div class="am-switch">Não tem conta? <a id="switch-to-signup">Criar conta grátis</a></div>
     </div>
 
@@ -1529,6 +1531,8 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       </div>
       <div class="am-err" id="signup-err"></div>
       <button class="am-submit" id="signup-btn">Criar conta grátis</button>
+      <div class="am-divider">ou</div>
+      <button id="google-signup-btn" style="height:46px;border-radius:12px;border:1.5px solid #E2E8F0;background:#fff;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:#374151;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;width:100%" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background='#fff'"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Continuar com Google</button>
       <div class="am-switch">Já tem conta? <a id="switch-to-login">Entrar</a></div>
     </div>
   </div>
@@ -1572,163 +1576,150 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDemo(); });
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-(function(){
-  const SUPA_URL = 'https://ikdguipxrkhuaoajzduzy.supabase.co';
-  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo';
-  const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+const SUPA_URL = 'https://ikdguipxrkhuaoajzduzy.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-  // ── Modal open/close ──────────────────────────────────────────
-  function openAuth(tab) {
-    const modal = document.getElementById('auth-modal');
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    clearErrors();
-    if (tab === 'signup') switchTab('signup');
-    else switchTab('login');
-  }
-  function closeAuth() {
-    document.getElementById('auth-modal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  function clearErrors() {
-    document.getElementById('login-err').className = 'am-err';
-    document.getElementById('signup-err').className = 'am-err';
-  }
-  function showErr(id, msg) {
-    const el = document.getElementById(id);
-    el.textContent = msg;
-    el.className = 'am-err show';
-  }
+// ── Modal open/close (global so onclick attrs work) ───────────
+function openAuth(tab) {
+  document.getElementById('auth-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  clearAuthErrors();
+  switchTab(tab === 'signup' ? 'signup' : 'login');
+}
+function closeAuth() {
+  document.getElementById('auth-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function clearAuthErrors() {
+  document.getElementById('login-err').className = 'am-err';
+  document.getElementById('signup-err').className = 'am-err';
+}
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'am-err show';
+}
 
-  // ── Tab switching ─────────────────────────────────────────────
-  function switchTab(tab) {
-    const isLogin = tab === 'login';
-    document.getElementById('tab-login').classList.toggle('active', isLogin);
-    document.getElementById('tab-signup').classList.toggle('active', !isLogin);
-    document.getElementById('panel-login').classList.toggle('active', isLogin);
-    document.getElementById('panel-signup').classList.toggle('active', !isLogin);
-    clearErrors();
-  }
-  document.getElementById('tab-login').addEventListener('click', () => switchTab('login'));
-  document.getElementById('tab-signup').addEventListener('click', () => switchTab('signup'));
-  document.getElementById('switch-to-signup').addEventListener('click', () => switchTab('signup'));
-  document.getElementById('switch-to-login').addEventListener('click', () => switchTab('login'));
+// ── Tab switching ─────────────────────────────────────────────
+function switchTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('tab-login').classList.toggle('active', isLogin);
+  document.getElementById('tab-signup').classList.toggle('active', !isLogin);
+  document.getElementById('panel-login').classList.toggle('active', isLogin);
+  document.getElementById('panel-signup').classList.toggle('active', !isLogin);
+  clearAuthErrors();
+}
+document.getElementById('tab-login').addEventListener('click', () => switchTab('login'));
+document.getElementById('tab-signup').addEventListener('click', () => switchTab('signup'));
+document.getElementById('switch-to-signup').addEventListener('click', () => switchTab('signup'));
+document.getElementById('switch-to-login').addEventListener('click', () => switchTab('login'));
 
-  // ── Close handlers ────────────────────────────────────────────
-  document.getElementById('auth-close').addEventListener('click', closeAuth);
-  document.getElementById('auth-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeAuth();
+// ── Close handlers ────────────────────────────────────────────
+document.getElementById('auth-close').addEventListener('click', closeAuth);
+document.getElementById('auth-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeAuth();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
+
+// ── Google OAuth ──────────────────────────────────────────────
+async function googleAuth() {
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: 'https://app.flowlance.com.br/auth/callback' },
   });
+}
+document.getElementById('google-login-btn').addEventListener('click', googleAuth);
+document.getElementById('google-signup-btn').addEventListener('click', googleAuth);
 
-  // ── Phone mask ────────────────────────────────────────────────
-  document.getElementById('signup-phone').addEventListener('input', function() {
-    let v = this.value.replace(/\D/g, '').slice(0, 11);
-    if (v.length > 6) v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
-    else if (v.length > 2) v = '(' + v.slice(0,2) + ') ' + v.slice(2);
-    else if (v.length > 0) v = '(' + v;
-    this.value = v;
-  });
+// ── Phone mask ────────────────────────────────────────────────
+document.getElementById('signup-phone').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 6) v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+  else if (v.length > 2) v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+  else if (v.length > 0) v = '(' + v;
+  this.value = v;
+});
 
-  // ── Login ─────────────────────────────────────────────────────
-  document.getElementById('login-btn').addEventListener('click', async function() {
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
-    if (!email || !password) { showErr('login-err', 'Preencha email e senha.'); return; }
-    this.disabled = true;
-    this.textContent = 'Entrando…';
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) {
-      showErr('login-err', 'Email ou senha incorretos.');
-      this.disabled = false;
-      this.textContent = 'Entrar';
-    } else {
-      window.location.href = APP_URL + '/dashboard';
-    }
-  });
+// ── Login ─────────────────────────────────────────────────────
+document.getElementById('login-btn').addEventListener('click', async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if (!email || !password) { showErr('login-err', 'Preencha email e senha.'); return; }
+  this.disabled = true; this.textContent = 'Entrando…';
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    showErr('login-err', 'Email ou senha incorretos.');
+    this.disabled = false; this.textContent = 'Entrar';
+  } else {
+    window.location.href = APP_URL + '/dashboard';
+  }
+});
 
-  // ── Sign up ───────────────────────────────────────────────────
-  document.getElementById('signup-btn').addEventListener('click', async function() {
-    const name     = document.getElementById('signup-name').value.trim();
-    const email    = document.getElementById('signup-email').value.trim();
-    const phone    = document.getElementById('signup-phone').value.trim();
-    const password = document.getElementById('signup-password').value;
+// ── Sign up ───────────────────────────────────────────────────
+document.getElementById('signup-btn').addEventListener('click', async function() {
+  const name     = document.getElementById('signup-name').value.trim();
+  const email    = document.getElementById('signup-email').value.trim();
+  const phone    = document.getElementById('signup-phone').value.trim();
+  const password = document.getElementById('signup-password').value;
 
-    if (!name || !email || !phone || !password) {
-      showErr('signup-err', 'Preencha todos os campos.'); return;
-    }
-    if (phone.replace(/\D/g,'').length < 10) {
-      showErr('signup-err', 'Número de telefone inválido.'); return;
-    }
-    if (password.length < 6) {
-      showErr('signup-err', 'A senha deve ter pelo menos 6 caracteres.'); return;
-    }
+  if (!name || !email || !phone || !password) { showErr('signup-err', 'Preencha todos os campos.'); return; }
+  if (phone.replace(/\D/g,'').length < 10) { showErr('signup-err', 'Número de telefone inválido.'); return; }
+  if (password.length < 6) { showErr('signup-err', 'Senha muito curta (mínimo 6 caracteres).'); return; }
 
-    this.disabled = true;
-    this.textContent = 'Criando conta…';
+  this.disabled = true; this.textContent = 'Criando conta…';
 
-    // Check if phone already exists
-    const phoneDigits = phone.replace(/\D/g,'');
-    const { data: existing } = await sb
-      .from('usuarios')
-      .select('id')
-      .eq('telefone', phoneDigits)
-      .maybeSingle();
+  const phoneDigits = phone.replace(/\D/g,'');
 
+  // Check phone duplicate — ignore error if column doesn't exist yet
+  try {
+    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', phoneDigits).maybeSingle();
     if (existing) {
       showErr('signup-err', 'Este número já está cadastrado.');
-      this.disabled = false;
-      this.textContent = 'Criar conta grátis';
+      this.disabled = false; this.textContent = 'Criar conta grátis';
       return;
     }
+  } catch(_) {}
 
-    const { data, error } = await sb.auth.signUp({
-      email,
-      password,
-      options: { data: { nome: name, telefone: phoneDigits } },
-    });
-
-    if (error) {
-      const msg = error.message.includes('already registered')
-        ? 'Este email já está cadastrado.'
-        : 'Erro ao criar conta. Tente novamente.';
-      showErr('signup-err', msg);
-      this.disabled = false;
-      this.textContent = 'Criar conta grátis';
-      return;
-    }
-
-    // Save phone to usuarios table if user was created
-    if (data?.user) {
-      await sb.from('usuarios').upsert({
-        id: data.user.id,
-        nome: name,
-        telefone: phoneDigits,
-      }, { onConflict: 'id' });
-    }
-
-    window.location.href = APP_URL + '/onboarding';
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password,
+    options: { data: { nome: name, telefone: phoneDigits } },
   });
 
-  // ── Rewire CTA buttons to open auth modal ─────────────────────
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('nav-login')?.addEventListener('click', () => openAuth('login'), true);
-    document.getElementById('nav-cta')?.addEventListener('click', () => openAuth('signup'), true);
-    document.querySelectorAll('.btn-yellow, .btn-dk-big').forEach(btn => {
-      if (btn.textContent.includes('demo') || btn.textContent.includes('demonst')) return;
-      btn.addEventListener('click', () => openAuth('signup'), true);
-    });
-    document.querySelector('.ub-cta')?.addEventListener('click', () => openAuth('signup'), true);
-    const mobileMenuBtns = document.querySelectorAll('#mobile-menu button');
-    mobileMenuBtns.forEach(btn => {
-      const txt = btn.textContent.trim();
-      if (txt.includes('Entrar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('login'); }, true);
-      if (txt.includes('Testar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('signup'); }, true);
-    });
-  });
+  if (error) {
+    let msg = 'Erro ao criar conta. Tente novamente.';
+    if (error.message.includes('already registered') || error.message.includes('already been registered')) msg = 'Email já cadastrado.';
+    else if (error.message.includes('password') || error.message.includes('weak')) msg = 'Senha muito curta (mínimo 6 caracteres).';
+    else if (error.message.includes('email')) msg = 'Email inválido.';
+    showErr('signup-err', msg);
+    this.disabled = false; this.textContent = 'Criar conta grátis';
+    return;
+  }
 
-  // Close on Escape (auth modal)
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
-})();
+  // Save phone — non-blocking, don't fail if column missing
+  if (data?.user) {
+    try {
+      await sb.from('usuarios').upsert({ id: data.user.id, nome: name, telefone: phoneDigits }, { onConflict: 'id' });
+    } catch(_) {}
+  }
+
+  window.location.href = APP_URL + '/onboarding';
+});
+
+// ── Wire CTA buttons (DOM already loaded, script is at bottom) ─
+document.getElementById('nav-login')?.addEventListener('click', () => openAuth('login'));
+document.getElementById('nav-cta')?.addEventListener('click', () => openAuth('signup'));
+document.querySelectorAll('.btn-yellow, .btn-dk-big').forEach(btn => {
+  if (btn.textContent.includes('demo') || btn.textContent.includes('demonst')) return;
+  btn.addEventListener('click', () => openAuth('signup'));
+});
+document.querySelector('.ub-cta')?.addEventListener('click', () => openAuth('signup'));
+document.querySelectorAll('#mobile-menu button').forEach(btn => {
+  const txt = btn.textContent.trim();
+  if (txt.includes('Entrar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('login'); });
+  if (txt.includes('Testar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('signup'); });
+});
 </script>
 </body>
 </html>
