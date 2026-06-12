@@ -617,6 +617,36 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   .am-cards { grid-template-columns: 1fr 1fr; }
   .ph-cards { grid-template-columns: 1fr 1fr; }
 }
+/* ── Auth Modal ─────────────────────────────── */
+#auth-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+#auth-modal.open{display:flex}
+.am-box{background:#fff;border-radius:20px;width:100%;max-width:420px;padding:32px;box-shadow:0 40px 100px rgba(0,0,0,.25);position:relative}
+.am-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:var(--gl);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.am-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.am-logo-mark{width:36px;height:36px;background:var(--dk);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;flex-shrink:0}
+.am-logo-mark span{font-size:11px;font-weight:900;color:#fff;letter-spacing:-0.5px;font-family:'Arial Black',Arial,sans-serif;display:block;text-align:center}
+.am-tabs{display:flex;gap:4px;background:var(--gl);border-radius:10px;padding:4px;margin-bottom:24px}
+.am-tab{flex:1;padding:8px;border:none;background:none;border-radius:7px;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:var(--gr);cursor:pointer;transition:all .15s}
+.am-tab.active{background:#fff;color:var(--dk);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.am-panel{display:none}.am-panel.active{display:flex;flex-direction:column;gap:14px}
+.am-field{display:flex;flex-direction:column;gap:6px}
+.am-field label{font-size:13px;font-weight:600;color:var(--dk)}
+.am-field input{height:44px;border:1.5px solid var(--br);border-radius:10px;padding:0 14px;font-family:'Geist',sans-serif;font-size:14px;color:var(--dk);outline:none;transition:border-color .15s;background:#fff}
+.am-field input:focus{border-color:var(--dk)}
+.am-field input.error{border-color:#EF4444}
+.am-err{font-size:13px;color:#EF4444;display:none;margin-top:2px}
+.am-err.show{display:block}
+.am-submit{height:46px;border-radius:12px;border:none;background:var(--dk);color:#fff;font-family:'Geist',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;margin-top:4px}
+.am-submit:hover{opacity:.85}
+.am-submit:disabled{opacity:.5;cursor:not-allowed}
+.am-remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gr);cursor:pointer;user-select:none}
+.am-remember input{width:16px;height:16px;accent-color:var(--dk);cursor:pointer}
+.am-divider{font-size:12px;color:var(--gr);text-align:center;position:relative}
+.am-divider::before,.am-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--br)}
+.am-divider::before{left:0}.am-divider::after{right:0}
+.am-switch{font-size:13px;color:var(--gr);text-align:center}
+.am-switch a{color:var(--dk);font-weight:600;cursor:pointer;text-decoration:none}
+.am-switch a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -1285,43 +1315,21 @@ function closeDemo(){ document.getElementById('demo-modal').style.display='none'
 
 // Wire all CTA buttons
 document.addEventListener('DOMContentLoaded', () => {
-  // Nav
-  document.getElementById('nav-login')?.addEventListener('click', ()=>goTo('/login'));
-  document.getElementById('nav-cta')?.addEventListener('click', ()=>goTo('/register?trial=true'));
-
-  // All "começar / trial / criar conta" buttons
-  document.querySelectorAll('.btn-yellow, .btn-dk-big').forEach(btn=>{
-    if(btn.textContent.includes('demo') || btn.textContent.includes('demonst')) return;
-    btn.addEventListener('click', ()=>goTo('/register?trial=true'));
-  });
-
-  // Starter plan
-  document.querySelectorAll('.pc-cta').forEach(btn=>{
-    const txt = btn.textContent.trim();
-    if(txt.includes('trial') || txt.includes('gratuito')){
-      btn.addEventListener('click', ()=>goTo('/register?plan=starter&trial=true'));
-    } else if(txt.includes('Assinar')){
-      // Pro or Agência — find which card
-      const card = btn.closest('.pc');
-      const planName = card?.querySelector('.pc-plan-name')?.textContent?.trim()?.toLowerCase() || '';
-      btn.addEventListener('click', ()=>goTo(`/register?plan=${planName}`));
-    }
-  });
-
   // "Ver demonstração" buttons
   document.querySelectorAll('.btn-outline').forEach(btn=>{
     if(btn.textContent.includes('demonst')) btn.addEventListener('click', openDemo);
   });
 
-  // Urgency banner CTA
-  document.querySelector('.ub-cta')?.addEventListener('click', ()=>goTo('/register?trial=true&ref=beta'));
-
-  // Mobile menu buttons
-  const mobileMenuBtns = document.querySelectorAll('#mobile-menu button');
-  mobileMenuBtns.forEach(btn=>{
+  // Pricing plan CTAs still go to app
+  document.querySelectorAll('.pc-cta').forEach(btn=>{
     const txt = btn.textContent.trim();
-    if(txt.includes('Entrar')) btn.addEventListener('click', ()=>{ toggleMenu(); goTo('/login'); });
-    if(txt.includes('Testar')) btn.addEventListener('click', ()=>{ toggleMenu(); goTo('/register?trial=true'); });
+    if(txt.includes('trial') || txt.includes('gratuito')){
+      btn.addEventListener('click', ()=>goTo('/register?plan=starter&trial=true'));
+    } else if(txt.includes('Assinar')){
+      const card = btn.closest('.pc');
+      const planName = card?.querySelector('.pc-plan-name')?.textContent?.trim()?.toLowerCase() || '';
+      btn.addEventListener('click', ()=>goTo(`/register?plan=${planName}`));
+    }
   });
 });
 
@@ -1468,6 +1476,64 @@ document.querySelectorAll('.faq-q').forEach(q=>{
   });
 });
 </script>
+<!-- AUTH MODAL -->
+<div id="auth-modal" role="dialog" aria-modal="true">
+  <div class="am-box">
+    <button class="am-close" id="auth-close" aria-label="Fechar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="am-logo">
+      <div class="am-logo-mark"><span>AV</span><span>RN</span></div>
+      <span style="font-size:17px;font-weight:800;color:var(--dk)">Flowlance</span>
+    </div>
+    <div class="am-tabs">
+      <button class="am-tab active" id="tab-login">Entrar</button>
+      <button class="am-tab" id="tab-signup">Criar conta</button>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="am-panel active" id="panel-login">
+      <div class="am-field">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="am-field">
+        <label for="login-password">Senha</label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <label class="am-remember">
+        <input type="checkbox" id="login-remember"> Lembrar de mim
+      </label>
+      <div class="am-err" id="login-err"></div>
+      <button class="am-submit" id="login-btn">Entrar</button>
+      <div class="am-switch">Não tem conta? <a id="switch-to-signup">Criar conta grátis</a></div>
+    </div>
+
+    <!-- SIGNUP PANEL -->
+    <div class="am-panel" id="panel-signup">
+      <div class="am-field">
+        <label for="signup-name">Nome completo</label>
+        <input type="text" id="signup-name" placeholder="Seu nome" autocomplete="name">
+      </div>
+      <div class="am-field">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="am-field">
+        <label for="signup-phone">WhatsApp</label>
+        <input type="tel" id="signup-phone" placeholder="(11) 99999-9999" autocomplete="tel" maxlength="15">
+      </div>
+      <div class="am-field">
+        <label for="signup-password">Senha</label>
+        <input type="password" id="signup-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+      </div>
+      <div class="am-err" id="signup-err"></div>
+      <button class="am-submit" id="signup-btn">Criar conta grátis</button>
+      <div class="am-switch">Já tem conta? <a id="switch-to-login">Entrar</a></div>
+    </div>
+  </div>
+</div>
+
 <!-- DEMO MODAL -->
 <div id="demo-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center;padding:20px">
   <div style="background:#fff;border-radius:20px;overflow:hidden;width:100%;max-width:800px;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.4)">
@@ -1503,5 +1569,166 @@ document.getElementById('demo-modal').addEventListener('click', function(e){
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDemo(); });
 </script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  const SUPA_URL = 'https://ikdguipxrkhuaoajzduzy.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo';
+  const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+  // ── Modal open/close ──────────────────────────────────────────
+  function openAuth(tab) {
+    const modal = document.getElementById('auth-modal');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    clearErrors();
+    if (tab === 'signup') switchTab('signup');
+    else switchTab('login');
+  }
+  function closeAuth() {
+    document.getElementById('auth-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function clearErrors() {
+    document.getElementById('login-err').className = 'am-err';
+    document.getElementById('signup-err').className = 'am-err';
+  }
+  function showErr(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = 'am-err show';
+  }
+
+  // ── Tab switching ─────────────────────────────────────────────
+  function switchTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('tab-login').classList.toggle('active', isLogin);
+    document.getElementById('tab-signup').classList.toggle('active', !isLogin);
+    document.getElementById('panel-login').classList.toggle('active', isLogin);
+    document.getElementById('panel-signup').classList.toggle('active', !isLogin);
+    clearErrors();
+  }
+  document.getElementById('tab-login').addEventListener('click', () => switchTab('login'));
+  document.getElementById('tab-signup').addEventListener('click', () => switchTab('signup'));
+  document.getElementById('switch-to-signup').addEventListener('click', () => switchTab('signup'));
+  document.getElementById('switch-to-login').addEventListener('click', () => switchTab('login'));
+
+  // ── Close handlers ────────────────────────────────────────────
+  document.getElementById('auth-close').addEventListener('click', closeAuth);
+  document.getElementById('auth-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeAuth();
+  });
+
+  // ── Phone mask ────────────────────────────────────────────────
+  document.getElementById('signup-phone').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 6) v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+    else if (v.length > 2) v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+    else if (v.length > 0) v = '(' + v;
+    this.value = v;
+  });
+
+  // ── Login ─────────────────────────────────────────────────────
+  document.getElementById('login-btn').addEventListener('click', async function() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    if (!email || !password) { showErr('login-err', 'Preencha email e senha.'); return; }
+    this.disabled = true;
+    this.textContent = 'Entrando…';
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      showErr('login-err', 'Email ou senha incorretos.');
+      this.disabled = false;
+      this.textContent = 'Entrar';
+    } else {
+      window.location.href = APP_URL + '/dashboard';
+    }
+  });
+
+  // ── Sign up ───────────────────────────────────────────────────
+  document.getElementById('signup-btn').addEventListener('click', async function() {
+    const name     = document.getElementById('signup-name').value.trim();
+    const email    = document.getElementById('signup-email').value.trim();
+    const phone    = document.getElementById('signup-phone').value.trim();
+    const password = document.getElementById('signup-password').value;
+
+    if (!name || !email || !phone || !password) {
+      showErr('signup-err', 'Preencha todos os campos.'); return;
+    }
+    if (phone.replace(/\D/g,'').length < 10) {
+      showErr('signup-err', 'Número de telefone inválido.'); return;
+    }
+    if (password.length < 6) {
+      showErr('signup-err', 'A senha deve ter pelo menos 6 caracteres.'); return;
+    }
+
+    this.disabled = true;
+    this.textContent = 'Criando conta…';
+
+    // Check if phone already exists
+    const phoneDigits = phone.replace(/\D/g,'');
+    const { data: existing } = await sb
+      .from('usuarios')
+      .select('id')
+      .eq('telefone', phoneDigits)
+      .maybeSingle();
+
+    if (existing) {
+      showErr('signup-err', 'Este número já está cadastrado.');
+      this.disabled = false;
+      this.textContent = 'Criar conta grátis';
+      return;
+    }
+
+    const { data, error } = await sb.auth.signUp({
+      email,
+      password,
+      options: { data: { nome: name, telefone: phoneDigits } },
+    });
+
+    if (error) {
+      const msg = error.message.includes('already registered')
+        ? 'Este email já está cadastrado.'
+        : 'Erro ao criar conta. Tente novamente.';
+      showErr('signup-err', msg);
+      this.disabled = false;
+      this.textContent = 'Criar conta grátis';
+      return;
+    }
+
+    // Save phone to usuarios table if user was created
+    if (data?.user) {
+      await sb.from('usuarios').upsert({
+        id: data.user.id,
+        nome: name,
+        telefone: phoneDigits,
+      }, { onConflict: 'id' });
+    }
+
+    window.location.href = APP_URL + '/onboarding';
+  });
+
+  // ── Rewire CTA buttons to open auth modal ─────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('nav-login')?.addEventListener('click', () => openAuth('login'), true);
+    document.getElementById('nav-cta')?.addEventListener('click', () => openAuth('signup'), true);
+    document.querySelectorAll('.btn-yellow, .btn-dk-big').forEach(btn => {
+      if (btn.textContent.includes('demo') || btn.textContent.includes('demonst')) return;
+      btn.addEventListener('click', () => openAuth('signup'), true);
+    });
+    document.querySelector('.ub-cta')?.addEventListener('click', () => openAuth('signup'), true);
+    const mobileMenuBtns = document.querySelectorAll('#mobile-menu button');
+    mobileMenuBtns.forEach(btn => {
+      const txt = btn.textContent.trim();
+      if (txt.includes('Entrar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('login'); }, true);
+      if (txt.includes('Testar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('signup'); }, true);
+    });
+  });
+
+  // Close on Escape (auth modal)
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
+})();
+</script>
 </body>
 </html>
