@@ -1576,7 +1576,7 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDemo(); });
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const SUPA_URL = 'https://ikdguipxrkhuaoajzduzy.supabase.co';
+const SUPA_URL = 'https://ikdguipxrkhuaojzduzy.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo';
 const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
@@ -1684,7 +1684,8 @@ document.getElementById('signup-btn').addEventListener('click', async function()
   });
 
   if (error) {
-    let msg = 'Erro ao criar conta. Tente novamente.';
+    console.log('Signup error:', JSON.stringify(error));
+    let msg = error.message || 'Erro ao criar conta. Tente novamente.';
     if (error.message.includes('already registered') || error.message.includes('already been registered')) msg = 'Email já cadastrado.';
     else if (error.message.includes('password') || error.message.includes('weak')) msg = 'Senha muito curta (mínimo 6 caracteres).';
     else if (error.message.includes('email')) msg = 'Email inválido.';
