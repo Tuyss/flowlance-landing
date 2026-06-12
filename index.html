@@ -687,7 +687,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   <a href="#planos" onclick="toggleMenu()" style="font-size:32px;font-weight:800;color:#fff;text-decoration:none;padding:18px;letter-spacing:-1px;opacity:.9">Planos</a>
   <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px;width:240px">
     <button onclick="toggleMenu()" style="font-family:'Geist',sans-serif;font-size:16px;font-weight:600;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:14px;border-radius:50px;cursor:pointer">Entrar</button>
-    <button onclick="toggleMenu()" style="font-family:'Geist',sans-serif;font-size:16px;font-weight:700;color:var(--dk);background:var(--y);border:none;padding:14px;border-radius:50px;cursor:pointer">Testar 7 dias grátis</button>
+    <button onclick="toggleMenu();openAuth('signup')" style="font-family:'Geist',sans-serif;font-size:16px;font-weight:700;color:var(--dk);background:var(--y);border:none;padding:14px;border-radius:50px;cursor:pointer">Testar 7 dias grátis</button>
   </div>
 </div>
 
@@ -698,7 +698,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <h1 class="reveal d1">Gerencie todo seu negócio num só lugar.</h1>
     <p class="hero-sub reveal d2">Propostas, cobranças, contratos e NFS-e automáticos. Pare de perder tempo com burocracia e foque no que gera dinheiro.</p>
     <div class="hero-cta reveal d3">
-      <button class="btn-yellow">Começar grátis por 7 dias</button>
+      <button class="btn-yellow" onclick="openAuth('signup')">Começar grátis por 7 dias</button>
       <button class="btn-outline">Ver demonstração</button>
     </div>
     <p class="hero-note reveal d4">Sem cartão de crédito no trial. Cancele quando quiser.</p>
@@ -1507,7 +1507,7 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       <div class="am-err" id="login-err"></div>
       <button class="am-submit" id="login-btn">Entrar</button>
       <div class="am-divider">ou</div>
-      <button id="google-login-btn" style="height:46px;border-radius:12px;border:1.5px solid #E2E8F0;background:#fff;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:#374151;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;width:100%" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background='#fff'"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Continuar com Google</button>
+      <button onclick="signInWithGoogle()" style="width:100%;padding:12px;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;font-family:Geist,sans-serif;font-size:14px;font-weight:600;color:#0E0E0E;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continuar com Google</button>
       <div class="am-switch">Não tem conta? <a id="switch-to-signup">Criar conta grátis</a></div>
     </div>
 
@@ -1532,7 +1532,7 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       <div class="am-err" id="signup-err"></div>
       <button class="am-submit" id="signup-btn">Criar conta grátis</button>
       <div class="am-divider">ou</div>
-      <button id="google-signup-btn" style="height:46px;border-radius:12px;border:1.5px solid #E2E8F0;background:#fff;font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:#374151;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;width:100%" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background='#fff'"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Continuar com Google</button>
+      <button onclick="signInWithGoogle()" style="width:100%;padding:12px;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;font-family:Geist,sans-serif;font-size:14px;font-weight:600;color:#0E0E0E;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continuar com Google</button>
       <div class="am-switch">Já tem conta? <a id="switch-to-login">Entrar</a></div>
     </div>
   </div>
@@ -1578,7 +1578,7 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDemo(); });
 <script>
 const SUPA_URL = 'https://ikdguipxrkhuaoajzduzy.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo';
-const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // ── Modal open/close (global so onclick attrs work) ───────────
 function openAuth(tab) {
@@ -1623,14 +1623,12 @@ document.getElementById('auth-modal').addEventListener('click', function(e) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
 
 // ── Google OAuth ──────────────────────────────────────────────
-async function googleAuth() {
+async function signInWithGoogle() {
   await sb.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: 'https://app.flowlance.com.br/auth/callback' },
   });
 }
-document.getElementById('google-login-btn').addEventListener('click', googleAuth);
-document.getElementById('google-signup-btn').addEventListener('click', googleAuth);
 
 // ── Phone mask ────────────────────────────────────────────────
 document.getElementById('signup-phone').addEventListener('input', function() {
@@ -1671,15 +1669,13 @@ document.getElementById('signup-btn').addEventListener('click', async function()
 
   const phoneDigits = phone.replace(/\D/g,'');
 
-  // Check phone duplicate — ignore error if column doesn't exist yet
-  try {
-    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', phoneDigits).maybeSingle();
-    if (existing) {
-      showErr('signup-err', 'Este número já está cadastrado.');
-      this.disabled = false; this.textContent = 'Criar conta grátis';
-      return;
-    }
-  } catch(_) {}
+  // Check phone duplicate
+  const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', phoneDigits).maybeSingle();
+  if (existing) {
+    showErr('signup-err', 'Este número já está cadastrado.');
+    this.disabled = false; this.textContent = 'Criar conta grátis';
+    return;
+  }
 
   const { data, error } = await sb.auth.signUp({
     email,
@@ -1697,11 +1693,9 @@ document.getElementById('signup-btn').addEventListener('click', async function()
     return;
   }
 
-  // Save phone — non-blocking, don't fail if column missing
+  // Save phone to usuarios table
   if (data?.user) {
-    try {
-      await sb.from('usuarios').upsert({ id: data.user.id, nome: name, telefone: phoneDigits }, { onConflict: 'id' });
-    } catch(_) {}
+    await sb.from('usuarios').upsert({ id: data.user.id, nome: name, telefone: phoneDigits }, { onConflict: 'id' });
   }
 
   window.location.href = APP_URL + '/onboarding';
@@ -1718,7 +1712,6 @@ document.querySelector('.ub-cta')?.addEventListener('click', () => openAuth('sig
 document.querySelectorAll('#mobile-menu button').forEach(btn => {
   const txt = btn.textContent.trim();
   if (txt.includes('Entrar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('login'); });
-  if (txt.includes('Testar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('signup'); });
 });
 </script>
 </body>
