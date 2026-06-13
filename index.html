@@ -1604,6 +1604,20 @@ function openAuth(tab) {
 function closeAuth() {
   document.getElementById('auth-modal').classList.remove('open');
   document.body.style.overflow = '';
+  // Reset all modal state for next open
+  const tabBar = document.querySelector('.am-tabs');
+  if (tabBar) tabBar.style.display = '';
+  document.getElementById('panel-confirm').classList.remove('active');
+  document.getElementById('panel-signup').classList.remove('active');
+  document.getElementById('panel-login').classList.add('active');
+  ['tab-login','tab-signup'].forEach(id => document.getElementById(id).style.display = '');
+  document.getElementById('tab-login').classList.add('active');
+  document.getElementById('tab-signup').classList.remove('active');
+  document.getElementById('signup-btn').disabled = false;
+  document.getElementById('signup-btn').textContent = 'Criar conta grátis';
+  document.getElementById('login-btn').disabled = false;
+  document.getElementById('login-btn').textContent = 'Entrar';
+  clearAuthErrors();
 }
 function clearAuthErrors() {
   document.getElementById('login-err').className = 'am-err';
@@ -1675,10 +1689,17 @@ function formatPhone(v) {
 // ── Show confirmation panel inside modal ──────────────────────
 function showConfirmPanel(email) {
   document.getElementById('confirm-email-display').textContent = email;
-  ['panel-login','panel-signup'].forEach(id => document.getElementById(id).classList.remove('active'));
+  // Hide ALL panels and tabs first
+  ['panel-login','panel-signup','panel-confirm'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['tab-login','tab-signup'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('active');
+    el.style.display = 'none';
+  });
+  // Hide the tab bar container entirely
+  const tabBar = document.querySelector('.am-tabs');
+  if (tabBar) tabBar.style.display = 'none';
   document.getElementById('panel-confirm').classList.add('active');
-  document.getElementById('tab-login').classList.remove('active');
-  document.getElementById('tab-signup').classList.remove('active');
 }
 
 // ── Login ─────────────────────────────────────────────────────
@@ -1686,24 +1707,27 @@ document.getElementById('login-btn').addEventListener('click', async function() 
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   if (!email || !password) { showErr('login-err', 'Preencha email e senha.'); return; }
-  this.disabled = true; this.textContent = 'Verificando…';
+  const btn = this;
+  btn.disabled = true; btn.textContent = 'Verificando…';
 
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) {
-    showErr('login-err', 'Email ou senha incorretos.');
-    this.disabled = false; this.textContent = 'Entrar';
-    return;
-  }
-
-  // Check plan status
-  this.textContent = 'Carregando…';
-  const { data: perfil } = await sb.from('usuarios').select('plano, trial_expira_em').eq('id', data.user.id).maybeSingle();
-  const semPlano = !perfil?.plano || (perfil.plano === 'trial' && !perfil.trial_expira_em);
-  if (semPlano) {
-    closeAuth();
-    showToast('Bem-vindo! Escolha um plano para começar.');
-  } else {
-    window.location.href = APP_URL + '/dashboard';
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      showErr('login-err', 'Email ou senha incorretos.');
+      return;
+    }
+    // Check plan status
+    btn.textContent = 'Carregando…';
+    const { data: perfil } = await sb.from('usuarios').select('plano, trial_expira_em').eq('id', data.user.id).maybeSingle();
+    const semPlano = !perfil?.plano || (perfil.plano === 'trial' && !perfil.trial_expira_em);
+    if (semPlano) {
+      closeAuth();
+      showToast('Bem-vindo! Escolha um plano para começar.');
+    } else {
+      window.location.replace(APP_URL + '/dashboard');
+    }
+  } finally {
+    btn.disabled = false; btn.textContent = 'Entrar';
   }
 });
 
@@ -1718,42 +1742,53 @@ document.getElementById('signup-btn').addEventListener('click', async function()
   if (phone.replace(/\D/g,'').length < 10) { showErr('signup-err', 'Número de telefone inválido.'); return; }
   if (password.length < 6) { showErr('signup-err', 'Senha muito curta (mínimo 6 caracteres).'); return; }
 
-  this.disabled = true; this.textContent = 'Criando conta…';
+  const btn = this;
+  btn.disabled = true; btn.textContent = 'Criando conta…';
 
-  const phoneDigits = phone.replace(/\D/g,'');
+  try {
+    const phoneDigits = phone.replace(/\D/g,'');
 
-  // Check phone duplicate
-  const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', phoneDigits).maybeSingle();
-  if (existing) {
-    showErr('signup-err', 'Este número já está cadastrado.');
-    this.disabled = false; this.textContent = 'Criar conta grátis';
-    return;
+    // Check phone duplicate
+    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', phoneDigits).maybeSingle();
+    if (existing) {
+      showErr('signup-err', 'Este número já está cadastrado.');
+      return;
+    }
+
+    const { data, error } = await sb.auth.signUp({
+      email,
+      password,
+      options: { data: { nome: name, telefone: phoneDigits } },
+    });
+
+    if (error) {
+      console.log('Signup error:', JSON.stringify(error));
+      const isAlready = error.message.includes('already registered') || error.message.includes('already been registered');
+      if (isAlready) {
+        const errEl = document.getElementById('signup-err');
+        errEl.innerHTML = 'Email já cadastrado. <a href="#" style="color:#0F0F13;font-weight:700" id="err-switch-login">Fazer login</a>';
+        errEl.className = 'am-err show';
+        document.getElementById('err-switch-login').addEventListener('click', e => { e.preventDefault(); switchTab('login'); });
+      } else if (error.message.includes('password') || error.message.includes('weak')) {
+        showErr('signup-err', 'Senha muito curta (mínimo 6 caracteres).');
+      } else if (error.message.includes('email')) {
+        showErr('signup-err', 'Email inválido.');
+      } else {
+        showErr('signup-err', error.message || 'Erro ao criar conta. Tente novamente.');
+      }
+      return;
+    }
+
+    // Save phone to usuarios table
+    if (data?.user) {
+      await sb.from('usuarios').upsert({ id: data.user.id, nome: name, telefone: phoneDigits }, { onConflict: 'id' });
+    }
+
+    // Show confirmation screen inside modal (do not redirect)
+    showConfirmPanel(email);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Criar conta grátis';
   }
-
-  const { data, error } = await sb.auth.signUp({
-    email,
-    password,
-    options: { data: { nome: name, telefone: phoneDigits } },
-  });
-
-  if (error) {
-    console.log('Signup error:', JSON.stringify(error));
-    let msg = error.message || 'Erro ao criar conta. Tente novamente.';
-    if (error.message.includes('already registered') || error.message.includes('already been registered')) msg = 'Email já cadastrado.';
-    else if (error.message.includes('password') || error.message.includes('weak')) msg = 'Senha muito curta (mínimo 6 caracteres).';
-    else if (error.message.includes('email')) msg = 'Email inválido.';
-    showErr('signup-err', msg);
-    this.disabled = false; this.textContent = 'Criar conta grátis';
-    return;
-  }
-
-  // Save phone to usuarios table
-  if (data?.user) {
-    await sb.from('usuarios').upsert({ id: data.user.id, nome: name, telefone: phoneDigits }, { onConflict: 'id' });
-  }
-
-  // Show confirmation screen inside modal (do not redirect)
-  showConfirmPanel(email);
 });
 
 // ── Toast helper ──────────────────────────────────────────────
