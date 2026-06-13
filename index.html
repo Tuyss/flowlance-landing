@@ -1720,8 +1720,9 @@ document.getElementById('login-btn').addEventListener('click', async function() 
     btn.textContent = 'Carregando…';
     const { data: perfil } = await sb.from('usuarios').select('plano, trial_expira_em').eq('id', data.user.id).maybeSingle();
     const semPlano = !perfil?.plano || (perfil.plano === 'trial' && !perfil.trial_expira_em);
+    updateNavForLoggedUser();
+    closeAuth();
     if (semPlano) {
-      closeAuth();
       showToast('Bem-vindo! Escolha um plano para começar.');
     } else {
       window.location.replace(APP_URL + '/dashboard');
@@ -1784,12 +1785,31 @@ document.getElementById('signup-btn').addEventListener('click', async function()
       await sb.from('usuarios').upsert({ id: data.user.id, nome: name, telefone: phoneDigits }, { onConflict: 'id' });
     }
 
-    // Show confirmation screen inside modal (do not redirect)
+    // Update nav and show confirmation screen
+    updateNavForLoggedUser();
     showConfirmPanel(email);
   } finally {
     btn.disabled = false; btn.textContent = 'Criar conta grátis';
   }
 });
+
+// ── Navbar update after login ─────────────────────────────────
+function updateNavForLoggedUser() {
+  const navLogin = document.getElementById('nav-login');
+  const navCta = document.getElementById('nav-cta');
+  if (navLogin) navLogin.style.display = 'none';
+  if (navCta) navCta.style.display = 'none';
+
+  const nav = document.querySelector('.nav-actions');
+  if (nav && !document.getElementById('open-app-btn')) {
+    const btn = document.createElement('a');
+    btn.id = 'open-app-btn';
+    btn.href = 'https://app.flowlance.com.br/dashboard';
+    btn.textContent = 'Abrir app →';
+    btn.style.cssText = 'font-family:Geist,sans-serif;font-size:14px;font-weight:700;color:#0E0E0E;background:#F5C842;padding:10px 22px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center';
+    nav.appendChild(btn);
+  }
+}
 
 // ── Toast helper ──────────────────────────────────────────────
 function showToast(msg) {
@@ -1800,13 +1820,16 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 5000);
 }
 
-// ── Email confirmation token detection (on page load) ─────────
-(async function checkConfirmToken() {
+// ── Session check + email confirmation token (on page load) ──
+(async function onPageLoad() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    updateNavForLoggedUser();
+  }
+
   const hasToken = window.location.hash.includes('access_token') || window.location.search.includes('token_hash');
   if (!hasToken) return;
-  const { data } = await sb.auth.getSession();
-  if (data?.session) {
-    // Clear hash/params so refresh doesn't retrigger
+  if (session) {
     history.replaceState(null, '', window.location.pathname);
     showToast('Email confirmado! Escolha seu plano para começar.');
   }
