@@ -1720,7 +1720,7 @@ document.getElementById('login-btn').addEventListener('click', async function() 
     btn.textContent = 'Carregando…';
     const { data: perfil } = await sb.from('usuarios').select('plano, trial_expira_em').eq('id', data.user.id).maybeSingle();
     const semPlano = !perfil?.plano || (perfil.plano === 'trial' && !perfil.trial_expira_em);
-    updateNavForLoggedUser();
+    updateNavForLoggedUser(data.user.email);
     closeAuth();
     if (semPlano) {
       showToast('Bem-vindo! Escolha um plano para começar.');
@@ -1786,7 +1786,7 @@ document.getElementById('signup-btn').addEventListener('click', async function()
     }
 
     // Update nav and show confirmation screen
-    updateNavForLoggedUser();
+    updateNavForLoggedUser(email);
     showConfirmPanel(email);
   } finally {
     btn.disabled = false; btn.textContent = 'Criar conta grátis';
@@ -1794,7 +1794,7 @@ document.getElementById('signup-btn').addEventListener('click', async function()
 });
 
 // ── Navbar update after login ─────────────────────────────────
-function updateNavForLoggedUser() {
+function updateNavForLoggedUser(userEmail) {
   const navLogin = document.getElementById('nav-login');
   const navCta = document.getElementById('nav-cta');
   if (navLogin) navLogin.style.display = 'none';
@@ -1802,12 +1802,65 @@ function updateNavForLoggedUser() {
 
   const nav = document.querySelector('.nav-actions');
   if (nav && !document.getElementById('open-app-btn')) {
-    const btn = document.createElement('a');
-    btn.id = 'open-app-btn';
-    btn.href = 'https://app.flowlance.com.br/dashboard';
-    btn.textContent = 'Abrir app →';
-    btn.style.cssText = 'font-family:Geist,sans-serif;font-size:14px;font-weight:700;color:#0E0E0E;background:#F5C842;padding:10px 22px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center';
-    nav.appendChild(btn);
+    // Abrir app button
+    const appBtn = document.createElement('button');
+    appBtn.id = 'open-app-btn';
+    appBtn.onclick = () => window.location.href = 'https://app.flowlance.com.br/dashboard';
+    appBtn.textContent = 'Abrir app →';
+    appBtn.style.cssText = 'font-family:Geist,sans-serif;font-size:14px;font-weight:700;color:#0E0E0E;background:#F5C842;padding:10px 22px;border-radius:50px;border:none;cursor:pointer';
+
+    // Profile dropdown wrapper
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'position:relative;display:inline-block';
+
+    // Profile button
+    const profileBtn = document.createElement('button');
+    profileBtn.id = 'profile-btn';
+    profileBtn.style.cssText = 'width:36px;height:36px;border-radius:50%;background:#0E0E0E;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Geist,sans-serif;font-size:13px;font-weight:700';
+    profileBtn.textContent = userEmail ? userEmail[0].toUpperCase() : 'U';
+    profileBtn.onclick = () => {
+      const dd = document.getElementById('profile-dropdown');
+      dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    };
+
+    // Dropdown menu
+    const dropdown = document.createElement('div');
+    dropdown.id = 'profile-dropdown';
+    dropdown.style.cssText = 'display:none;position:absolute;right:0;top:44px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:8px;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:1000';
+
+    if (userEmail) {
+      const emailDiv = document.createElement('div');
+      emailDiv.style.cssText = 'font-size:12px;color:#6B7280;padding:8px 12px 12px;border-bottom:1px solid #F3F4F6;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px';
+      emailDiv.textContent = userEmail;
+      dropdown.appendChild(emailDiv);
+    }
+
+    const logoutBtn = document.createElement('button');
+    logoutBtn.textContent = 'Sair da conta';
+    logoutBtn.style.cssText = 'width:100%;text-align:left;padding:10px 12px;border:none;background:none;font-family:Geist,sans-serif;font-size:14px;color:#EF4444;cursor:pointer;border-radius:8px';
+    logoutBtn.onmouseover = () => logoutBtn.style.background = '#FEF2F2';
+    logoutBtn.onmouseout = () => logoutBtn.style.background = 'none';
+    logoutBtn.onclick = async () => {
+      await sb.auth.signOut();
+      document.getElementById('open-app-btn')?.remove();
+      wrapper.remove();
+      if (navLogin) navLogin.style.display = '';
+      if (navCta) navCta.style.display = '';
+    };
+
+    dropdown.appendChild(logoutBtn);
+    wrapper.appendChild(profileBtn);
+    wrapper.appendChild(dropdown);
+
+    nav.appendChild(appBtn);
+    nav.appendChild(wrapper);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!wrapper.contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
   }
 }
 
@@ -1824,7 +1877,7 @@ function showToast(msg) {
 (async function onPageLoad() {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    updateNavForLoggedUser();
+    updateNavForLoggedUser(session.user.email);
   }
 
   const hasToken = window.location.hash.includes('access_token') || window.location.search.includes('token_hash');
