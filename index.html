@@ -1535,6 +1535,20 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       <button onclick="signInWithGoogle()" style="width:100%;padding:12px;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;font-family:Geist,sans-serif;font-size:14px;font-weight:600;color:#0E0E0E;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continuar com Google</button>
       <div class="am-switch">Já tem conta? <a id="switch-to-login">Entrar</a></div>
     </div>
+
+    <!-- CONFIRMATION PANEL -->
+    <div class="am-panel" id="panel-confirm">
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:8px 0 4px">
+        <div style="width:56px;height:56px;border-radius:50%;background:#F0FDF4;display:flex;align-items:center;justify-content:center">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div>
+          <p style="font-size:18px;font-weight:800;color:#0F0F13;margin:0 0 8px">Confirme seu email</p>
+          <p style="font-size:14px;color:#6B7280;line-height:1.6;margin:0">Enviamos um link de confirmação para <strong id="confirm-email-display" style="color:#0F0F13"></strong>. Clique no link para ativar sua conta e depois volte aqui para entrar.</p>
+        </div>
+        <button onclick="closeAuth()" class="am-submit" style="width:100%;margin-top:8px">Entendi</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1631,24 +1645,44 @@ async function signInWithGoogle() {
 }
 
 // ── Phone mask ────────────────────────────────────────────────
-document.getElementById('signup-phone').addEventListener('input', function() {
-  let v = this.value.replace(/\D/g, '').slice(0, 11);
-  if (v.length > 6) v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
-  else if (v.length > 2) v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+document.getElementById('signup-phone').addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g, '').substring(0, 11);
+  if (v.length > 6) v = '(' + v.substring(0,2) + ') ' + v.substring(2,7) + '-' + v.substring(7);
+  else if (v.length > 2) v = '(' + v.substring(0,2) + ') ' + v.substring(2);
   else if (v.length > 0) v = '(' + v;
-  this.value = v;
+  e.target.value = v;
 });
+
+// ── Show confirmation panel inside modal ──────────────────────
+function showConfirmPanel(email) {
+  document.getElementById('confirm-email-display').textContent = email;
+  ['panel-login','panel-signup'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById('panel-confirm').classList.add('active');
+  document.getElementById('tab-login').classList.remove('active');
+  document.getElementById('tab-signup').classList.remove('active');
+}
 
 // ── Login ─────────────────────────────────────────────────────
 document.getElementById('login-btn').addEventListener('click', async function() {
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   if (!email || !password) { showErr('login-err', 'Preencha email e senha.'); return; }
-  this.disabled = true; this.textContent = 'Entrando…';
-  const { error } = await sb.auth.signInWithPassword({ email, password });
+  this.disabled = true; this.textContent = 'Verificando…';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
   if (error) {
     showErr('login-err', 'Email ou senha incorretos.');
     this.disabled = false; this.textContent = 'Entrar';
+    return;
+  }
+
+  // Check plan status
+  this.textContent = 'Carregando…';
+  const { data: perfil } = await sb.from('usuarios').select('plano, trial_expira_em').eq('id', data.user.id).maybeSingle();
+  const semPlano = !perfil?.plano || (perfil.plano === 'trial' && !perfil.trial_expira_em);
+  if (semPlano) {
+    closeAuth();
+    showToast('Bem-vindo! Escolha um plano para começar.');
   } else {
     window.location.href = APP_URL + '/dashboard';
   }
@@ -1699,8 +1733,30 @@ document.getElementById('signup-btn').addEventListener('click', async function()
     await sb.from('usuarios').upsert({ id: data.user.id, nome: name, telefone: phoneDigits }, { onConflict: 'id' });
   }
 
-  window.location.href = APP_URL + '/onboarding';
+  // Show confirmation screen inside modal (do not redirect)
+  showConfirmPanel(email);
 });
+
+// ── Toast helper ──────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0F0F13;color:#fff;padding:14px 24px;border-radius:50px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.2);animation:fadeIn .3s ease';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 5000);
+}
+
+// ── Email confirmation token detection (on page load) ─────────
+(async function checkConfirmToken() {
+  const hasToken = window.location.hash.includes('access_token') || window.location.search.includes('token_hash');
+  if (!hasToken) return;
+  const { data } = await sb.auth.getSession();
+  if (data?.session) {
+    // Clear hash/params so refresh doesn't retrigger
+    history.replaceState(null, '', window.location.pathname);
+    showToast('Email confirmado! Escolha seu plano para começar.');
+  }
+})();
 
 // ── Wire CTA buttons (DOM already loaded, script is at bottom) ─
 document.getElementById('nav-login')?.addEventListener('click', () => openAuth('login'));
