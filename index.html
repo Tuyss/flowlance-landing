@@ -671,6 +671,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   <div class="nav-actions">
     <button class="btn-ghost" id="nav-login">Entrar</button>
     <button class="btn-dark" id="nav-cta">Testar 7 dias grátis</button>
+    <a id="open-app-btn" href="https://app.flowlance.com.br/dashboard" style="display:none;font-family:Geist,sans-serif;font-size:14px;font-weight:700;color:#0E0E0E;background:#F5C842;padding:10px 22px;border-radius:50px;text-decoration:none;align-items:center">Abrir app →</a>
     <button id="hamburger" onclick="toggleMenu()" style="display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:5px;align-items:center;justify-content:center">
       <span class="hb-line"></span><span class="hb-line"></span><span class="hb-line"></span>
     </button>
@@ -1800,21 +1801,17 @@ function updateNavForLoggedUser(userEmail) {
   if (navLogin) navLogin.style.display = 'none';
   if (navCta) navCta.style.display = 'none';
 
-  const nav = document.querySelector('.nav-actions');
-  if (nav && !document.getElementById('open-app-btn')) {
-    // Abrir app link
-    const appLink = document.createElement('a');
-    appLink.id = 'open-app-btn';
-    appLink.setAttribute('href', 'https://app.flowlance.com.br/dashboard');
-    appLink.setAttribute('target', '_blank');
-    appLink.innerText = 'Abrir app →';
-    appLink.style.cssText = 'font-family:Geist,sans-serif;font-size:14px;font-weight:700;color:#0E0E0E;background:#F5C842;padding:10px 22px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center';
+  // Show static app button already in HTML
+  document.getElementById('open-app-btn').style.display = 'inline-flex';
 
-    // Profile dropdown wrapper
+  // Profile dropdown — only create once
+  if (!document.getElementById('profile-btn')) {
+    const nav = document.querySelector('.nav-actions');
+
     const wrapper = document.createElement('div');
+    wrapper.id = 'profile-wrapper';
     wrapper.style.cssText = 'position:relative;display:inline-flex;align-items:center';
 
-    // Profile button
     const profileBtn = document.createElement('button');
     profileBtn.id = 'profile-btn';
     profileBtn.style.cssText = 'width:36px;height:36px;border-radius:50%;background:#0E0E0E;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Geist,sans-serif;font-size:13px;font-weight:700';
@@ -1825,12 +1822,10 @@ function updateNavForLoggedUser(userEmail) {
       dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
     });
 
-    // Dropdown menu
     const dropdown = document.createElement('div');
     dropdown.id = 'profile-dropdown';
     dropdown.style.cssText = 'display:none;position:absolute;right:0;top:44px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:8px;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:1000';
 
-    // Email header
     if (userEmail) {
       const emailDiv = document.createElement('div');
       emailDiv.style.cssText = 'font-size:13px;color:#6B7280;padding:8px 12px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:184px';
@@ -1838,23 +1833,18 @@ function updateNavForLoggedUser(userEmail) {
       dropdown.appendChild(emailDiv);
     }
 
-    // Plan status
     const planDiv = document.createElement('div');
     planDiv.style.cssText = 'font-size:12px;font-weight:600;color:#9CA3AF;padding:0 12px 10px;border-bottom:1px solid #F3F4F6;margin-bottom:4px';
     planDiv.textContent = 'Carregando plano…';
     dropdown.appendChild(planDiv);
 
-    // Fetch plan async
-    if (userEmail) {
-      sb.auth.getUser().then(({ data: { user } }) => {
-        if (!user) return;
-        sb.from('usuarios').select('plano').eq('id', user.id).maybeSingle().then(({ data }) => {
-          const p = data?.plano;
-          const labels = { trial: 'Trial', starter: 'Starter', pro: 'Pro', agencia: 'Agência' };
-          planDiv.textContent = labels[p] || 'Sem plano';
-        });
+    sb.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      sb.from('usuarios').select('plano').eq('id', user.id).maybeSingle().then(({ data }) => {
+        const labels = { trial: 'Trial', starter: 'Starter', pro: 'Pro', agencia: 'Agência' };
+        planDiv.textContent = labels[data?.plano] || 'Sem plano';
       });
-    }
+    });
 
     const divider = document.createElement('div');
     divider.style.cssText = 'height:1px;background:#F3F4F6;margin:4px 0';
@@ -1868,7 +1858,7 @@ function updateNavForLoggedUser(userEmail) {
     logoutBtn.onmouseout = () => logoutBtn.style.background = 'none';
     logoutBtn.addEventListener('click', async () => {
       await sb.auth.signOut();
-      document.getElementById('open-app-btn')?.remove();
+      document.getElementById('open-app-btn').style.display = 'none';
       wrapper.remove();
       if (navLogin) navLogin.style.display = '';
       if (navCta) navCta.style.display = '';
@@ -1877,11 +1867,8 @@ function updateNavForLoggedUser(userEmail) {
 
     wrapper.appendChild(profileBtn);
     wrapper.appendChild(dropdown);
-
-    nav.appendChild(appLink);
     nav.appendChild(wrapper);
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', () => { dropdown.style.display = 'none'; });
   }
 }
