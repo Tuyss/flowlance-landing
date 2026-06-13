@@ -1645,13 +1645,32 @@ async function signInWithGoogle() {
 }
 
 // ── Phone mask ────────────────────────────────────────────────
-document.getElementById('signup-phone').addEventListener('input', function(e) {
-  let v = e.target.value.replace(/\D/g, '').substring(0, 11);
-  if (v.length > 6) v = '(' + v.substring(0,2) + ') ' + v.substring(2,7) + '-' + v.substring(7);
-  else if (v.length > 2) v = '(' + v.substring(0,2) + ') ' + v.substring(2);
-  else if (v.length > 0) v = '(' + v;
-  e.target.value = v;
+const phoneInput = document.getElementById('signup-phone');
+let phoneRaw = '';
+
+phoneInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    phoneRaw = phoneRaw.slice(0, -1);
+    this.value = formatPhone(phoneRaw);
+  }
 });
+
+phoneInput.addEventListener('input', function(e) {
+  if (e.inputType === 'deleteContentBackward') return;
+  const added = e.data ? e.data.replace(/\D/g, '') : '';
+  if (added && phoneRaw.length < 11) {
+    phoneRaw += added;
+  }
+  this.value = formatPhone(phoneRaw);
+});
+
+function formatPhone(v) {
+  if (v.length > 6) return '(' + v.substring(0,2) + ') ' + v.substring(2,7) + '-' + v.substring(7);
+  if (v.length > 2) return '(' + v.substring(0,2) + ') ' + v.substring(2);
+  if (v.length > 0) return '(' + v;
+  return '';
+}
 
 // ── Show confirmation panel inside modal ──────────────────────
 function showConfirmPanel(email) {
