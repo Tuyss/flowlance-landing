@@ -1802,14 +1802,13 @@ function updateNavForLoggedUser(userEmail) {
 
   const nav = document.querySelector('.nav-actions');
   if (nav && !document.getElementById('open-app-btn')) {
-    // Abrir app button
-    const appBtn = document.createElement('a');
-    appBtn.id = 'open-app-btn';
-    appBtn.href = 'https://app.flowlance.com.br/dashboard';
-    appBtn.target = '_self';
-    appBtn.rel = 'noopener';
-    appBtn.textContent = 'Abrir app →';
-    appBtn.style.cssText = 'font-family:Geist,sans-serif;font-size:14px;font-weight:700;color:#0E0E0E;background:#F5C842;padding:10px 22px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer';
+    // Abrir app link
+    const appLink = document.createElement('a');
+    appLink.id = 'open-app-btn';
+    appLink.setAttribute('href', 'https://app.flowlance.com.br/dashboard');
+    appLink.setAttribute('target', '_blank');
+    appLink.innerText = 'Abrir app →';
+    appLink.style.cssText = 'font-family:Geist,sans-serif;font-size:14px;font-weight:700;color:#0E0E0E;background:#F5C842;padding:10px 22px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center';
 
     // Profile dropdown wrapper
     const wrapper = document.createElement('div');
@@ -1831,57 +1830,55 @@ function updateNavForLoggedUser(userEmail) {
     dropdown.id = 'profile-dropdown';
     dropdown.style.cssText = 'display:none;position:absolute;right:0;top:44px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:8px;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:1000';
 
-    function ddLink(label, iconSvg, color, hoverBg, href) {
-      const a = document.createElement('a');
-      a.href = href;
-      a.rel = 'noopener';
-      a.style.cssText = `width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-family:Geist,sans-serif;font-size:14px;color:${color};cursor:pointer;display:flex;align-items:center;gap:10px;text-decoration:none`;
-      a.innerHTML = iconSvg + label;
-      a.onmouseover = () => a.style.background = hoverBg;
-      a.onmouseout = () => a.style.background = 'none';
-      return a;
-    }
-    function ddBtn(label, iconSvg, color, hoverBg, onClick) {
-      const btn = document.createElement('button');
-      btn.style.cssText = `width:100%;text-align:left;padding:10px 12px;border:none;background:none;font-family:Geist,sans-serif;font-size:14px;color:${color};cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:10px`;
-      btn.innerHTML = iconSvg + label;
-      btn.onmouseover = () => btn.style.background = hoverBg;
-      btn.onmouseout = () => btn.style.background = 'none';
-      btn.addEventListener('click', onClick);
-      return btn;
-    }
-
     // Email header
     if (userEmail) {
       const emailDiv = document.createElement('div');
-      emailDiv.style.cssText = 'font-size:13px;color:#6B7280;padding:8px 12px 12px;border-bottom:1px solid #F3F4F6;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:184px';
+      emailDiv.style.cssText = 'font-size:13px;color:#6B7280;padding:8px 12px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:184px';
       emailDiv.textContent = userEmail;
       dropdown.appendChild(emailDiv);
     }
 
-    const iconPerson = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
-    const iconCard  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>';
-    const iconOut   = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>';
+    // Plan status
+    const planDiv = document.createElement('div');
+    planDiv.style.cssText = 'font-size:12px;font-weight:600;color:#9CA3AF;padding:0 12px 10px;border-bottom:1px solid #F3F4F6;margin-bottom:4px';
+    planDiv.textContent = 'Carregando plano…';
+    dropdown.appendChild(planDiv);
 
-    dropdown.appendChild(ddLink('Meu perfil', iconPerson, '#0E0E0E', '#F9FAFB', 'https://app.flowlance.com.br/configuracoes'));
-    dropdown.appendChild(ddLink('Meu plano',  iconCard,   '#0E0E0E', '#F9FAFB', 'https://app.flowlance.com.br/configuracoes'));
+    // Fetch plan async
+    if (userEmail) {
+      sb.auth.getUser().then(({ data: { user } }) => {
+        if (!user) return;
+        sb.from('usuarios').select('plano').eq('id', user.id).maybeSingle().then(({ data }) => {
+          const p = data?.plano;
+          const labels = { trial: 'Trial', starter: 'Starter', pro: 'Pro', agencia: 'Agência' };
+          planDiv.textContent = labels[p] || 'Sem plano';
+        });
+      });
+    }
 
     const divider = document.createElement('div');
     divider.style.cssText = 'height:1px;background:#F3F4F6;margin:4px 0';
     dropdown.appendChild(divider);
 
-    dropdown.appendChild(ddBtn('Sair da conta', iconOut, '#EF4444', '#FEF2F2', async () => {
+    const iconOut = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>';
+    const logoutBtn = document.createElement('button');
+    logoutBtn.style.cssText = 'width:100%;text-align:left;padding:10px 12px;border:none;background:none;font-family:Geist,sans-serif;font-size:14px;color:#EF4444;cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:10px';
+    logoutBtn.innerHTML = iconOut + 'Sair da conta';
+    logoutBtn.onmouseover = () => logoutBtn.style.background = '#FEF2F2';
+    logoutBtn.onmouseout = () => logoutBtn.style.background = 'none';
+    logoutBtn.addEventListener('click', async () => {
       await sb.auth.signOut();
       document.getElementById('open-app-btn')?.remove();
       wrapper.remove();
       if (navLogin) navLogin.style.display = '';
       if (navCta) navCta.style.display = '';
-    }));
+    });
+    dropdown.appendChild(logoutBtn);
 
     wrapper.appendChild(profileBtn);
     wrapper.appendChild(dropdown);
 
-    nav.appendChild(appBtn);
+    nav.appendChild(appLink);
     nav.appendChild(wrapper);
 
     // Close dropdown when clicking outside
