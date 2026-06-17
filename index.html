@@ -1830,14 +1830,22 @@ document.getElementById('signup-btn').addEventListener('click', async function()
       return;
     }
 
-    // Save phone to usuarios table
-    if (data?.user) {
-      await sb.from('usuarios').upsert({ id: data.user.id, nome: name, telefone: phoneDigits }, { onConflict: 'id' });
-    }
+    // Sign out immediately — user must log in explicitly
+    await sb.auth.signOut();
 
-    // Update nav and show confirmation screen
-    updateNavForLoggedUser(email);
-    showConfirmPanel(email);
+    // Pre-fill login email and switch to login tab
+    const loginEmailField = document.getElementById('login-email');
+    if (loginEmailField) loginEmailField.value = email;
+    switchTab('login');
+
+    // Show success message above the login form
+    showErr('login-err', 'Conta criada com sucesso! Faça login para continuar.');
+    const errEl = document.getElementById('login-err');
+    if (errEl) {
+      errEl.style.color = '#166534';
+      errEl.style.background = '#f0fdf4';
+      errEl.style.borderColor = '#bbf7d0';
+    }
   } finally {
     btn.disabled = false; btn.textContent = 'Criar conta grátis';
   }
