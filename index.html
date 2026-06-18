@@ -1680,10 +1680,10 @@ function showErr(id, msg) {
 // ── Tab switching ─────────────────────────────────────────────
 function switchTab(tab) {
   const isLogin = tab === 'login';
+  ['panel-login','panel-signup','panel-confirm','panel-trial'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById(isLogin ? 'panel-login' : 'panel-signup').classList.add('active');
   document.getElementById('tab-login').classList.toggle('active', isLogin);
   document.getElementById('tab-signup').classList.toggle('active', !isLogin);
-  document.getElementById('panel-login').classList.toggle('active', isLogin);
-  document.getElementById('panel-signup').classList.toggle('active', !isLogin);
   clearAuthErrors();
 }
 document.getElementById('tab-login').addEventListener('click', () => switchTab('login'));
