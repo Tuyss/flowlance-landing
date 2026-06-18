@@ -1572,7 +1572,7 @@ document.querySelectorAll('.faq-q').forEach(q=>{
           <p id="confirm-title" style="font-size:18px;font-weight:800;color:#0F0F13;margin:0 0 8px">Verifique seu email</p>
           <p id="confirm-msg" style="font-size:14px;color:#6B7280;line-height:1.6;margin:0"></p>
         </div>
-        <button onclick="openAuth('login')" class="am-submit" style="width:100%;margin-top:8px">Ir para login</button>
+        <button onclick="closeAuth(); setTimeout(() => openAuth('login'), 50);" class="am-submit" style="width:100%;margin-top:8px">Ir para login</button>
       </div>
     </div>
   </div>
