@@ -1226,7 +1226,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Contrato digital</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Templates básicos</li>
         </ul>
-        <button class="pc-cta">Começar trial gratuito</button>
+        <button class="pc-cta" onclick="handlePlanClick('starter')">Começar trial gratuito</button>
         <p class="pc-note">Após 7 dias, cobrança automática. Conta bloqueada se não assinar.</p>
       </div>
 
@@ -1256,7 +1256,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#F5C842" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Follow-up WhatsApp</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#F5C842" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Templates premium</li>
         </ul>
-        <button class="pc-cta">Assinar agora</button>
+        <button class="pc-cta" onclick="handlePlanClick('pro')">Assinar agora</button>
         <p class="pc-note">Cobrança imediata. Cancele quando quiser.</p>
       </div>
 
@@ -1285,7 +1285,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Relatórios avançados</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Templates exclusivos</li>
         </ul>
-        <button class="pc-cta cta-y">Assinar agora</button>
+        <button class="pc-cta cta-y" onclick="handlePlanClick('agencia')">Assinar agora</button>
         <p class="pc-note">Assine direto ou converse com o time antes.</p>
       </div>
 
@@ -1946,6 +1946,44 @@ document.querySelectorAll('#mobile-menu button').forEach(btn => {
   const txt = btn.textContent.trim();
   if (txt.includes('Entrar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('login'); });
 });
+
+async function handlePlanClick(planId) {
+  const { data: { session } } = await sb.auth.getSession();
+
+  if (!session) {
+    openAuth('signup');
+    return;
+  }
+
+  if (planId === 'starter') {
+    const expiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    await sb.from('usuarios').upsert({
+      id: session.user.id,
+      plano: 'trial',
+      trial_expira_em: expiry,
+      plano_status: 'ativo'
+    }, { onConflict: 'id' });
+    window.location.href = 'https://app.flowlance.com.br/dashboard';
+    return;
+  }
+
+  const priceIds = {
+    pro: 'price_1ThHbHGo06O74DQ61Zk2tWnh',
+    agencia: 'price_1ThHcoGo06O74DQ6PlrI9AWX'
+  };
+
+  const res = await fetch('https://app.flowlance.com.br/api/stripe/create-checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      priceId: priceIds[planId],
+      userId: session.user.id,
+      userEmail: session.user.email
+    })
+  });
+  const { url } = await res.json();
+  if (url) window.location.href = url;
+}
 </script>
 </body>
 </html>
