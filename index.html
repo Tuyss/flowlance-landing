@@ -652,7 +652,6 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 #trial-banner{display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:#15803D;text-align:center}
 #trial-banner.show{display:block}
 </style>
-<script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
 
@@ -1227,7 +1226,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Contrato digital</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Templates básicos</li>
         </ul>
-        <button class="pc-cta" onclick="handlePlanClick('starter')">Começar trial gratuito</button>
+        <button class="pc-cta" onclick="handlePlanClick('starter', currentBilling)">Começar trial gratuito</button>
         <p class="pc-note">Após 7 dias, cobrança automática. Conta bloqueada se não assinar.</p>
       </div>
 
@@ -1257,7 +1256,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#F5C842" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Follow-up WhatsApp</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#F5C842" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Templates premium</li>
         </ul>
-        <button class="pc-cta" onclick="handlePlanClick('pro')">Assinar agora</button>
+        <button class="pc-cta" onclick="handlePlanClick('pro', currentBilling)">Assinar agora</button>
         <p class="pc-note">Cobrança imediata. Cancele quando quiser.</p>
       </div>
 
@@ -1457,8 +1456,10 @@ function toggleMenu(){
 }
 
 // Billing toggle
+let currentBilling = 'mensal';
 function setBilling(mode){
   const isYearly=mode==='yearly';
+  currentBilling = isYearly ? 'anual' : 'mensal';
   document.getElementById('bt-monthly').classList.toggle('active',!isYearly);
   document.getElementById('bt-yearly').classList.toggle('active',isYearly);
   document.querySelectorAll('.pc-price-main').forEach(el=>{
@@ -1948,7 +1949,7 @@ document.querySelectorAll('#mobile-menu button').forEach(btn => {
   if (txt.includes('Entrar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('login'); });
 });
 
-async function handlePlanClick(planId) {
+async function handlePlanClick(planId, billing) {
   const { data: { session } } = await sb.auth.getSession();
 
   if (!session) {
@@ -1956,34 +1957,45 @@ async function handlePlanClick(planId) {
     return;
   }
 
+  const billingType = billing || 'mensal';
+
+  const links = {
+    starter: {
+      mensal: 'https://buy.stripe.com/test_5kQ28rfzf5DS9IScJvds407',
+      anual:  'https://buy.stripe.com/test_8x26oHbiZeao5sCdNzds408'
+    },
+    pro: {
+      mensal: 'https://buy.stripe.com/test_bJeaEX9aReaodZ8fVHds405',
+      anual:  'https://buy.stripe.com/test_4gM14nbiZ0jy1cm10Nds406'
+    },
+    agencia: {
+      mensal: 'https://buy.stripe.com/test_4gM5kD3Qxd6kdZ86l7ds402',
+      anual:  'https://buy.stripe.com/test_bJe14ndr7d6kaMW6l7ds404'
+    }
+  };
+
   if (planId === 'starter') {
-    const expiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-    await sb.from('usuarios').upsert({
-      id: session.user.id,
-      plano: 'trial',
-      trial_expira_em: expiry,
-      plano_status: 'ativo'
-    }, { onConflict: 'id' });
-    window.location.href = 'https://app.flowlance.com.br/dashboard';
+    const { data: perfil } = await sb.from('usuarios').select('trial_expira_em').eq('id', session.user.id).maybeSingle();
+
+    const jaUsouTrial = perfil?.trial_expira_em !== null && perfil?.trial_expira_em !== undefined;
+
+    if (!jaUsouTrial) {
+      const expiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      await sb.from('usuarios').upsert({
+        id: session.user.id,
+        plano: 'trial',
+        trial_expira_em: expiry,
+        plano_status: 'ativo'
+      }, { onConflict: 'id' });
+      window.location.href = 'https://app.flowlance.com.br/dashboard';
+      return;
+    }
+
+    window.location.href = links.starter[billingType] + '?prefilled_email=' + encodeURIComponent(session.user.email);
     return;
   }
 
-  const stripe = Stripe('pk_test_51TDn7GGo06O74DQ6VSe8kS2XT8bxY28ENAfcMOhQLSHFlFlRmMBFaICbFwoHLfJJSNkMuWgOnqsOFv2C5cBTiDsI00hjNw4r2Y');
-
-  const priceIds = {
-    pro: 'price_1ThHbHGo06O74DQ61Zk2tWnh',
-    agencia: 'price_1ThHcoGo06O74DQ6PlrI9AWX'
-  };
-
-  const { error } = await stripe.redirectToCheckout({
-    lineItems: [{ price: priceIds[planId], quantity: 1 }],
-    mode: 'subscription',
-    successUrl: 'https://app.flowlance.com.br/dashboard?upgraded=true',
-    cancelUrl: 'https://flowlance.com.br/#planos',
-    customerEmail: session.user.email,
-  });
-
-  if (error) alert('Erro: ' + error.message);
+  window.location.href = links[planId][billingType] + '?prefilled_email=' + encodeURIComponent(session.user.email);
 }
 </script>
 </body>
