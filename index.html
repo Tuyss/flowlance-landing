@@ -1285,7 +1285,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Relatórios avançados</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Templates exclusivos</li>
         </ul>
-        <button class="pc-cta cta-y" onclick="handlePlanClick('agencia')">Assinar agora</button>
+        <button class="pc-cta cta-y" onclick="handlePlanClick('agencia', currentBilling)">Assinar agora</button>
         <p class="pc-note">Assine direto ou converse com o time antes.</p>
       </div>
 
@@ -1975,22 +1975,6 @@ async function handlePlanClick(planId, billing) {
   };
 
   if (planId === 'starter') {
-    const { data: perfil } = await sb.from('usuarios').select('trial_expira_em').eq('id', session.user.id).maybeSingle();
-
-    const jaUsouTrial = perfil?.trial_expira_em !== null && perfil?.trial_expira_em !== undefined;
-
-    if (!jaUsouTrial) {
-      const expiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-      await sb.from('usuarios').upsert({
-        id: session.user.id,
-        plano: 'trial',
-        trial_expira_em: expiry,
-        plano_status: 'ativo'
-      }, { onConflict: 'id' });
-      window.location.href = 'https://app.flowlance.com.br/dashboard';
-      return;
-    }
-
     window.location.href = links.starter[billingType] + '?prefilled_email=' + encodeURIComponent(session.user.email);
     return;
   }
