@@ -1978,6 +1978,22 @@ async function handlePlanClick(planId, billing) {
   };
 
   if (planId === 'starter') {
+    const { data: perfil } = await sb.from('usuarios').select('trial_expira_em, plano').eq('id', session.user.id).maybeSingle();
+
+    const jaUsouTrial = perfil?.trial_expira_em !== null && perfil?.trial_expira_em !== undefined;
+
+    if (!jaUsouTrial) {
+      const expiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      await sb.from('usuarios').upsert({
+        id: session.user.id,
+        plano: 'trial',
+        trial_expira_em: expiry,
+        plano_status: 'ativo'
+      }, { onConflict: 'id' });
+      window.location.href = 'https://app.flowlance.com.br/dashboard';
+      return;
+    }
+
     window.location.href = links.starter[billingType] + '?prefilled_email=' + encodeURIComponent(session.user.email);
     return;
   }
