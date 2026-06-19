@@ -1966,7 +1966,7 @@ async function handlePlanClick(planId) {
       trial_expira_em: expiry,
       plano_status: 'ativo'
     }, { onConflict: 'id' });
-    window.location.href = 'https://app.flowlance.com.br/dashboard';
+    // window.location.href = 'https://app.flowlance.com.br/dashboard';
     return;
   }
 
@@ -1985,7 +1985,7 @@ async function handlePlanClick(planId) {
     })
   });
   const { url } = await res.json();
-  if (url) window.location.href = url;
+  // if (url) window.location.href = url;
 }
 </script>
 </body>
