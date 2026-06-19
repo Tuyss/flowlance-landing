@@ -1325,17 +1325,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(btn.textContent.includes('demonst')) btn.addEventListener('click', openDemo);
   });
 
-  // Pricing plan CTAs still go to app
-  document.querySelectorAll('.pc-cta').forEach(btn=>{
-    const txt = btn.textContent.trim();
-    if(txt.includes('trial') || txt.includes('gratuito')){
-      btn.addEventListener('click', ()=>goTo('/register?plan=starter&trial=true'));
-    } else if(txt.includes('Assinar')){
-      const card = btn.closest('.pc');
-      const planName = card?.querySelector('.pc-plan-name')?.textContent?.trim()?.toLowerCase() || '';
-      btn.addEventListener('click', ()=>goTo(`/register?plan=${planName}`));
-    }
-  });
 });
 
 // Marquee
