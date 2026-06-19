@@ -1948,12 +1948,9 @@ document.querySelectorAll('#mobile-menu button').forEach(btn => {
 });
 
 async function handlePlanClick(planId) {
-  console.log('[handlePlanClick] called with:', planId);
-  const { data: { session }, error: sessionError } = await sb.auth.getSession();
-  console.log('[handlePlanClick] session:', session ? session.user.email : 'null', 'error:', sessionError);
+  const { data: { session } } = await sb.auth.getSession();
 
   if (!session) {
-    console.log('[handlePlanClick] no session, opening signup');
     openAuth('signup');
     return;
   }
@@ -1966,7 +1963,7 @@ async function handlePlanClick(planId) {
       trial_expira_em: expiry,
       plano_status: 'ativo'
     }, { onConflict: 'id' });
-    // window.location.href = 'https://app.flowlance.com.br/dashboard';
+    window.location.href = 'https://app.flowlance.com.br/dashboard';
     return;
   }
 
@@ -1985,7 +1982,7 @@ async function handlePlanClick(planId) {
     })
   });
   const { url } = await res.json();
-  // if (url) window.location.href = url;
+  if (url) window.location.href = url;
 }
 </script>
 </body>
