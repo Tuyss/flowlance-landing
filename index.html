@@ -652,6 +652,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 #trial-banner{display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:#15803D;text-align:center}
 #trial-banner.show{display:block}
 </style>
+<script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
 
@@ -1967,22 +1968,22 @@ async function handlePlanClick(planId) {
     return;
   }
 
+  const stripe = Stripe('pk_test_51TDn7GGo06O74DQ6VSe8kS2XT8bxY28ENAfcMOhQLSHFlFlRmMBFaICbFwoHLfJJSNkMuWgOnqsOFv2C5cBTiDsI00hjNw4r2Y');
+
   const priceIds = {
     pro: 'price_1ThHbHGo06O74DQ61Zk2tWnh',
     agencia: 'price_1ThHcoGo06O74DQ6PlrI9AWX'
   };
 
-  const res = await fetch('https://app.flowlance.com.br/api/stripe/create-checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      priceId: priceIds[planId],
-      userId: session.user.id,
-      userEmail: session.user.email
-    })
+  const { error } = await stripe.redirectToCheckout({
+    lineItems: [{ price: priceIds[planId], quantity: 1 }],
+    mode: 'subscription',
+    successUrl: 'https://app.flowlance.com.br/dashboard?upgraded=true',
+    cancelUrl: 'https://flowlance.com.br/#planos',
+    customerEmail: session.user.email,
   });
-  const { url } = await res.json();
-  if (url) window.location.href = url;
+
+  if (error) alert('Erro: ' + error.message);
 }
 </script>
 </body>
