@@ -1948,9 +1948,12 @@ document.querySelectorAll('#mobile-menu button').forEach(btn => {
 });
 
 async function handlePlanClick(planId) {
-  const { data: { session } } = await sb.auth.getSession();
+  console.log('[handlePlanClick] called with:', planId);
+  const { data: { session }, error: sessionError } = await sb.auth.getSession();
+  console.log('[handlePlanClick] session:', session ? session.user.email : 'null', 'error:', sessionError);
 
   if (!session) {
+    console.log('[handlePlanClick] no session, opening signup');
     openAuth('signup');
     return;
   }
