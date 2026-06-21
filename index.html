@@ -1976,10 +1976,6 @@ async function submitResetPassword() {
   showConfirmPanel({ title: 'Senha alterada! ✓', msgHtml: 'Sua senha foi redefinida com sucesso. Faça login para continuar.' });
 }
 
-console.log('FULL URL:', window.location.href);
-console.log('HASH:', window.location.hash);
-console.log('SEARCH:', window.location.search);
-
 // ── Session check + email confirmation token (on page load) ──
 (async function onPageLoad() {
   const hash = window.location.hash;
