@@ -1651,7 +1651,9 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDemo(); });
 <script>
 const SUPA_URL = 'https://ikdguipxrkhuaojzduzy.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo';
-const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
+  auth: { autoRefreshToken: false, persistSession: false }
+});
 
 // ── Modal open/close (global so onclick attrs work) ───────────
 function openAuth(tab) {
