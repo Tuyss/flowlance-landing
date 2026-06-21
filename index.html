@@ -1568,6 +1568,20 @@ document.querySelectorAll('.faq-q').forEach(q=>{
         <button onclick="closeAuth(); setTimeout(() => openAuth('login'), 50);" class="am-submit" style="width:100%;margin-top:8px">Ir para login</button>
       </div>
     </div>
+
+    <div class="am-panel" id="panel-reset-password">
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:4px 0 8px">
+        <div style="width:56px;height:56px;border-radius:50%;background:#F0FDF4;display:flex;align-items:center;justify-content:center">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <p style="font-size:18px;font-weight:800;color:#0F0F13;margin:0">Redefinir senha</p>
+        <p style="font-size:13px;color:#6B7280;margin:0">Digite e confirme sua nova senha</p>
+      </div>
+      <input type="password" id="reset-password-1" class="am-input" placeholder="Nova senha">
+      <input type="password" id="reset-password-2" class="am-input" placeholder="Confirmar nova senha" style="margin-top:-6px">
+      <p id="reset-err" class="am-err"></p>
+      <button id="reset-password-btn" class="am-submit" onclick="submitResetPassword()">Salvar nova senha</button>
+    </div>
   </div>
 </div>
 
@@ -1659,7 +1673,7 @@ function openTrial() {
   const tabBar = document.querySelector('.am-tabs');
   if (tabBar) tabBar.style.display = 'none';
   ['tab-login','tab-signup'].forEach(id => document.getElementById(id).style.display = 'none');
-  ['panel-login','panel-signup','panel-confirm'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['panel-login','panel-signup','panel-confirm','panel-reset-password'].forEach(id => document.getElementById(id).classList.remove('active'));
   document.getElementById('panel-trial').classList.add('active');
 }
 function showTrialSignup() {
@@ -1675,7 +1689,7 @@ function closeAuth() {
   const tabBar = document.querySelector('.am-tabs');
   if (tabBar) tabBar.style.display = '';
   ['tab-login','tab-signup'].forEach(id => document.getElementById(id).style.display = '');
-  ['panel-confirm','panel-signup','panel-trial'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['panel-confirm','panel-signup','panel-trial','panel-reset-password'].forEach(id => document.getElementById(id).classList.remove('active'));
   document.getElementById('panel-login').classList.add('active');
   document.getElementById('tab-login').classList.add('active');
   document.getElementById('tab-signup').classList.remove('active');
@@ -1699,7 +1713,7 @@ function showErr(id, msg) {
 // ── Tab switching ─────────────────────────────────────────────
 function switchTab(tab) {
   const isLogin = tab === 'login';
-  ['panel-login','panel-signup','panel-confirm','panel-trial'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['panel-login','panel-signup','panel-confirm','panel-trial','panel-reset-password'].forEach(id => document.getElementById(id).classList.remove('active'));
   document.getElementById(isLogin ? 'panel-login' : 'panel-signup').classList.add('active');
   document.getElementById('tab-login').classList.toggle('active', isLogin);
   document.getElementById('tab-signup').classList.toggle('active', !isLogin);
@@ -1764,7 +1778,7 @@ function showConfirmPanel({ title, msgHtml, email } = {}) {
   } else {
     msgEl.innerHTML = 'Enviamos um link de confirmação para <strong style="color:#0F0F13">' + (email || '') + '</strong>. Clique nele para ativar sua conta, depois volte aqui e faça login.';
   }
-  ['panel-login','panel-signup','panel-trial','panel-confirm'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['panel-login','panel-signup','panel-trial','panel-confirm','panel-reset-password'].forEach(id => document.getElementById(id).classList.remove('active'));
   ['tab-login','tab-signup'].forEach(id => {
     const el = document.getElementById(id);
     el.classList.remove('active');
@@ -1943,13 +1957,46 @@ function updateNavForLoggedUser(userEmail) {
   }
 }
 
+async function submitResetPassword() {
+  const p1 = document.getElementById('reset-password-1').value;
+  const p2 = document.getElementById('reset-password-2').value;
+  const errEl = document.getElementById('reset-err');
+  const btn = document.getElementById('reset-password-btn');
+  errEl.textContent = '';
+  errEl.className = 'am-err';
+  if (p1.length < 6) { errEl.textContent = 'Senha muito curta (mínimo 6 caracteres).'; errEl.className = 'am-err show'; return; }
+  if (p1 !== p2) { errEl.textContent = 'As senhas não coincidem.'; errEl.className = 'am-err show'; return; }
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  btn.disabled = false; btn.textContent = 'Salvar nova senha';
+  if (error) { errEl.textContent = error.message; errEl.className = 'am-err show'; return; }
+  await sb.auth.signOut();
+  showConfirmPanel({ title: 'Senha alterada! ✓', msgHtml: 'Sua senha foi redefinida com sucesso. Faça login para continuar.' });
+}
+
 // ── Session check + email confirmation token (on page load) ──
 (async function onPageLoad() {
-  const hasToken = window.location.hash.includes('access_token') || window.location.search.includes('token_hash');
+  const hash = window.location.hash;
+  const search = window.location.search;
+  const isRecovery = hash.includes('type=recovery') || search.includes('type=recovery');
+  const hasToken = hash.includes('access_token') || search.includes('token_hash');
 
   if (hasToken) {
     history.replaceState(null, '', window.location.pathname);
     const { data: { session } } = await sb.auth.getSession();
+
+    if (isRecovery && session) {
+      // Password reset flow — show reset form, keep session active so updateUser works
+      document.getElementById('auth-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      const tabBar = document.querySelector('.am-tabs');
+      if (tabBar) tabBar.style.display = 'none';
+      ['panel-login','panel-signup','panel-trial','panel-confirm'].forEach(id =>
+        document.getElementById(id)?.classList.remove('active'));
+      document.getElementById('panel-reset-password').classList.add('active');
+      return;
+    }
+
     if (session) {
       await sb.auth.signOut();
       document.getElementById('auth-modal').classList.add('open');
