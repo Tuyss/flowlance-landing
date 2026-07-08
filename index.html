@@ -51,13 +51,6 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .rr.visible{opacity:1;transform:translateX(0)}
 .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.4s}
 
-/* URGENCY BANNER */
-.urgency-bar{background:var(--dk);padding:10px 60px;display:flex;align-items:center;justify-content:center;gap:16px;overflow:hidden;position:relative}
-.urgency-bar::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(245,200,66,.03) 40px,rgba(245,200,66,.03) 41px)}
-.ub-badge{background:var(--y);color:var(--dk);font-size:10px;font-weight:800;padding:3px 10px;border-radius:50px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
-.ub-text{font-size:13px;font-weight:500;color:rgba(255,255,255,.75)}
-.ub-text strong{color:#fff;font-weight:700}
-.ub-cta{font-size:12px;font-weight:700;color:var(--y);text-decoration:underline;cursor:pointer;white-space:nowrap}
 
 /* HERO */
 .hero{padding:100px 60px 100px;background:var(--yb);overflow:hidden}
@@ -502,9 +495,6 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   .btn-dark { font-size: 13px; padding: 8px 16px; }
   .nav-logo { font-size: 17px; }
 
-  /* URGENCY BANNER */
-  .urgency-bar { padding: 10px 20px; flex-wrap: wrap; gap: 8px; justify-content: center; text-align: center; }
-  .ub-text { font-size: 12px; }
 
   /* HERO */
   .hero { padding: 110px 20px 64px; }
@@ -657,12 +647,6 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 </head>
 <body>
 
-<!-- URGENCY BANNER -->
-<div class="urgency-bar">
-  <span class="ub-badge">Beta</span>
-  <span class="ub-text">Primeiros 100 clientes ganham <strong>30% de desconto vitalício</strong> — restam poucas vagas</span>
-  <span class="ub-cta">Garantir agora →</span>
-</div>
 
 <nav id="nav">
   <a href="#" class="nav-logo">
@@ -768,7 +752,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
             </div>
             <div class="app-main">
               <div class="am-top">
-                <div><div class="am-title">Boa tarde, Arthur</div><div class="am-date">Segunda-feira, 8 de junho de 2026</div></div>
+                <div><div class="am-title">Boa tarde, Camila</div><div class="am-date" id="mockup-date"></div></div>
                 <div style="display:flex;gap:7px;align-items:center"><div class="am-bell"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="am-bell-dot"></div></div><div class="am-btn">+ Novo</div></div>
               </div>
               <div class="am-cards">
@@ -1020,8 +1004,8 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 <div class="int-wrap">
   <div class="int-inner">
     <p class="sl reveal">Integrações</p>
-    <h2 class="sh2 reveal d1">Conecta com as ferramentas<br>que você já usa.</h2>
-    <p class="sp reveal d2">Não precisa mudar seu fluxo de trabalho. A Flowlance se integra ao que você já conhece.</p>
+    <h2 class="sh2 reveal d1">Comece com WhatsApp — mais<br>integrações a caminho.</h2>
+    <p class="sp reveal d2">WhatsApp disponível agora. Pix, Contratos digitais e NFS-e chegam em breve.</p>
     <div class="int-grid">
       <div class="int-card reveal d1">
         <div class="int-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
@@ -1071,7 +1055,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <div class="phone-notch"></div>
           <div class="phone-screen">
             <div class="ph-head">
-              <div class="ph-greet">Boa tarde, Arthur</div>
+              <div class="ph-greet">Boa tarde, Camila</div>
               <div class="ph-bell"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="ph-bell-dot"></div></div>
             </div>
             <div class="ph-cards">
@@ -1117,7 +1101,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
         <div class="how-step-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
         <div class="how-num">2</div>
         <h3>Escolha seu plano</h3>
-        <p>Selecione o plano ideal para o seu negócio. O Starter tem 7 dias grátis — o cartão só é cobrado no 8º dia.</p>
+        <p>Selecione o plano ideal para o seu negócio. O Starter tem 7 dias grátis, sem necessidade de cartão. Após o período, você escolhe se quer continuar em um plano pago.</p>
       </div>
 
       <div class="how-step reveal d3">
@@ -1161,7 +1145,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
       <div class="faq-item"><div class="faq-q"><span class="faq-q-text">O trial de 7 dias é realmente grátis?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim, completamente grátis. Você não precisa informar cartão de crédito para começar. Após os 7 dias, você escolhe um plano — caso não assine, a conta é bloqueada mas seus dados ficam salvos por 30 dias.</div></div></div>
       <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Como funciona o bloqueio após o trial?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Ao fim dos 7 dias, a conta é bloqueada até que você assine um plano. Você não perde nenhum dado — tudo fica salvo. Assim que assinar, o acesso é liberado imediatamente.</div></div></div>
       <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Posso cancelar quando quiser?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim. Cancele a qualquer momento sem custo. O plano continua ativo até o fim do período pago e não há cobrança extra pelo cancelamento.</div></div></div>
-      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">A NFS-e funciona para qual município?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">A integração com NFS-e suporta a maioria dos municípios brasileiros. Estamos expandindo a cobertura continuamente — consulte o suporte para confirmar o seu município.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">A NFS-e funciona para qual município?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">A integração com NFS-e está em desenvolvimento e vai suportar a maioria dos municípios brasileiros. Quando estiver disponível, avisamos pelo email do seu cadastro.</div></div></div>
       <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Qual a diferença entre Pro e Agência?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">O Pro é ideal para freelancers solo que precisam de todas as funcionalidades. O Agência adiciona multi-usuário para times, relatórios avançados e API de integração — ideal para quem tem equipe ou alto volume de projetos.</div></div></div>
       <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Meus dados e os dos meus clientes estão seguros?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim. A Flowlance usa criptografia em repouso e em trânsito, hospedagem em servidores seguros e autenticação via número de celular. Seus dados e os dos seus clientes estão protegidos conforme a LGPD.</div></div></div>
     </div>
@@ -1208,7 +1192,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Templates básicos</li>
         </ul>
         <button class="pc-cta" onclick="handlePlanClick('starter', currentBilling)">Começar trial gratuito</button>
-        <p class="pc-note">Após 7 dias, cobrança automática. Conta bloqueada se não assinar.</p>
+        <p class="pc-note">Após 7 dias, escolha um plano para continuar. Conta bloqueada se não assinar.</p>
       </div>
 
       <!-- PRO (featured) -->
@@ -1267,7 +1251,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Templates exclusivos</li>
         </ul>
         <button class="pc-cta cta-y" onclick="handlePlanClick('agencia', currentBilling)">Assinar agora</button>
-        <p class="pc-note">Assine direto ou converse com o time antes.</p>
+        <p class="pc-note">Assine direto. Cancele quando quiser.</p>
       </div>
 
     </div>
@@ -1286,13 +1270,22 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 
 <footer>
   <a href="#" class="fl"><svg width="22" height="22" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="36" height="36" rx="9" fill="#F5C842"/><path d="M11 28 L11 15 L18 15 L18 21.5 L25 21.5 L25 28" stroke="#0E0E0E" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 15 L25 8 L32 15" stroke="#0E0E0E" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Flowlance</a>
-  <div class="flinks"><a href="#">Funcionalidades</a><a href="#">Planos</a><a href="#">Termos de uso</a><a href="#">Privacidade</a><a href="#">Contato</a></div>
+  <div class="flinks"><a href="#features">Funcionalidades</a><a href="#planos">Planos</a><a href="/termos">Termos de uso</a><a href="/privacidade">Privacidade</a><a href="/contato">Contato</a></div>
   <div class="fcopy">© 2026 Flowlance. Todos os direitos reservados.</div>
 </footer>
 
 <script>
-// ── CONFIG — troque aqui quando o domínio próprio estiver pronto ──
 const APP_URL = 'https://app.flowlance.com.br';
+
+// Mockup date — keeps the dashboard screenshot looking current
+(function() {
+  const el = document.getElementById('mockup-date');
+  if (!el) return;
+  const now = new Date();
+  const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  el.textContent = `${dias[now.getDay()]}, ${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+})();
 
 function goTo(path){ window.location.href = APP_URL + path; }
 function openDemo(){ document.getElementById('demo-modal').style.display='flex'; document.body.style.overflow='hidden'; }
@@ -1308,7 +1301,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Marquee
-const items=['Propostas Profissionais','Rastreamento em Tempo Real','Cobranças via Pix','NFS-e Automática','Follow-up WhatsApp','Contratos Digitais','Meta Mensal','Clientes Ilimitados','7 Dias Grátis','Beta com Desconto'];
+const items=['Propostas Profissionais','Rastreamento em Tempo Real','Cobranças via Pix','NFS-e Automática','Follow-up WhatsApp','Contratos Digitais','Meta Mensal','Clientes Ilimitados','7 Dias Grátis'];
 document.getElementById('marquee').innerHTML=[...items,...items].map(t=>`<span class="mq-item">${t}</span>`).join('');
 
 // Nav shadow
@@ -1578,7 +1571,7 @@ document.querySelectorAll('.faq-q').forEach(q=>{
     </ul>
     <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;cursor:pointer;font-size:13px;color:#6B7280;line-height:1.5">
       <input type="checkbox" id="terms-check" style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
-      Li e aceito os <a href="#" style="color:#0E0E0E;font-weight:600">Termos de Uso</a> e a <a href="#" style="color:#0E0E0E;font-weight:600">Política de Privacidade</a>
+      Li e aceito os <a href="/termos" target="_blank" style="color:#0E0E0E;font-weight:600">Termos de Uso</a> e a <a href="/privacidade" target="_blank" style="color:#0E0E0E;font-weight:600">Política de Privacidade</a>
     </label>
     <button id="terms-confirm-btn" onclick="confirmTrial()" disabled style="width:100%;padding:14px;border-radius:50px;background:#F5C842;color:#0E0E0E;font-weight:700;font-size:15px;border:none;cursor:not-allowed;opacity:0.5;font-family:Geist,sans-serif">
       Começar 7 dias grátis
@@ -1997,7 +1990,6 @@ document.querySelectorAll('.btn-yellow, .btn-dk-big').forEach(btn => {
   if (btn.textContent.includes('demo') || btn.textContent.includes('demonst')) return;
   btn.addEventListener('click', () => openTrial());
 });
-document.querySelector('.ub-cta')?.addEventListener('click', () => openTrial());
 document.querySelectorAll('#mobile-menu button').forEach(btn => {
   const txt = btn.textContent.trim();
   if (txt.includes('Entrar')) btn.addEventListener('click', () => { toggleMenu(); openAuth('login'); });
