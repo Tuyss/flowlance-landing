@@ -270,6 +270,7 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .int-card:hover::before{transform:scaleX(1)}
 .int-icon{width:44px;height:44px;background:var(--dk);border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
 .int-icon svg{width:20px;height:20px;stroke:#fff;stroke-width:1.8;fill:none}
+.int-icon.brand svg{stroke:none;fill:white;stroke-width:0}
 .int-name{font-size:15px;font-weight:800;color:var(--dk);margin-bottom:6px;letter-spacing:-.3px}
 .int-desc{font-size:13px;color:var(--gr);line-height:1.55;margin-bottom:12px}
 .int-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:50px}
@@ -982,11 +983,11 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
       </div>
 
       <div class="feat-card reveal d3">
-        <div class="feat-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <div class="feat-card-icon" style="background:#E6F9F7;border-color:#A7E8E2">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#32BCAD"><path d="M16.05 8.71l-2.83-2.83a.5.5 0 0 0-.71 0L10.66 7.7 9.24 6.29a.5.5 0 0 0-.71 0L5.7 9.12a.5.5 0 0 0 0 .71l1.41 1.41-1.83 1.83a.5.5 0 0 0 0 .71l2.83 2.83a.5.5 0 0 0 .71 0l1.83-1.83 1.41 1.41a.5.5 0 0 0 .71 0l2.83-2.83a.5.5 0 0 0 0-.71l-1.41-1.41 1.83-1.83a.5.5 0 0 0 0-.71z"/></svg>
         </div>
         <div class="feat-card-title">Cobrança via Pix e cartão (Stripe)</div>
-        <div class="feat-card-desc">Gere cobranças Pix instantâneas ou aceite cartão e boleto automaticamente via Stripe. Quando o cliente paga, você vê a confirmação em tempo real.</div>
+        <div class="feat-card-desc">Gere cobranças Pix com confirmação de comprovante, ou aceite cartão e boleto via Stripe. Quando o pagamento entra, você recebe uma notificação imediata.</div>
       </div>
 
       <div class="feat-card reveal d4">
@@ -1006,8 +1007,8 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
       </div>
 
       <div class="feat-card reveal d2">
-        <div class="feat-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <div class="feat-card-icon" style="background:#E7F9EF;border-color:#A7DFB8">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.967-.273-.099-.473-.149-.673.15-.2.3-.768.965-.94 1.164-.174.199-.347.223-.645.075-.3-.15-1.27-.467-2.42-1.483-.893-.79-1.494-1.767-1.668-2.063-.175-.298-.018-.46.13-.608.135-.135.3-.35.449-.524.15-.173.2-.299.3-.497.1-.2.05-.374-.026-.524-.075-.149-.672-1.62-.922-2.206-.24-.583-.487-.505-.672-.514-.173-.009-.374-.01-.576-.01-.199 0-.523.074-.796.358-.274.285-1.046 1.02-1.046 2.487s1.07 2.882 1.22 3.08c.149.198 2.095 3.2 5.076 4.487.71.305 1.263.488 1.69.625.714.227 1.365.194 1.879.117.574-.085 1.767-.72 2.016-1.413.25-.694.25-1.29.175-1.414-.074-.124-.273-.198-.573-.347zm-5.496 7.614h-.003A9.96 9.96 0 0 1 6.628 20.2l-.353-.21-3.657.96.975-3.562-.23-.366A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12.002 2 14.67 2 17.18 3.04 19.07 4.93A9.93 9.93 0 0 1 22 12.003C22 17.528 17.527 22 12.002 21.996z"/></svg>
         </div>
         <div class="feat-card-title">Follow-up automático pelo WhatsApp</div>
         <div class="feat-card-desc">Configure os dias sem resposta e a mensagem. A Flowlance avisa você — ou dispara direto para o cliente pelo WhatsApp, sem constrangimento e sem esquecimento.</div>
@@ -1100,20 +1101,20 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 <div class="int-wrap">
   <div class="int-inner">
     <p class="sl reveal">Integrações</p>
-    <h2 class="sh2 reveal d1">Comece com WhatsApp — mais<br>integrações a caminho.</h2>
-    <p class="sp reveal d2">WhatsApp disponível agora. Pix, Contratos digitais e NFS-e chegam em breve.</p>
+    <h2 class="sh2 reveal d1">WhatsApp e Pix disponíveis agora.<br>Mais integrações a caminho.</h2>
+    <p class="sp reveal d2">Envie pelo WhatsApp e receba via Pix hoje mesmo. Contratos digitais e NFS-e chegam em breve.</p>
     <div class="int-grid">
       <div class="int-card reveal d1">
-        <div class="int-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="int-icon brand" style="background:#25D366"><svg viewBox="0 0 24 24"><path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.967-.273-.099-.473-.149-.673.15-.2.3-.768.965-.94 1.164-.174.199-.347.223-.645.075-.3-.15-1.27-.467-2.42-1.483-.893-.79-1.494-1.767-1.668-2.063-.175-.298-.018-.46.13-.608.135-.135.3-.35.449-.524.15-.173.2-.299.3-.497.1-.2.05-.374-.026-.524-.075-.149-.672-1.62-.922-2.206-.24-.583-.487-.505-.672-.514-.173-.009-.374-.01-.576-.01-.199 0-.523.074-.796.358-.274.285-1.046 1.02-1.046 2.487s1.07 2.882 1.22 3.08c.149.198 2.095 3.2 5.076 4.487.71.305 1.263.488 1.69.625.714.227 1.365.194 1.879.117.574-.085 1.767-.72 2.016-1.413.25-.694.25-1.29.175-1.414-.074-.124-.273-.198-.573-.347zm-5.496 7.614h-.003A9.96 9.96 0 0 1 6.628 20.2l-.353-.21-3.657.96.975-3.562-.23-.366A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12.002 2 14.67 2 17.18 3.04 19.07 4.93A9.93 9.93 0 0 1 22 12.003C22 17.528 17.527 22 12.002 21.996z"/></svg></div>
         <div class="int-name">WhatsApp</div>
-        <div class="int-desc">Envie propostas e cobranças diretamente pelo WhatsApp com mensagem personalizada para cada cliente.</div>
+        <div class="int-desc">Envie propostas e follow-ups de cobrança diretamente pelo WhatsApp com mensagem personalizada para cada cliente.</div>
         <div class="int-status int-live"><span class="int-dot"></span>Disponível</div>
       </div>
       <div class="int-card reveal d2">
-        <div class="int-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <div class="int-icon brand" style="background:#32BCAD"><svg viewBox="0 0 24 24"><path d="M16.05 8.71l-2.83-2.83a.5.5 0 0 0-.71 0L10.66 7.7 9.24 6.29a.5.5 0 0 0-.71 0L5.7 9.12a.5.5 0 0 0 0 .71l1.41 1.41-1.83 1.83a.5.5 0 0 0 0 .71l2.83 2.83a.5.5 0 0 0 .71 0l1.83-1.83 1.41 1.41a.5.5 0 0 0 .71 0l2.83-2.83a.5.5 0 0 0 0-.71l-1.41-1.41 1.83-1.83a.5.5 0 0 0 0-.71z"/></svg></div>
         <div class="int-name">Pix</div>
-        <div class="int-desc">Cobranças via Pix instantâneo integradas ao fluxo da proposta. O cliente paga em segundos, você recebe na hora.</div>
-        <div class="int-status int-soon"><span class="int-dot"></span>Em breve</div>
+        <div class="int-desc">Cobranças via Pix instantâneo com confirmação de comprovante. O cliente paga em segundos, você confirma na hora.</div>
+        <div class="int-status int-live"><span class="int-dot"></span>Disponível</div>
       </div>
       <div class="int-card reveal d3">
         <div class="int-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
