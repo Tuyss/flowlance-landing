@@ -84,10 +84,10 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .sp-text{font-size:14px;font-weight:500;color:var(--t2)}
 
 /* MARQUEE */
-.mq-wrap{background:var(--dk);overflow:hidden;padding:15px 0}
-.mq-track{display:flex;gap:48px;animation:slide 22s linear infinite;width:max-content}
-.mq-item{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35);white-space:nowrap}
-.mq-item::after{content:'·';color:var(--y);margin-left:48px}
+.mq-wrap{background:var(--dk);overflow:hidden;padding:22px 0;-webkit-mask-image:linear-gradient(to right,transparent 0%,black 7%,black 93%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,black 7%,black 93%,transparent 100%)}
+.mq-track{display:flex;gap:48px;animation:slide 36s linear infinite;width:max-content}
+.mq-item{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.68);white-space:nowrap;display:inline-flex;align-items:center;gap:48px}
+.mq-item::after{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--y);vertical-align:middle;flex-shrink:0;opacity:.9}
 @keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* STATS */
@@ -101,6 +101,9 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .sticky-outer{display:flex;background:#fff}
 .sticky-left{flex:0 0 44%;padding:0 0 0 60px}
 .sticky-right{flex:0 0 56%;position:sticky;top:64px;height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;overflow:hidden;background:#F2F2F0}
+.sticky-intro{padding:80px 56px 56px 0;border-bottom:1px solid var(--br)}
+.sticky-intro .sl{color:var(--gr);margin-bottom:12px}
+.sticky-intro-h{font-size:clamp(26px,2.4vw,36px);font-weight:800;letter-spacing:-1.2px;line-height:1.15;color:var(--dk);max-width:360px}
 .sticky-block{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 56px 80px 0;border-bottom:1px solid var(--br)}
 .sticky-block:last-child{border-bottom:none}
 .feat-eye{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gr);margin-bottom:18px;display:flex;align-items:center;gap:8px}
@@ -108,10 +111,11 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .sticky-block h2{font-size:clamp(28px,2.8vw,42px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;color:var(--dk);margin-bottom:16px}
 .sticky-block p{font-size:16px;color:var(--gr);line-height:1.72;margin-bottom:28px;max-width:400px}
 .feat-tabs{display:flex;flex-direction:column;gap:3px}
-.ftab{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;border:none;background:none;font-family:'Geist',sans-serif;text-align:left;transition:background .15s;font-size:14px;font-weight:600;color:var(--gr);width:100%}
+.ftab{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;border:none;background:none;font-family:'Geist',sans-serif;text-align:left;transition:background .15s,color .15s;font-size:14px;font-weight:600;color:var(--t2);width:100%}
 .ftab:hover{background:var(--gl);color:var(--dk)}
 .ftab.active{background:var(--dk);color:#fff}
-.ftab-dot{width:6px;height:6px;border-radius:50%;background:var(--y);flex-shrink:0}
+.ftab-dot{width:6px;height:6px;border-radius:50%;background:var(--y);flex-shrink:0;transition:transform .2s}
+.ftab.active .ftab-dot{transform:scale(1.3)}
 .screen-cards{position:relative;width:100%;height:100%}
 .sc{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:32px;opacity:0;transform:translateY(14px);transition:opacity .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1);pointer-events:none}
 .sc.active{opacity:1;transform:translateY(0);pointer-events:auto}
@@ -125,7 +129,7 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .burl{flex:1;background:#fff;border-radius:7px;padding:5px 12px;font-size:11px;font-family:'Geist Mono',monospace;color:#888;text-align:center;border:1px solid rgba(0,0,0,.08)}
 
 /* App layout */
-.app-layout{display:flex;height:360px;overflow:hidden}
+.app-layout{display:flex;height:400px;overflow:hidden}
 .app-sidebar{width:52px;background:var(--dk2);display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:14px;flex-shrink:0}
 .as-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
 .as-icon.on{background:var(--y)}
@@ -295,9 +299,16 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .mf-d{font-size:13px;color:rgba(255,255,255,.4);line-height:1.5}
 
 /* Phone mockup */
-.phone-wrap{display:flex;justify-content:center;align-items:center;position:relative}
-.phone-glow{position:absolute;width:280px;height:280px;background:var(--y);opacity:.07;border-radius:50%;filter:blur(60px);pointer-events:none}
-.phone{width:220px;background:#1C1C1E;border-radius:36px;padding:10px;box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);position:relative;z-index:1}
+.phone-wrap{display:flex;justify-content:center;align-items:center;position:relative;padding:40px 48px}
+.phone-glow{position:absolute;width:320px;height:320px;background:var(--y);opacity:.09;border-radius:50%;filter:blur(80px);pointer-events:none}
+.phone{width:230px;background:#1C1C1E;border-radius:36px;padding:10px;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1),inset 0 0 0 1px rgba(255,255,255,.04);position:relative;z-index:1}
+/* Floating notification pills */
+.ph-pill{position:absolute;background:#fff;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 28px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.05);z-index:10;white-space:nowrap}
+.ph-pill-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ph-pill-title{font-size:12px;font-weight:700;color:#0E0E0E;line-height:1.2}
+.ph-pill-sub{font-size:11px;color:#6B7280;margin-top:1px}
+.ph-pill-accept{top:20px;right:-20px}
+.ph-pill-view{bottom:60px;left:-16px}
 .phone-inner{background:#F5F5F7;border-radius:28px;overflow:hidden;height:440px;position:relative;display:flex;flex-direction:column}
 .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:80px;height:24px;background:#1C1C1E;border-radius:0 0 14px 14px;z-index:10}
 .phone-screen{padding:36px 12px 0;flex:1;overflow:hidden}
@@ -552,9 +563,10 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   /* MOBILE SECTION */
   .mobile-section { padding: 64px 20px; }
   .mobile-inner { grid-template-columns: 1fr; gap: 48px; }
-  .phone-wrap { order: -1; }
-  .phone { width: 180px; }
-  .phone-inner { height: 360px; }
+  .phone-wrap { order: -1; padding: 32px 48px; }
+  .phone { width: 190px; }
+  .phone-inner { height: 380px; }
+  .ph-pill { display: none; }
 
   /* HOW IT WORKS */
   .how-wrap { padding: 64px 20px; }
@@ -724,6 +736,10 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 <!-- STICKY SCROLL -->
 <div id="features" class="sticky-outer">
   <div class="sticky-left">
+    <div class="sticky-intro">
+      <p class="sl">Funcionalidades</p>
+      <p class="sticky-intro-h">Da proposta ao pagamento, tudo centralizado.</p>
+    </div>
     <div class="sticky-block" data-section="0">
       <p class="feat-eye">Dashboard</p>
       <h2>Tudo que importa, visível de uma vez.</h2>
@@ -1147,6 +1163,16 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     </div>
     <div class="phone-wrap rr">
       <div class="phone-glow"></div>
+      <!-- Floating notification: proposta aceita -->
+      <div class="ph-pill ph-pill-accept">
+        <div class="ph-pill-icon" style="background:#D1FAE5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div><div class="ph-pill-title">Proposta aceita!</div><div class="ph-pill-sub">Fernando N. · R$2.700</div></div>
+      </div>
+      <!-- Floating notification: proposta visualizada -->
+      <div class="ph-pill ph-pill-view">
+        <div class="ph-pill-icon" style="background:#EEF2FF"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div><div class="ph-pill-title">Proposta visualizada</div><div class="ph-pill-sub">agora mesmo</div></div>
+      </div>
       <div class="phone">
         <div class="phone-inner">
           <div class="phone-notch"></div>
