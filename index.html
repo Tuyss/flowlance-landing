@@ -505,6 +505,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   .hero { padding: 140px 32px 80px; }
   .hero-inner { max-width: 100%; grid-template-columns: 1fr; gap: 0; }
   .hero-visual { display: none; }
+  .hero-visual-img { display: none; }
   .stats { padding: 48px 32px; }
   .sticky-outer { flex-direction: column; }
   .sticky-left { flex: none; width: 100%; padding: 0 32px; }
@@ -682,7 +683,9 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 @keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes fadeOut{from{opacity:1}to{opacity:0}}
 /* ── Features grid ────────────────────────────── */
-.feats-wrap{padding:80px 24px;background:var(--gl)}
+.feats-wrap{padding:80px 24px;background:var(--gl);position:relative;overflow:hidden}
+.feats-wrap::before{content:'';position:absolute;inset:0;background-image:url('/public/features-bg.png');background-size:cover;background-position:center;opacity:.055;pointer-events:none;z-index:0}
+.feats-inner{position:relative;z-index:1}
 .feats-inner{max-width:1120px;margin:0 auto}
 .feats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
 .feat-card{background:#fff;border-radius:14px;padding:24px 22px;border:1px solid rgba(0,0,0,.07);transition:box-shadow .2s,border-color .2s}
@@ -692,6 +695,26 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 .feat-card-desc{font-size:13px;color:var(--gr);line-height:1.65}
 @media(max-width:1024px){.feats-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.feats-grid{grid-template-columns:1fr;gap:14px}.feats-wrap{padding:56px 20px}}
+
+/* ── HERO MOCKUP IMAGE ── */
+.hero-mockup-img{width:100%;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.2),0 0 0 1px rgba(0,0,0,.06);display:block;object-fit:cover}
+.hero-visual-img{display:flex;align-items:center;justify-content:center;animation:hv-parent .65s cubic-bezier(.22,1,.36,1) .05s both}
+
+/* ── PAIN SECTION ── */
+.pain-wrap{background:#fff;padding:100px 60px;overflow:hidden;border-top:1px solid var(--br)}
+.pain-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.pain-img{width:100%;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.14);display:block;object-fit:cover;aspect-ratio:4/3}
+.pain-headline{font-size:clamp(28px,3vw,44px);font-weight:800;letter-spacing:-1.8px;line-height:1.1;color:var(--dk);margin-bottom:18px}
+.pain-sub{font-size:17px;color:var(--gr);line-height:1.7;margin-bottom:32px}
+@media(max-width:1024px){.pain-inner{gap:48px}}
+@media(max-width:768px){.pain-wrap{padding:64px 20px}.pain-inner{grid-template-columns:1fr;gap:36px}.pain-img-order{order:-1}}
+
+/* ── PEOPLE TRUST SECTION ── */
+.people-wrap{background:var(--yb);padding:100px 60px;overflow:hidden}
+.people-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.people-img{width:100%;border-radius:20px;box-shadow:0 20px 56px rgba(0,0,0,.1);display:block;object-fit:cover;aspect-ratio:1/1}
+@media(max-width:1024px){.people-inner{gap:48px}}
+@media(max-width:768px){.people-wrap{padding:64px 20px}.people-inner{grid-template-columns:1fr;gap:36px}}
 </style>
 </head>
 <body>
@@ -744,29 +767,26 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
       </div>
       <p class="hero-note reveal d4">Sem cartão de crédito no trial. Cancele quando quiser.</p>
     </div>
-    <div class="hero-visual">
-      <div class="hv-card">
-        <div class="hv-icon" style="background:#FFFBEA"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="9,15 12,18 15,15"/></svg></div>
-        <div style="flex:1"><div class="hv-t">Proposta enviada</div><div class="hv-s">Site institucional · R$3.200</div></div>
-        <div class="hv-time">agora</div>
-      </div>
-      <div class="hv-card">
-        <div class="hv-icon" style="background:#D1FAE5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div style="flex:1"><div class="hv-t">Proposta aceita</div><div class="hv-s">Cobrança Pix gerada automaticamente</div></div>
-        <div class="hv-time">38min</div>
-      </div>
-      <div class="hv-card">
-        <div class="hv-icon" style="background:#EEF2FF"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-        <div style="flex:1"><div class="hv-t">R$3.200,00 recebido</div><div class="hv-s">Pix confirmado</div></div>
-        <div class="hv-time">41min</div>
-      </div>
-      <div class="hv-stat">
-        <span class="hv-num">2 min</span>
-        <span class="hv-label">da proposta ao link pronto para aceitar</span>
-      </div>
+    <div class="hero-visual-img">
+      <img src="/public/hero-mockup.png" alt="Dashboard Flowlance — propostas, cobranças e rastreamento" class="hero-mockup-img">
     </div>
   </div>
 </section>
+
+<!-- PAIN SECTION -->
+<div class="pain-wrap">
+  <div class="pain-inner">
+    <div class="rl">
+      <p class="sl">O problema</p>
+      <h2 class="pain-headline">Você entrega projetos incríveis. E depois passa 3 horas tentando cobrar.</h2>
+      <p class="pain-sub">Proposta no Word, email que some na caixa de entrada, chave Pix mandada no WhatsApp, portal da nota fiscal com 12 campos... Todo mês os mesmos processos que não geram receita — só consomem tempo. Você não precisa de mais uma planilha. Precisa de um sistema que faz isso por você.</p>
+      <button class="btn-yellow" onclick="openTrial()" style="font-size:15px;font-weight:700;padding:14px 32px;border-radius:50px;border:none;cursor:pointer;background:var(--y);color:var(--dk);font-family:'Geist',sans-serif">Resolver isso agora →</button>
+    </div>
+    <div class="rr pain-img-order">
+      <img src="/public/pain-point.png" alt="Freelancer sobrecarregado com burocracia" class="pain-img">
+    </div>
+  </div>
+</div>
 
 <div class="mq-wrap"><div class="mq-track" id="marquee"></div></div>
 
@@ -945,43 +965,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 
       <!-- TRACK STATS -->
       <div class="sc bg-bl" id="sc-track-stats">
-        <div class="app-shell" style="max-width:400px">
-          <div class="app-top"><div class="safari-actions" style="display:flex;gap:5px"><div class="adot adr"></div><div class="adot ady"></div><div class="adot adg"></div></div><div class="aurl" style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:7px">app.flowlance.com.br/propostas</div></div>
-          <div class="app-body" style="padding:16px">
-            <!-- Badge aceita no topo direito -->
-            <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-              <span style="background:#D1FAE5;color:#059669;font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px">Aceita</span>
-            </div>
-            <!-- Card rastreamento -->
-            <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid var(--br);margin-bottom:10px">
-              <div style="font-size:14px;font-weight:800;color:var(--dk);margin-bottom:14px;letter-spacing:-.3px">Rastreamento</div>
-              <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F3F4F6">
-                <div style="width:30px;height:30px;background:#EEF2FF;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-                <div style="flex:1"><div style="font-size:11px;color:var(--gr)">Visualizações</div><div style="font-size:14px;font-weight:800;color:var(--dk)">1</div></div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F3F4F6">
-                <div style="width:30px;height:30px;background:#F3F4FF;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                <div style="flex:1"><div style="font-size:11px;color:var(--gr)">Tempo médio</div><div style="font-size:14px;font-weight:800;color:var(--dk)">—</div></div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;padding:9px 0">
-                <div style="width:30px;height:30px;background:#D1FAE5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-                <div style="flex:1"><div style="font-size:11px;color:var(--gr)">Último acesso</div><div style="font-size:14px;font-weight:800;color:var(--dk)">agora</div></div>
-              </div>
-              <div style="display:flex;gap:16px;padding-top:10px;border-top:1px solid #F3F4F6;margin-top:2px">
-                <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gr)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>0 mobile</div>
-                <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gr)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>1 desktop</div>
-              </div>
-            </div>
-            <!-- Card histórico -->
-            <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid var(--br)">
-              <div style="font-size:14px;font-weight:800;color:var(--dk);margin-bottom:12px;letter-spacing:-.3px">Histórico</div>
-              <div style="display:flex;align-items:flex-start;gap:8px">
-                <div style="width:8px;height:8px;background:var(--y);border-radius:50%;margin-top:4px;flex-shrink:0"></div>
-                <div><div style="font-size:12px;font-weight:700;color:var(--dk)">Visto via desktop</div><div style="font-size:11px;color:var(--gr);margin-top:1px">agora</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <img src="/public/floating-card.png" alt="Proposta com rastreamento de visualizações" style="width:100%;max-width:400px;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.13),0 0 0 1px rgba(0,0,0,.05);display:block">
       </div>
 
       <!-- TRACK HIST -->
@@ -1268,6 +1252,34 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   </div>
 </div>
 
+
+<!-- PEOPLE TRUST SECTION -->
+<div class="people-wrap">
+  <div class="people-inner">
+    <div class="rl">
+      <img src="/public/people-talking.png" alt="Freelancer apresentando proposta para cliente" class="people-img">
+    </div>
+    <div class="rr">
+      <p class="sl">Para quem trabalha com pessoas</p>
+      <h2 class="sh2" style="margin-bottom:16px">A reunião foi boa. A proposta saiu em 2 minutos. O dinheiro entrou.</h2>
+      <p style="font-size:17px;color:var(--gr);line-height:1.7;margin-bottom:32px">Com a Flowlance, você fecha projetos com confiança — sabendo exatamente quando o cliente abriu, quando aceitou e quando pagou. Sem ficar perguntando se ele recebeu o email.</p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:24px;height:24px;background:var(--y);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span style="font-size:15px;font-weight:600;color:var(--dk)">Proposta enviada pelo WhatsApp, aceita em 1 clique</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:24px;height:24px;background:var(--y);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span style="font-size:15px;font-weight:600;color:var(--dk)">Notificação no segundo em que o cliente abrir</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:24px;height:24px;background:var(--y);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span style="font-size:15px;font-weight:600;color:var(--dk)">Cobrança Pix automática — sem cobrar no WhatsApp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- TESTIMONIALS -->
 <div class="testi-wrap">
