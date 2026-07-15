@@ -66,15 +66,21 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .hero{padding:100px 60px 100px;background:var(--yb);overflow:hidden}
 .hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 340px;gap:56px;align-items:center}
 /* Hero visual — activity feed cards */
-.hero-visual{display:flex;flex-direction:column;gap:10px}
-.hv-card{background:#fff;border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 16px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.05)}
+@keyframes hv-parent{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
+@keyframes hv-item{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero-visual{display:flex;flex-direction:column;gap:10px;animation:hv-parent .65s cubic-bezier(.22,1,.36,1) .05s both}
+.hv-card{background:#fff;border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 2px rgba(0,0,0,.05),0 4px 12px rgba(0,0,0,.07),0 16px 32px rgba(0,0,0,.05),0 0 0 1px rgba(0,0,0,.04)}
+.hv-card:nth-child(1){animation:hv-item .45s cubic-bezier(.22,1,.36,1) .28s both}
+.hv-card:nth-child(2){animation:hv-item .45s cubic-bezier(.22,1,.36,1) .43s both}
+.hv-card:nth-child(3){animation:hv-item .45s cubic-bezier(.22,1,.36,1) .58s both}
+.hv-stat{animation:hv-item .45s cubic-bezier(.22,1,.36,1) .72s both}
 .hv-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hv-t{font-size:13px;font-weight:700;color:var(--dk);line-height:1.2}
 .hv-s{font-size:11px;color:var(--gr);margin-top:2px}
-.hv-time{font-size:10px;color:var(--gr);margin-left:auto;white-space:nowrap;align-self:flex-start;padding-top:2px;flex-shrink:0}
+.hv-time{font-size:10px;color:rgba(107,114,128,.55);margin-left:auto;white-space:nowrap;align-self:flex-start;padding-top:1px;flex-shrink:0;font-variant-numeric:tabular-nums}
 .hv-stat{background:var(--dk);border-radius:14px;padding:16px 18px;display:flex;align-items:baseline;gap:8px}
 .hv-num{font-size:26px;font-weight:900;color:var(--y);letter-spacing:-1px;line-height:1}
-.hv-label{font-size:12px;color:rgba(255,255,255,.45);font-weight:500;line-height:1.4}
+.hv-label{font-size:12px;color:rgba(255,255,255,.4);font-weight:500;line-height:1.4}
 .eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yd);margin-bottom:24px;display:flex;align-items:center;gap:8px}
 .eyebrow::before{content:'';width:20px;height:2px;background:var(--yd)}
 .hero h1{font-size:clamp(52px,7vw,88px);font-weight:800;letter-spacing:-3px;line-height:1;color:var(--dk);max-width:760px;margin-bottom:24px}
@@ -731,27 +737,27 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <div>
       <p class="eyebrow reveal">A plataforma para freelancers brasileiros</p>
       <h1 class="reveal d1">Você faz o projeto. A Flowlance faz o resto.</h1>
-      <p class="hero-sub reveal d2">Proposta em 2 minutos, cobrança automática no Pix e NFS-e sem abrir portal de prefeitura. Feito para quem trabalha solo.</p>
+      <p class="hero-sub reveal d2">Proposta em 2 minutos e cobrança automática via Pix. Feito para quem trabalha solo.</p>
       <div class="hero-cta reveal d3">
         <button class="btn-yellow" onclick="openTrial()">Começar grátis por 7 dias</button>
         <button class="btn-outline">Ver demonstração</button>
       </div>
       <p class="hero-note reveal d4">Sem cartão de crédito no trial. Cancele quando quiser.</p>
     </div>
-    <div class="hero-visual rr">
+    <div class="hero-visual">
       <div class="hv-card">
         <div class="hv-icon" style="background:#FFFBEA"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="9,15 12,18 15,15"/></svg></div>
         <div style="flex:1"><div class="hv-t">Proposta enviada</div><div class="hv-s">Site institucional · R$3.200</div></div>
         <div class="hv-time">agora</div>
       </div>
       <div class="hv-card">
-        <div class="hv-icon" style="background:#D1FAE5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hv-icon" style="background:#D1FAE5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
         <div style="flex:1"><div class="hv-t">Proposta aceita</div><div class="hv-s">Cobrança Pix gerada automaticamente</div></div>
         <div class="hv-time">38min</div>
       </div>
       <div class="hv-card">
         <div class="hv-icon" style="background:#EEF2FF"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-        <div style="flex:1"><div class="hv-t">R$3.200,00 recebido</div><div class="hv-s">NF-S-e emitida automaticamente</div></div>
+        <div style="flex:1"><div class="hv-t">R$3.200,00 recebido</div><div class="hv-s">Pix confirmado</div></div>
         <div class="hv-time">41min</div>
       </div>
       <div class="hv-stat">
