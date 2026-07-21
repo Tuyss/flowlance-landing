@@ -243,8 +243,8 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .comp-wrap .sp{color:rgba(255,255,255,.45)}
 .comp-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:56px}
 .comp-col{border-radius:20px;padding:36px;border:1px solid rgba(255,255,255,.08)}
-.comp-col.old{background:rgba(255,255,255,.04)}
-.comp-col.new{background:rgba(245,200,66,.06);border-color:rgba(245,200,66,.2)}
+.comp-col.old{background:rgba(255,255,255,.035);border-top:3px solid rgba(239,68,68,.28)}
+.comp-col.new{background:rgba(245,200,66,.07);border-color:rgba(245,200,66,.22);border-top:3px solid rgba(245,200,66,.6)}
 .comp-col-header{display:flex;align-items:center;gap:12px;margin-bottom:28px}
 .comp-col-tag{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:50px}
 .comp-col.old .comp-col-tag{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
@@ -260,17 +260,22 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .comp-col.old .comp-icon svg{stroke:rgba(255,255,255,.3)}
 .comp-col.new .comp-icon svg{stroke:var(--y)}
 .comp-feat-title{font-size:14px;font-weight:700;margin-bottom:3px}
-.comp-col.old .comp-feat-title{color:rgba(255,255,255,.45)}
-.comp-col.new .comp-feat-title{color:#fff}
+.comp-col.old .comp-feat-title{color:rgba(255,255,255,.42)}
+.comp-col.new .comp-feat-title{color:#fff;font-size:15px}
 .comp-feat-desc{font-size:13px;color:rgba(255,255,255,.3);line-height:1.5}
-.comp-col.new .comp-feat-desc{color:rgba(255,255,255,.5)}
+.comp-col.old .comp-feat-desc{color:rgba(255,255,255,.28)}
+.comp-col.new .comp-feat-desc{color:rgba(255,255,255,.52)}
+.comp-marker{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:10px;font-weight:800}
+.comp-marker.x{background:rgba(239,68,68,.14);color:rgba(239,68,68,.6)}
+.comp-marker.ok{background:rgba(245,200,66,.15);color:var(--y)}
+.comp-row-inner{display:flex;flex-direction:column;flex:1}
 .comp-x{color:rgba(255,255,255,.2);font-size:12px;font-weight:700;letter-spacing:.5px}
 .comp-check{color:var(--y);font-size:12px;font-weight:700}
 
 /* ── INTEGRATIONS — clean grid, no emojis ── */
 .int-wrap{background:#fff;padding:100px 60px;overflow:hidden}
 .int-inner{max-width:1100px;margin:0 auto}
-.int-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:52px}
+.int-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px}
 .int-card{background:var(--gl);border-radius:16px;padding:28px 24px;border:1px solid var(--br);transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s,background .2s;position:relative;overflow:hidden}
 .int-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.08);background:#fff}
 .int-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--y);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.22,1,.36,1)}
@@ -278,6 +283,9 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .int-icon{width:44px;height:44px;background:var(--dk);border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
 .int-icon svg{width:20px;height:20px;stroke:#fff;stroke-width:1.8;fill:none}
 .int-icon.brand svg{stroke:none;fill:white;stroke-width:0}
+/* Logo icons — no background box, just the brand SVG in brand color */
+.int-icon.logo{background:transparent;border-radius:0;width:36px;height:36px}
+.int-icon.logo svg{width:36px;height:36px;stroke:none;fill:currentColor;stroke-width:0}
 .int-name{font-size:15px;font-weight:800;color:var(--dk);margin-bottom:6px;letter-spacing:-.3px}
 .int-desc{font-size:13px;color:var(--gr);line-height:1.55;margin-bottom:12px}
 .int-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:50px}
@@ -393,8 +401,8 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 
 /* Toggle */
 .billing-toggle{display:flex;align-items:center;background:#E8E8E5;border-radius:50px;padding:4px;width:fit-content;margin:0 auto 56px;gap:2px}
-.bt-opt{font-family:'Geist',sans-serif;font-size:14px;font-weight:600;padding:9px 22px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,color .2s;color:var(--gr);background:none}
-.bt-opt.active{background:var(--dk);color:#fff}
+.bt-opt{font-family:'Geist',sans-serif;font-size:14px;font-weight:600;padding:9px 22px;border-radius:50px;border:none;cursor:pointer;transition:background .2s,color .2s;color:var(--gr);background:none}
+.bt-opt.active{background:var(--dk);color:#fff;border-radius:50px}
 .bt-save{background:var(--y);color:var(--dk);font-size:11px;font-weight:800;padding:3px 9px;border-radius:50px;margin-left:4px;white-space:nowrap}
 
 /* Grid */
@@ -554,7 +562,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 
   /* INTEGRATIONS */
   .int-wrap { padding: 64px 20px; }
-  .int-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .int-grid { grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
   .int-card { padding: 22px 18px; }
   .int-name { font-size: 14px; }
   .int-desc { font-size: 12px; }
@@ -778,7 +786,6 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <span class="mq-pill">Cobranças via Pix</span>
     <span class="mq-pill">NFS-e automática</span>
     <span class="mq-pill">Follow-up WhatsApp</span>
-    <span class="mq-pill">Contratos digitais</span>
     <span class="mq-pill">Meta mensal</span>
     <span class="mq-pill">Clientes ilimitados</span>
     <span class="mq-pill">7 dias grátis</span>
@@ -1080,24 +1087,24 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <span class="comp-col-title">Planilha + Email + WhatsApp</span>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-          <div><div class="comp-feat-title">Proposta no Word/PDF</div><div class="comp-feat-desc">Editar, salvar, exportar, renomear, enviar por email. 20 minutos por proposta.</div></div>
+          <div class="comp-marker x">✕</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">Proposta no Word/PDF</div><div class="comp-feat-desc">Editar, salvar, exportar, renomear, enviar por email. 20 minutos por proposta.</div></div>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
-          <div><div class="comp-feat-title">Sem rastreamento</div><div class="comp-feat-desc">Você envia e não sabe se o cliente viu. Fica aguardando resposta sem contexto.</div></div>
+          <div class="comp-marker x">✕</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">Sem rastreamento</div><div class="comp-feat-desc">Você envia e não sabe se o cliente viu. Fica aguardando resposta sem contexto.</div></div>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-          <div><div class="comp-feat-title">Cobrança manual</div><div class="comp-feat-desc">Você manda o Pix na mão, esquece de cobrar, ou cobra com constrangimento.</div></div>
+          <div class="comp-marker x">✕</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">Cobrança manual</div><div class="comp-feat-desc">Você manda o Pix na mão, esquece de cobrar, ou cobra com constrangimento.</div></div>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
-          <div><div class="comp-feat-title">NFS-e manual</div><div class="comp-feat-desc">Você acessa o portal da prefeitura, preenche tudo na mão, torce pra não errar.</div></div>
+          <div class="comp-marker x">✕</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">NFS-e manual</div><div class="comp-feat-desc">Você acessa o portal da prefeitura, preenche tudo na mão, torce pra não errar.</div></div>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-          <div><div class="comp-feat-title">Planilha de controle</div><div class="comp-feat-desc">Desatualizada, perdida, sem visibilidade real do que você está ganhando.</div></div>
+          <div class="comp-marker x">✕</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">Planilha de controle</div><div class="comp-feat-desc">Desatualizada, perdida, sem visibilidade real do que você está ganhando.</div></div>
         </div>
       </div>
       <div class="comp-col new">
@@ -1106,24 +1113,24 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <span class="comp-col-title">Tudo automatizado</span>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="9,15 12,18 15,15"/></svg></div>
-          <div><div class="comp-feat-title">Proposta em 2 minutos</div><div class="comp-feat-desc">Template pronto, preenche os valores, link gerado na hora. Envia pelo WhatsApp em segundos.</div></div>
+          <div class="comp-marker ok">✓</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">Proposta em 2 minutos</div><div class="comp-feat-desc">Template pronto, preenche os valores, link gerado na hora. Envia pelo WhatsApp em segundos.</div></div>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-          <div><div class="comp-feat-title">Rastreamento em tempo real</div><div class="comp-feat-desc">Notificação imediata quando o cliente abre. Sabe quando ligar para fechar.</div></div>
+          <div class="comp-marker ok">✓</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">Rastreamento em tempo real</div><div class="comp-feat-desc">Notificação imediata quando o cliente abre. Sabe quando ligar para fechar.</div></div>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-          <div><div class="comp-feat-title">Cobrança gerada ao aceitar</div><div class="comp-feat-desc">Proposta aceita, cobrança Pix gerada automaticamente. Zero esforço.</div></div>
+          <div class="comp-marker ok">✓</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">Cobrança gerada ao aceitar</div><div class="comp-feat-desc">Proposta aceita, cobrança Pix gerada automaticamente. Zero esforço.</div></div>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-          <div><div class="comp-feat-title">NFS-e emitida automaticamente</div><div class="comp-feat-desc">Pagamento confirmado, nota fiscal emitida. Você nem precisa saber que aconteceu.</div></div>
+          <div class="comp-marker ok">✓</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">NFS-e emitida automaticamente</div><div class="comp-feat-desc">Pagamento confirmado, nota fiscal emitida. Você nem precisa saber que aconteceu.</div></div>
         </div>
         <div class="comp-row">
-          <div class="comp-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
-          <div><div class="comp-feat-title">Dashboard em tempo real</div><div class="comp-feat-desc">Receita, metas, propostas e cobranças sempre atualizados num só painel.</div></div>
+          <div class="comp-marker ok">✓</div>
+          <div class="comp-row-inner"><div class="comp-feat-title">Dashboard em tempo real</div><div class="comp-feat-desc">Receita, metas, propostas e cobranças sempre atualizados num só painel.</div></div>
         </div>
       </div>
     </div>
@@ -1138,24 +1145,18 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <p class="sp reveal d2">Você não precisa adotar novas ferramentas. A Flowlance se conecta ao que você já usa para fechar e receber — desde hoje.</p>
     <div class="int-grid">
       <div class="int-card reveal d1">
-        <div class="int-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="int-icon logo" style="color:#25D366"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></div>
         <div class="int-name">WhatsApp</div>
         <div class="int-desc">Proposta que vai por email some na caixa de entrada. Envie pelo WhatsApp — onde o cliente realmente responde — com link direto para aceitar.</div>
         <div class="int-status int-live"><span class="int-dot"></span>Disponível</div>
       </div>
       <div class="int-card reveal d2">
-        <div class="int-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="14" x2="8" y2="14"/><line x1="10" y1="14" x2="16" y2="14"/></svg></div>
+        <div class="int-icon logo" style="color:#32BCAD"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.283 18.36a3.505 3.505 0 0 0 2.493-1.032l3.6-3.6a.684.684 0 0 1 .946 0l3.613 3.613a3.504 3.504 0 0 0 2.493 1.032h.71l-4.56 4.56a3.647 3.647 0 0 1-5.156 0L4.85 18.36ZM18.428 5.627a3.505 3.505 0 0 0-2.493 1.032l-3.613 3.614a.67.67 0 0 1-.946 0l-3.6-3.6A3.505 3.505 0 0 0 5.283 5.64h-.434l4.573-4.572a3.646 3.646 0 0 1 5.156 0l4.559 4.559ZM1.068 9.422 3.79 6.699h1.492a2.483 2.483 0 0 1 1.744.722l3.6 3.6a1.73 1.73 0 0 0 2.443 0l3.614-3.613a2.482 2.482 0 0 1 1.744-.723h1.767l2.737 2.737a3.646 3.646 0 0 1 0 5.156l-2.736 2.736h-1.768a2.482 2.482 0 0 1-1.744-.722l-3.613-3.613a1.77 1.77 0 0 0-2.444 0l-3.6 3.6a2.483 2.483 0 0 1-1.744.722H3.791l-2.723-2.723a3.646 3.646 0 0 1 0-5.156"/></svg></div>
         <div class="int-name">Pix</div>
         <div class="int-desc">Chave Pix na mão, esperar comprovante no WhatsApp, confirmar manualmente. Com a Flowlance, a cobrança é gerada automática e a confirmação é imediata.</div>
         <div class="int-status int-live"><span class="int-dot"></span>Disponível</div>
       </div>
       <div class="int-card reveal d3">
-        <div class="int-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <div class="int-name">Contratos digitais</div>
-        <div class="int-desc">Assine contratos vinculados à proposta com validade jurídica — tudo na Flowlance, sem papel, sem email de PDF. Em desenvolvimento.</div>
-        <div class="int-status int-soon"><span class="int-dot"></span>Em breve</div>
-      </div>
-      <div class="int-card reveal d4">
         <div class="int-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
         <div class="int-name">NFS-e</div>
         <div class="int-desc">Portal da prefeitura, 12 campos, torce pra não errar. Em breve: nota fiscal emitida automaticamente assim que o Pix confirmar.</div>
