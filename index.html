@@ -1793,8 +1793,41 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDemo(); });
 <script>
 const SUPA_URL = 'https://ikdguipxrkhuaojzduzy.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo';
+
+// Cookie storage adapter so the PKCE code_verifier and the auth session are
+// stored in cookies with domain='.flowlance.com.br', making them readable by
+// both flowlance.com.br (this page) and app.flowlance.com.br (the app/callback).
+// Without this, supabase-js uses localStorage which is origin-scoped and can't
+// be shared across subdomains — causing "invalid_token" errors after OAuth.
+const COOKIE_DOMAIN = '.flowlance.com.br';
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days — match Supabase JWT expiry
+
+const cookieStorage = {
+  getItem(key) {
+    const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(key + '='));
+    return match ? decodeURIComponent(match.slice(key.length + 1)) : null;
+  },
+  setItem(key, value) {
+    document.cookie = key + '=' + encodeURIComponent(value) +
+      '; domain=' + COOKIE_DOMAIN +
+      '; path=/' +
+      '; max-age=' + COOKIE_MAX_AGE +
+      '; SameSite=Lax';
+  },
+  removeItem(key) {
+    document.cookie = key + '=; domain=' + COOKIE_DOMAIN + '; path=/; max-age=0';
+  }
+};
+
 const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
-  auth: { autoRefreshToken: false, persistSession: false }
+  auth: {
+    autoRefreshToken: false,
+    persistSession: true,      // store session in cookieStorage so it survives page reloads
+    detectSessionInUrl: false, // callback is on app.flowlance.com.br, not here
+    storage: cookieStorage,    // use parent-domain cookies instead of localStorage
+    storageKey: 'sb-ikdguipxrkhuaojzduzy-auth-token', // same key as @supabase/ssr
+    flowType: 'pkce',          // explicit PKCE — code_verifier goes into cookieStorage
+  }
 });
 
 // ── Modal open/close (global so onclick attrs work) ───────────
@@ -1878,13 +1911,18 @@ document.getElementById('auth-modal').addEventListener('click', function(e) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
 
 // ── Google OAuth ──────────────────────────────────────────────
-// IMPORTANT: Do NOT call sb.auth.signInWithOAuth here.
-// The landing page is on flowlance.com.br (different subdomain from app.flowlance.com.br).
-// PKCE stores the code_verifier in this domain's storage; when Google redirects to
-// app.flowlance.com.br/auth/callback, the server-side handler can't find it → 400/invalid_token.
-// Fix: redirect to the app's login page, which initiates OAuth from the correct domain.
-function signInWithGoogle() {
-  window.location.href = 'https://app.flowlance.com.br/login?sso=google';
+// The PKCE code_verifier is stored by cookieStorage (above) with domain='.flowlance.com.br'.
+// When Google redirects to app.flowlance.com.br/auth/callback, that subdomain receives
+// the shared cookie automatically, so exchangeCodeForSession() can find the code_verifier.
+// The callback then redirects back to flowlance.com.br (from=landing), and the session
+// cookie (.flowlance.com.br domain) is readable here via cookieStorage.
+async function signInWithGoogle() {
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: 'https://app.flowlance.com.br/auth/callback?from=landing',
+    },
+  });
 }
 
 // ── Phone mask ────────────────────────────────────────────────
