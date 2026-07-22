@@ -1878,11 +1878,13 @@ document.getElementById('auth-modal').addEventListener('click', function(e) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
 
 // ── Google OAuth ──────────────────────────────────────────────
-async function signInWithGoogle() {
-  await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: 'https://app.flowlance.com.br/auth/callback' },
-  });
+// IMPORTANT: Do NOT call sb.auth.signInWithOAuth here.
+// The landing page is on flowlance.com.br (different subdomain from app.flowlance.com.br).
+// PKCE stores the code_verifier in this domain's storage; when Google redirects to
+// app.flowlance.com.br/auth/callback, the server-side handler can't find it → 400/invalid_token.
+// Fix: redirect to the app's login page, which initiates OAuth from the correct domain.
+function signInWithGoogle() {
+  window.location.href = 'https://app.flowlance.com.br/login?sso=google';
 }
 
 // ── Phone mask ────────────────────────────────────────────────
