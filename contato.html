@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contato — Flowlance</title>
+<meta name="description" content="Entre em contato com a equipe Flowlance. Suporte, dúvidas e parcerias.">
+<link rel="icon" type="image/png" href="/flowlance-logo-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --y:#F5C842;--yd:#E0B320;--yb:#FFFBEA;
+  --dk:#0E0E0E;
+  --gr:#6B7280;--gl:#F5F5F5;--br:#E5E7EB;
+  --wh:#fff;--tx:#111827;--t2:#374151;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Geist',sans-serif;background:#fff;color:var(--tx)}
+
+nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 60px;height:64px;background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--br)}
+.nav-logo{font-size:20px;font-weight:800;letter-spacing:-.5px;color:var(--dk);text-decoration:none;display:flex;align-items:center;gap:9px}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--gr);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--dk)}
+.btn-dark{font-family:'Geist',sans-serif;font-size:14px;font-weight:700;color:#fff;background:var(--dk);border:none;cursor:pointer;padding:10px 22px;border-radius:10px;text-decoration:none;display:inline-block;transition:opacity .15s}
+.btn-dark:hover{opacity:.82}
+
+footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;justify-content:space-between}
+.fl{font-size:18px;font-weight:800;color:#fff;display:flex;align-items:center;gap:9px;text-decoration:none}
+.flinks{display:flex;gap:24px}
+.flinks a{font-size:13px;color:rgba(255,255,255,.3);text-decoration:none;font-weight:500;transition:color .15s}
+.flinks a:hover{color:rgba(255,255,255,.75)}
+.fcopy{font-size:12px;color:rgba(255,255,255,.2)}
+
+.page-wrap{max-width:720px;margin:0 auto;padding:80px 24px 120px}
+.page-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gr);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.page-label::before{content:'';width:16px;height:2px;background:var(--y)}
+h1{font-size:clamp(32px,4vw,48px);font-weight:800;letter-spacing:-2px;line-height:1.1;color:var(--dk);margin-bottom:10px}
+.page-sub{font-size:17px;color:var(--gr);line-height:1.65;margin-bottom:56px;max-width:480px}
+
+.channels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:52px}
+.channel{background:var(--gl);border:1px solid var(--br);border-radius:14px;padding:28px 24px;text-decoration:none;color:inherit;transition:border-color .15s,background .15s;display:block}
+.channel:hover{border-color:rgba(0,0,0,.2);background:#fff}
+.ch-icon{width:40px;height:40px;border-radius:10px;background:var(--dk);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.ch-icon svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ch-title{font-size:15px;font-weight:700;color:var(--dk);margin-bottom:4px}
+.ch-desc{font-size:13px;color:var(--gr);line-height:1.5;margin-bottom:12px}
+.ch-action{font-size:13px;font-weight:600;color:var(--dk)}
+
+.faq-mini{border-top:1px solid var(--br);padding-top:48px}
+.faq-mini h2{font-size:22px;font-weight:800;color:var(--dk);letter-spacing:-.5px;margin-bottom:24px}
+.faq-row{border-bottom:1px solid var(--br);padding:18px 0}
+.faq-row dt{font-size:14px;font-weight:600;color:var(--dk);margin-bottom:6px}
+.faq-row dd{font-size:14px;color:var(--gr);line-height:1.65;margin:0}
+dl{margin:0}
+
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  footer{padding:32px 20px;flex-direction:column;gap:20px;align-items:flex-start}
+  .page-wrap{padding:52px 20px 80px}
+  .channels{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/flowlance-logo-transparent.png" alt="Flowlance" style="width:32px;height:32px;object-fit:contain">
+    Flowlance
+  </a>
+  <div class="nav-links">
+    <a href="/#features">Funcionalidades</a>
+    <a href="/#planos">Planos</a>
+    <a href="/contato">Contato</a>
+  </div>
+  <a href="https://app.flowlance.com.br" class="btn-dark">Acessar app</a>
+</nav>
+
+<div class="page-wrap">
+  <p class="page-label">Contato</p>
+  <h1>Fale com a gente</h1>
+  <p class="page-sub">Tem uma dúvida, feedback ou quer conversar sobre a Flowlance? Estamos aqui.</p>
+
+  <div class="channels">
+    <a class="channel" href="mailto:contato@flowlance.com.br">
+      <div class="ch-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 9.5 6.5a1 1 0 0 0 1 0L22 7"/></svg>
+      </div>
+      <div class="ch-title">E-mail</div>
+      <div class="ch-desc">Para dúvidas, suporte e questões sobre sua conta.</div>
+      <div class="ch-action">contato@flowlance.com.br →</div>
+    </a>
+
+    <a class="channel" href="https://app.flowlance.com.br" target="_blank" rel="noopener noreferrer">
+      <div class="ch-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="ch-title">Central de ajuda</div>
+      <div class="ch-desc">Tutoriais e guias para cada funcionalidade do app.</div>
+      <div class="ch-action">Abrir no app →</div>
+    </a>
+  </div>
+
+  <div class="faq-mini">
+    <h2>Perguntas rápidas</h2>
+    <dl>
+      <div class="faq-row">
+        <dt>Qual o prazo de resposta por e-mail?</dt>
+        <dd>Respondemos em até 1 dia útil, geralmente mais rápido durante horário comercial (seg–sex, 9h–18h).</dd>
+      </div>
+      <div class="faq-row">
+        <dt>Perdí o acesso à minha conta. O que fazer?</dt>
+        <dd>Acesse a tela de login e use a opção de recuperação de senha. Se o problema persistir, envie um e-mail para contato@flowlance.com.br com o e-mail do cadastro.</dd>
+      </div>
+      <div class="faq-row">
+        <dt>Quero cancelar meu plano. Como faço?</dt>
+        <dd>O cancelamento pode ser feito diretamente nas configurações do app, em Configurações → Plano. Se tiver dificuldades, entre em contato por e-mail.</dd>
+      </div>
+      <div class="faq-row">
+        <dt>Tenho uma sugestão de melhoria.</dt>
+        <dd>Adoramos feedback. Manda por e-mail ou pelo formulário — lemos tudo e usamos para priorizar o roadmap do produto.</dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<footer>
+  <a href="/" class="fl">
+    <img src="/flowlance-logo-transparent.png" alt="Flowlance" style="width:22px;height:22px;object-fit:contain">
+    Flowlance
+  </a>
+  <div class="flinks">
+    <a href="/#features">Funcionalidades</a>
+    <a href="/#planos">Planos</a>
+    <a href="/termos">Termos de uso</a>
+    <a href="/privacidade">Privacidade</a>
+    <a href="/contato">Contato</a>
+  </div>
+  <div class="fcopy">© 2026 Flowlance. Todos os direitos reservados.</div>
+</footer>
+
+</body>
+</html>

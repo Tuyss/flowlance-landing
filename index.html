@@ -1805,8 +1805,26 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days — match Supabase JWT expiry
 
 const cookieStorage = {
   getItem(key) {
-    const match = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(key + '='));
-    return match ? decodeURIComponent(match.slice(key.length + 1)) : null;
+    // @supabase/ssr splits large sessions (e.g. Google OAuth with identities[])
+    // into multiple cookies: key.0, key.1, ... instead of a single `key` cookie.
+    // This adapter must reassemble those chunks before returning the value,
+    // mirroring the combineChunks logic in @supabase/ssr/dist/module/utils/chunker.js.
+    const allCookies = document.cookie.split(';').map(c => c.trim());
+    const findCookie = (k) => {
+      const match = allCookies.find(c => c.startsWith(k + '='));
+      return match ? decodeURIComponent(match.slice(k.length + 1)) : null;
+    };
+    // Try non-chunked (single cookie) first
+    const direct = findCookie(key);
+    if (direct) return direct;
+    // Reassemble chunked cookies: key.0, key.1, key.2, ...
+    const chunks = [];
+    for (let i = 0; ; i++) {
+      const chunk = findCookie(`${key}.${i}`);
+      if (!chunk) break;
+      chunks.push(chunk);
+    }
+    return chunks.length > 0 ? chunks.join('') : null;
   },
   setItem(key, value) {
     document.cookie = key + '=' + encodeURIComponent(value) +
