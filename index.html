@@ -1803,12 +1803,24 @@ const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const COOKIE_DOMAIN = '.flowlance.com.br';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days — match Supabase JWT expiry
 
+// Decode a value that @supabase/ssr wrote with cookieEncoding:"base64url" (the
+// server-client default). The server prefixes the value with "base64-" and then
+// base64url-encodes the raw JSON so it survives cookie size limits cleanly.
+// supabase-js (browser) calls storage.getItem() and expects plain JSON, so we
+// must strip the prefix and decode before returning.
+function _fromBase64URL(b64url) {
+  const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = b64.padEnd(b64.length + (4 - b64.length % 4) % 4, '=');
+  const bytes = Uint8Array.from(atob(padded), c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
 const cookieStorage = {
   getItem(key) {
     // @supabase/ssr splits large sessions (e.g. Google OAuth with identities[])
     // into multiple cookies: key.0, key.1, ... instead of a single `key` cookie.
-    // This adapter must reassemble those chunks before returning the value,
-    // mirroring the combineChunks logic in @supabase/ssr/dist/module/utils/chunker.js.
+    // This adapter must reassemble those chunks and decode the base64url wrapper
+    // that @supabase/ssr applies by default (cookieEncoding: "base64url").
     const allCookies = document.cookie.split(';').map(c => c.trim());
     const findCookie = (k) => {
       const match = allCookies.find(c => c.startsWith(k + '='));
@@ -1816,15 +1828,24 @@ const cookieStorage = {
     };
     // Try non-chunked (single cookie) first
     const direct = findCookie(key);
-    if (direct) return direct;
-    // Reassemble chunked cookies: key.0, key.1, key.2, ...
-    const chunks = [];
-    for (let i = 0; ; i++) {
-      const chunk = findCookie(`${key}.${i}`);
-      if (!chunk) break;
-      chunks.push(chunk);
+    let raw = direct;
+    if (!raw) {
+      // Reassemble chunked cookies: key.0, key.1, key.2, ...
+      const chunks = [];
+      for (let i = 0; ; i++) {
+        const chunk = findCookie(`${key}.${i}`);
+        if (!chunk) break;
+        chunks.push(chunk);
+      }
+      raw = chunks.length > 0 ? chunks.join('') : null;
     }
-    return chunks.length > 0 ? chunks.join('') : null;
+    if (!raw) return null;
+    // Decode the "base64-" prefix that @supabase/ssr adds when cookieEncoding is
+    // "base64url" (the server-client default) so supabase-js can JSON.parse it.
+    if (raw.startsWith('base64-')) {
+      try { return _fromBase64URL(raw.slice(7)); } catch { return null; }
+    }
+    return raw;
   },
   setItem(key, value) {
     document.cookie = key + '=' + encodeURIComponent(value) +
@@ -2019,7 +2040,8 @@ document.getElementById('login-btn').addEventListener('click', async function() 
     }
     btn.textContent = 'Carregando…';
     closeAuth();
-    updateNavForLoggedUser(data.user.email);
+    const meta = data.user.user_metadata;
+    updateNavForLoggedUser(data.user.email, meta?.full_name || meta?.name || null);
     showSuccessToast('Login realizado com sucesso! ✓');
   } finally {
     btn.disabled = false; btn.textContent = 'Entrar';
@@ -2082,14 +2104,17 @@ document.getElementById('signup-btn').addEventListener('click', async function()
 });
 
 // ── Navbar update after login ─────────────────────────────────
-function updateNavForLoggedUser(userEmail) {
+function updateNavForLoggedUser(userEmail, userName) {
   const navLogin = document.getElementById('nav-login');
   const navCta = document.getElementById('nav-cta');
   if (navLogin) navLogin.style.display = 'none';
   if (navCta) navCta.style.display = 'none';
 
-  // Show static app button already in HTML
-  document.getElementById('open-app-btn').style.display = 'inline-flex';
+  // Personalized greeting: "Olá, {primeiro nome} →" if name is available
+  const firstName = userName ? userName.trim().split(/\s+/)[0] : null;
+  const appBtn = document.getElementById('open-app-btn');
+  appBtn.textContent = firstName ? `Olá, ${firstName} →` : 'Abrir app →';
+  appBtn.style.display = 'inline-flex';
 
   // Profile dropdown — only create once
   if (!document.getElementById('profile-btn')) {
@@ -2145,7 +2170,9 @@ function updateNavForLoggedUser(userEmail) {
     logoutBtn.onmouseout = () => logoutBtn.style.background = 'none';
     logoutBtn.addEventListener('click', async () => {
       await sb.auth.signOut();
-      document.getElementById('open-app-btn').style.display = 'none';
+      const btn = document.getElementById('open-app-btn');
+      btn.textContent = 'Abrir app →';
+      btn.style.display = 'none';
       wrapper.remove();
       if (navLogin) navLogin.style.display = '';
       if (navCta) navCta.style.display = '';
@@ -2211,7 +2238,9 @@ async function submitResetPassword() {
 
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    updateNavForLoggedUser(session.user.email);
+    const meta = session.user.user_metadata;
+    const name = meta?.full_name || meta?.name || null;
+    updateNavForLoggedUser(session.user.email, name);
   }
 })();
 
