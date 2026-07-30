@@ -1882,7 +1882,17 @@ function openAuth(tab) {
   document.getElementById('panel-trial').classList.remove('active');
   switchTab(tab === 'signup' ? 'signup' : 'login');
 }
-function openTrial() {
+async function openTrial() {
+  // If the user is already logged in, route through handlePlanClick so we
+  // respect their current plan state (active trial, active paid plan, etc.)
+  // rather than blindly showing the signup modal.
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    await handlePlanClick('starter', 'mensal');
+    return;
+  }
+
+  // Not logged in — show the trial panel modal as usual
   document.getElementById('auth-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
   clearAuthErrors();
@@ -2022,6 +2032,27 @@ function showSuccessToast(msg) {
     t.style.animation = 'fadeOut .3s ease forwards';
     setTimeout(() => t.remove(), 300);
   }, 3000);
+}
+
+// Shows a toast with an optional action link (5s, longer so user can click)
+function showToastComLink(msg, linkLabel, linkHref) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#0E0E0E;color:#fff;padding:14px 20px;border-radius:16px;font-size:14px;font-weight:500;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:slideInRight .3s ease;font-family:Geist,sans-serif;display:flex;flex-direction:column;gap:8px;max-width:300px';
+  const msgEl = document.createElement('span');
+  msgEl.textContent = msg;
+  t.appendChild(msgEl);
+  if (linkLabel && linkHref) {
+    const a = document.createElement('a');
+    a.href = linkHref;
+    a.textContent = linkLabel + ' →';
+    a.style.cssText = 'color:#F5C842;font-weight:700;text-decoration:none;font-size:13px';
+    t.appendChild(a);
+  }
+  document.body.appendChild(t);
+  setTimeout(() => {
+    t.style.animation = 'fadeOut .3s ease forwards';
+    setTimeout(() => t.remove(), 300);
+  }, 5000);
 }
 
 // ── Login ─────────────────────────────────────────────────────
@@ -2325,12 +2356,21 @@ async function handlePlanClick(planId, billing) {
   };
 
   if (planId === 'starter') {
-    const { data: perfil } = await sb.from('usuarios').select('trial_expira_em, plano').eq('id', session.user.id).maybeSingle();
+    const { data: perfil } = await sb.from('usuarios').select('trial_expira_em, plano, plano_status').eq('id', session.user.id).maybeSingle();
 
     const jaUsouTrial = perfil?.trial_expira_em !== null && perfil?.trial_expira_em !== undefined;
 
     if (!jaUsouTrial) {
       openTermsModal(session);
+      return;
+    }
+
+    // Guard: don't send to checkout if they already have an active trial or plan
+    const trialAtivo = perfil?.plano === 'trial' && new Date(perfil.trial_expira_em) > new Date();
+    const planoAtivo = perfil?.plano_status === 'ativo' && perfil?.plano !== 'trial';
+
+    if (trialAtivo || planoAtivo) {
+      showToastComLink('Você já tem um plano ativo.', 'Abrir o app', APP_URL);
       return;
     }
 
