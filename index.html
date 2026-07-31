@@ -1870,8 +1870,14 @@ const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
   }
 });
 
+// Tracks whether the current signup is coming from the "Testar 7 dias grátis"
+// CTA (trial intent) vs a generic "Criar conta" entry point.
+// Set true in showTrialSignup(), false in openAuth('signup') and closeAuth().
+let isTrialSignup = false;
+
 // ── Modal open/close (global so onclick attrs work) ───────────
 function openAuth(tab) {
+  if (tab === 'signup') isTrialSignup = false; // generic path — no trial
   document.getElementById('auth-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
   clearAuthErrors();
@@ -1904,12 +1910,14 @@ async function openTrial() {
   document.getElementById('panel-trial').classList.add('active');
 }
 function showTrialSignup() {
+  isTrialSignup = true; // user came from the trial CTA — grant 7-day trial
   document.getElementById('panel-trial').classList.remove('active');
   document.getElementById('panel-signup').classList.add('active');
   document.getElementById('trial-banner').classList.add('show');
   document.getElementById('signup-btn').textContent = 'Começar trial gratuito';
 }
 function closeAuth() {
+  isTrialSignup = false; // reset on close
   document.getElementById('auth-modal').classList.remove('open');
   document.body.style.overflow = '';
   // Reset all modal state
@@ -2103,10 +2111,16 @@ document.getElementById('signup-btn').addEventListener('click', async function()
       return;
     }
 
+    // Pass ?trial=1 only when the user came through the trial CTA so the
+    // auth/callback can grant the 7-day trial to the right users only.
+    const callbackBase = 'https://app.flowlance.com.br/auth/callback';
     const { data, error } = await sb.auth.signUp({
       email,
       password,
-      options: { data: { nome: name, telefone: phoneDigits } },
+      options: {
+        data: { nome: name, telefone: phoneDigits },
+        emailRedirectTo: isTrialSignup ? callbackBase + '?trial=1' : callbackBase,
+      },
     });
 
     if (error) {
@@ -2334,7 +2348,8 @@ async function handlePlanClick(planId, billing) {
   const { data: { session } } = await sb.auth.getSession();
 
   if (!session) {
-    openAuth('signup');
+    // Starter plan = trial CTA → go through trial flow so isTrialSignup is set
+    if (planId === 'starter') { openTrial(); } else { openAuth('signup'); }
     return;
   }
 
