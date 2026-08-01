@@ -722,6 +722,13 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 .ddi-item:hover{background:var(--gl)}
 .ddi-item-code{margin-left:auto;font-size:12px;color:var(--gr);font-family:'Geist Mono',monospace}
 
+/* ── OTP panel ── */
+.otp-phone{font-size:13px;font-weight:600;color:var(--dk);margin-bottom:4px}
+.otp-sub{font-size:12px;color:var(--gr);margin-bottom:16px;line-height:1.5}
+.otp-input{width:100%;height:56px;border:1.5px solid var(--br);border-radius:10px;text-align:center;font-size:26px;letter-spacing:.5em;font-family:'Geist Mono',monospace;color:var(--dk);outline:none;transition:border-color .15s;background:#fff}
+.otp-input:focus{border-color:var(--dk)}
+.otp-input::placeholder{letter-spacing:.2em;color:#ccc;font-size:20px}
+
 /* ── LGPD signup consent row ── */
 .lgpd-row{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#F9FAFB;border:1px solid var(--br);border-radius:10px;font-size:12px;color:#6B7280;line-height:1.55;cursor:pointer}
 .lgpd-row input[type=checkbox]{width:15px;height:15px;flex-shrink:0;margin-top:1px;accent-color:var(--dk);cursor:pointer}
@@ -1733,6 +1740,26 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       <div class="am-switch">Já tem conta? <a id="trial-to-login">Entrar</a></div>
     </div>
 
+    <!-- OTP PANEL -->
+    <div class="am-panel" id="panel-otp">
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:4px 0 12px">
+        <div style="width:52px;height:52px;border-radius:50%;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <p style="font-size:16px;font-weight:800;color:#0F0F13;margin:0">Verifique seu WhatsApp</p>
+        <p class="otp-sub">Enviamos um código de 6 dígitos para<br><strong id="otp-phone-display" class="otp-phone"></strong></p>
+      </div>
+      <input type="text" id="otp-code" class="otp-input" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="000000">
+      <div class="am-err" id="otp-err" style="margin-top:8px"></div>
+      <button class="am-submit" id="otp-verify-btn" style="margin-top:12px">Verificar código</button>
+      <div style="text-align:center;margin-top:12px">
+        <button id="otp-resend-btn" disabled style="background:none;border:none;font-family:Geist,sans-serif;font-size:13px;color:#9CA3AF;cursor:not-allowed;padding:0">Reenviar código (60s)</button>
+      </div>
+      <div style="text-align:center;margin-top:10px">
+        <button id="otp-back-btn" style="background:none;border:none;font-family:Geist,sans-serif;font-size:12px;color:#9CA3AF;cursor:pointer;padding:0">← Voltar e corrigir o número</button>
+      </div>
+    </div>
+
     <!-- CONFIRMATION PANEL -->
     <div class="am-panel" id="panel-confirm">
       <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:8px 0 4px">
@@ -1966,6 +1993,10 @@ function closeAuth() {
   document.getElementById('signup-btn').textContent = 'Criar conta grátis';
   document.getElementById('login-btn').disabled = false;
   document.getElementById('login-btn').textContent = 'Entrar';
+  // Reset OTP state
+  clearInterval(otpCountdownTimer);
+  pendingSignupData = null;
+  document.getElementById('panel-otp').classList.remove('active');
   // Reset phone field state
   phoneRaw = '';
   selectedCountry = PAISES[0];
@@ -2212,6 +2243,141 @@ document.getElementById('login-btn').addEventListener('click', async function() 
   }
 });
 
+// ── OTP state ─────────────────────────────────────────────────
+let pendingSignupData = null; // { name, email, password, e164 } set when OTP is sent
+let otpCountdownTimer = null;
+let otpCountdownVal = 0;
+
+function showOtpPanel(e164) {
+  document.getElementById('otp-phone-display').textContent = e164;
+  document.getElementById('otp-code').value = '';
+  showErr('otp-err', '');
+  ['panel-login','panel-signup','panel-confirm','panel-trial','panel-reset-password'].forEach(id =>
+    document.getElementById(id).classList.remove('active'));
+  const tabBar = document.querySelector('.am-tabs');
+  if (tabBar) tabBar.style.display = 'none';
+  document.getElementById('panel-otp').classList.add('active');
+  startOtpCountdown();
+  setTimeout(() => document.getElementById('otp-code').focus(), 50);
+}
+
+function startOtpCountdown() {
+  clearInterval(otpCountdownTimer);
+  otpCountdownVal = 60;
+  updateOtpResendBtn();
+  otpCountdownTimer = setInterval(() => {
+    otpCountdownVal--;
+    updateOtpResendBtn();
+    if (otpCountdownVal <= 0) clearInterval(otpCountdownTimer);
+  }, 1000);
+}
+
+function updateOtpResendBtn() {
+  const btn = document.getElementById('otp-resend-btn');
+  if (!btn) return;
+  if (otpCountdownVal > 0) {
+    btn.textContent = 'Reenviar código (' + otpCountdownVal + 's)';
+    btn.disabled = true;
+    btn.style.color = '#9CA3AF';
+    btn.style.cursor = 'not-allowed';
+  } else {
+    btn.textContent = 'Não recebeu? Reenviar código';
+    btn.disabled = false;
+    btn.style.color = '#374151';
+    btn.style.cursor = 'pointer';
+  }
+}
+
+async function sendOtp(e164) {
+  const res = await fetch('https://app.flowlance.com.br/api/otp/enviar', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ telefone: e164 }),
+  });
+  return res.json();
+}
+
+async function verifyOtp(e164, codigo) {
+  const res = await fetch('https://app.flowlance.com.br/api/otp/verificar', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ telefone: e164, codigo }),
+  });
+  return res.json();
+}
+
+// Wire OTP verify button
+document.getElementById('otp-verify-btn').addEventListener('click', async function() {
+  const codigo = document.getElementById('otp-code').value.trim();
+  if (!/^\d{6}$/.test(codigo)) { showErr('otp-err', 'Digite os 6 dígitos do código recebido.'); return; }
+  if (!pendingSignupData) { showErr('otp-err', 'Sessão expirada. Tente novamente.'); return; }
+  const btn = this;
+  btn.disabled = true; btn.textContent = 'Verificando…';
+  try {
+    const json = await verifyOtp(pendingSignupData.e164, codigo);
+    if (!json.ok) { showErr('otp-err', json.erro || 'Código incorreto. Tente novamente.'); return; }
+    // OTP verified — create account
+    btn.textContent = 'Criando conta…';
+    const { name, email, password, e164 } = pendingSignupData;
+    // Check phone duplicate (E.164 format)
+    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', e164).maybeSingle();
+    if (existing) { showErr('otp-err', 'Este número já está cadastrado.'); return; }
+    const callbackBase = 'https://app.flowlance.com.br/auth/callback';
+    const { data, error } = await sb.auth.signUp({
+      email, password,
+      options: {
+        data: { nome: name, telefone: e164 },
+        emailRedirectTo: isTrialSignup ? callbackBase + '?trial=1' : callbackBase,
+      },
+    });
+    if (error) {
+      const isAlready = error.message.includes('already registered') || error.message.includes('already been registered');
+      if (isAlready) {
+        const errEl = document.getElementById('otp-err');
+        errEl.innerHTML = 'Email já cadastrado. <a href="#" style="color:#0F0F13;font-weight:700" id="otp-err-login">Fazer login</a>';
+        errEl.className = 'am-err show';
+        document.getElementById('otp-err-login')?.addEventListener('click', e => { e.preventDefault(); switchTab('login'); });
+      } else { showErr('otp-err', error.message || 'Erro ao criar conta. Tente novamente.'); }
+      return;
+    }
+    await sb.auth.signOut();
+    pendingSignupData = null;
+    showConfirmPanel({ email });
+  } finally {
+    btn.disabled = false; btn.textContent = 'Verificar código';
+  }
+});
+
+// OTP resend button
+document.getElementById('otp-resend-btn').addEventListener('click', async function() {
+  if (!pendingSignupData || otpCountdownVal > 0) return;
+  this.disabled = true; this.textContent = 'Enviando…';
+  try {
+    const json = await sendOtp(pendingSignupData.e164);
+    if (json.ok) { startOtpCountdown(); document.getElementById('otp-code').value = ''; document.getElementById('otp-code').focus(); }
+    else showErr('otp-err', json.erro || 'Erro ao reenviar. Tente novamente.');
+  } finally { updateOtpResendBtn(); }
+});
+
+// OTP back button
+document.getElementById('otp-back-btn').addEventListener('click', function() {
+  clearInterval(otpCountdownTimer);
+  pendingSignupData = null;
+  ['panel-login','panel-signup','panel-confirm','panel-trial','panel-reset-password','panel-otp'].forEach(id =>
+    document.getElementById(id).classList.remove('active'));
+  const tabBar = document.querySelector('.am-tabs');
+  if (tabBar) tabBar.style.display = '';
+  document.getElementById('panel-signup').classList.add('active');
+  document.getElementById('tab-signup').classList.add('active');
+  document.getElementById('tab-login').classList.remove('active');
+});
+
+// OTP code auto-submit on 6 digits
+document.getElementById('otp-code').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g, '').slice(0, 6);
+  if (this.value.length === 6) document.getElementById('otp-verify-btn').click();
+});
+
 // ── Sign up ───────────────────────────────────────────────────
 document.getElementById('signup-btn').addEventListener('click', async function() {
   const name     = document.getElementById('signup-name').value.trim();
@@ -2224,72 +2390,35 @@ document.getElementById('signup-btn').addEventListener('click', async function()
 
   const minDigits = selectedCountry.dialCode === '+55' ? 10 : 7;
   if (phoneRaw.length < minDigits) { showErr('signup-err', 'Número de telefone inválido.'); return; }
-  if (password.length < 6) { showErr('signup-err', 'Senha muito curta (mínimo 6 caracteres).'); return; }
+  if (password.length < 8) { showErr('signup-err', 'Senha muito curta (mínimo 8 caracteres).'); return; }
 
-  const e164 = getE164(); // e.g. "+5511999999999"
+  const e164 = getE164();
 
   const btn = this;
   btn.disabled = true; btn.textContent = 'Validando…';
 
   try {
-    // Abstract API validation — server-side call via app API (keeps key secret)
+    // Abstract API format check (fast, cheap first-pass)
     try {
       const valRes = await fetch('https://app.flowlance.com.br/api/validar-telefone', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ telefone: e164 }),
       });
       if (valRes.ok) {
         const valJson = await valRes.json();
-        if (valJson.valid === false) {
-          showErr('signup-err', valJson.erro || 'Esse número não parece válido. Confira o DDI e os dígitos.');
-          return;
-        }
+        if (valJson.valid === false) { showErr('signup-err', valJson.erro || 'Esse número não parece válido.'); return; }
       }
-      // If fetch fails or returns non-ok: allow through (don't block signups on infra issues)
     } catch { /* network error — proceed */ }
 
-    btn.textContent = 'Criando conta…';
+    btn.textContent = 'Enviando código…';
 
-    // Check phone duplicate (E.164 format)
-    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', e164).maybeSingle();
-    if (existing) {
-      showErr('signup-err', 'Este número já está cadastrado.');
-      return;
-    }
+    // Send OTP via Twilio Verify
+    const otpJson = await sendOtp(e164);
+    if (!otpJson.ok) { showErr('signup-err', otpJson.erro || 'Erro ao enviar SMS. Tente novamente.'); return; }
 
-    // Pass ?trial=1 only when the user came through the trial CTA so the
-    // auth/callback can grant the 7-day trial to the right users only.
-    const callbackBase = 'https://app.flowlance.com.br/auth/callback';
-    const { data, error } = await sb.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { nome: name, telefone: e164 },
-        emailRedirectTo: isTrialSignup ? callbackBase + '?trial=1' : callbackBase,
-      },
-    });
-
-    if (error) {
-      const isAlready = error.message.includes('already registered') || error.message.includes('already been registered');
-      if (isAlready) {
-        const errEl = document.getElementById('signup-err');
-        errEl.innerHTML = 'Email já cadastrado. <a href="#" style="color:#0F0F13;font-weight:700" id="err-switch-login">Fazer login</a>';
-        errEl.className = 'am-err show';
-        document.getElementById('err-switch-login').addEventListener('click', e => { e.preventDefault(); switchTab('login'); });
-      } else if (error.message.includes('password') || error.message.includes('weak')) {
-        showErr('signup-err', 'Senha muito curta (mínimo 6 caracteres).');
-      } else if (error.message.includes('email')) {
-        showErr('signup-err', 'Email inválido.');
-      } else {
-        showErr('signup-err', error.message || 'Erro ao criar conta. Tente novamente.');
-      }
-      return;
-    }
-
-    // Sign out immediately — no auto-login ever
-    await sb.auth.signOut();
-    showConfirmPanel({ email });
+    // Store pending signup data for after OTP verification
+    pendingSignupData = { name, email, password, e164 };
+    showOtpPanel(e164);
   } finally {
     btn.disabled = false; btn.textContent = 'Criar conta grátis';
   }
