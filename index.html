@@ -2449,6 +2449,18 @@ document.getElementById('signup-btn').addEventListener('click', async function()
       }
       return;
     }
+    // Anti-enumeration detection: Supabase returns HTTP 200 (no error, no session)
+    // with identities:[] when the email already belongs to a confirmed account.
+    // The existing error.message check above never fires because error is null.
+    // A real new user always gets at least one identity (the email provider).
+    if (!data.user || (data.user.identities && data.user.identities.length === 0)) {
+      const errEl = document.getElementById('signup-err');
+      errEl.innerHTML = 'Email já cadastrado. <a href="#" style="color:#0F0F13;font-weight:700" id="err-switch-login">Fazer login</a>';
+      errEl.className = 'am-err show';
+      const link = document.getElementById('err-switch-login');
+      if (link) link.addEventListener('click', e => { e.preventDefault(); switchTab('login'); });
+      return;
+    }
     await sb.auth.signOut();
     showConfirmPanel({ email });
   } finally {
