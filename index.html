@@ -2410,15 +2410,47 @@ document.getElementById('signup-btn').addEventListener('click', async function()
       }
     } catch { /* network error — proceed */ }
 
-    btn.textContent = 'Enviando código…';
+    // SMS OTP verification step is intentionally disabled/hidden for now.
+    // The infrastructure (sendOtp, verifyOtp, showOtpPanel, panel-otp) remains in
+    // place — do not remove it.  To re-enable: replace the block below with
+    //   const otpJson = await sendOtp(e164);
+    //   if (!otpJson.ok) { showErr(...); return; }
+    //   pendingSignupData = { name, email, password, e164 };
+    //   showOtpPanel(e164);
+    // and add Twilio credentials to the app's Vercel env vars.
 
-    // Send OTP via Twilio Verify
-    const otpJson = await sendOtp(e164);
-    if (!otpJson.ok) { showErr('signup-err', otpJson.erro || 'Erro ao enviar SMS. Tente novamente.'); return; }
+    btn.textContent = 'Criando conta…';
 
-    // Store pending signup data for after OTP verification
-    pendingSignupData = { name, email, password, e164 };
-    showOtpPanel(e164);
+    // Check phone duplicate before account creation
+    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', e164).maybeSingle();
+    if (existing) { showErr('signup-err', 'Este número já está cadastrado.'); return; }
+
+    const callbackBase = 'https://app.flowlance.com.br/auth/callback';
+    const { data, error } = await sb.auth.signUp({
+      email, password,
+      options: {
+        data: { nome: name, telefone: e164 },
+        emailRedirectTo: isTrialSignup ? callbackBase + '?trial=1' : callbackBase,
+      },
+    });
+    if (error) {
+      const isAlready = error.message.includes('already registered') || error.message.includes('already been registered');
+      if (isAlready) {
+        const errEl = document.getElementById('signup-err');
+        errEl.innerHTML = 'Email já cadastrado. <a href="#" style="color:#0F0F13;font-weight:700" id="err-switch-login">Fazer login</a>';
+        errEl.className = 'am-err show';
+        document.getElementById('err-switch-login').addEventListener('click', e => { e.preventDefault(); switchTab('login'); });
+      } else if (error.message.includes('password') || error.message.includes('weak')) {
+        showErr('signup-err', 'Senha muito curta (mínimo 8 caracteres).');
+      } else if (error.message.includes('email')) {
+        showErr('signup-err', 'Email inválido.');
+      } else {
+        showErr('signup-err', error.message || 'Erro ao criar conta. Tente novamente.');
+      }
+      return;
+    }
+    await sb.auth.signOut();
+    showConfirmPanel({ email });
   } finally {
     btn.disabled = false; btn.textContent = 'Criar conta grátis';
   }
