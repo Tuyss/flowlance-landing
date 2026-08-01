@@ -2319,9 +2319,6 @@ document.getElementById('otp-verify-btn').addEventListener('click', async functi
     // OTP verified — create account
     btn.textContent = 'Criando conta…';
     const { name, email, password, e164 } = pendingSignupData;
-    // Check phone duplicate (E.164 format)
-    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', e164).maybeSingle();
-    if (existing) { showErr('otp-err', 'Este número já está cadastrado.'); return; }
     const callbackBase = 'https://app.flowlance.com.br/auth/callback';
     const { data, error } = await sb.auth.signUp({
       email, password,
@@ -2420,10 +2417,6 @@ document.getElementById('signup-btn').addEventListener('click', async function()
     // and add Twilio credentials to the app's Vercel env vars.
 
     btn.textContent = 'Criando conta…';
-
-    // Check phone duplicate before account creation
-    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', e164).maybeSingle();
-    if (existing) { showErr('signup-err', 'Este número já está cadastrado.'); return; }
 
     const callbackBase = 'https://app.flowlance.com.br/auth/callback';
     const { data, error } = await sb.auth.signUp({
