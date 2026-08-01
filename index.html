@@ -707,6 +707,26 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 .people-img{width:100%;border-radius:20px;box-shadow:0 20px 56px rgba(0,0,0,.1);display:block;object-fit:cover;aspect-ratio:1/1}
 @media(max-width:1024px){.people-inner{gap:48px}}
 @media(max-width:768px){.people-wrap{padding:64px 20px}.people-inner{grid-template-columns:1fr;gap:36px}}
+
+/* ── DDI phone field ── */
+.ddi-wrap{display:flex;border:1.5px solid var(--br);border-radius:10px;overflow:visible;position:relative;background:#fff;transition:border-color .15s}
+.ddi-wrap:focus-within{border-color:var(--dk)}
+.ddi-wrap.error{border-color:#EF4444}
+.ddi-btn{display:flex;align-items:center;gap:4px;padding:0 10px;border:none;border-right:1.5px solid var(--br);background:none;cursor:pointer;font-family:'Geist',sans-serif;font-size:13px;font-weight:600;color:var(--dk);white-space:nowrap;height:42px;flex-shrink:0;border-radius:8px 0 0 8px}
+.ddi-btn:hover{background:var(--gl)}
+.ddi-wrap input{flex:1;height:42px;border:none;outline:none;padding:0 12px;font-family:'Geist',sans-serif;font-size:14px;color:var(--dk);background:transparent;border-radius:0 8px 8px 0}
+.ddi-wrap input::placeholder{color:#9CA3AF}
+.ddi-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:9999;background:#fff;border:1.5px solid var(--br);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);overflow-y:auto;min-width:210px}
+.ddi-dropdown.open{display:block}
+.ddi-item{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:13px;color:var(--dk);white-space:nowrap}
+.ddi-item:hover{background:var(--gl)}
+.ddi-item-code{margin-left:auto;font-size:12px;color:var(--gr);font-family:'Geist Mono',monospace}
+
+/* ── LGPD signup consent row ── */
+.lgpd-row{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#F9FAFB;border:1px solid var(--br);border-radius:10px;font-size:12px;color:#6B7280;line-height:1.55;cursor:pointer}
+.lgpd-row input[type=checkbox]{width:15px;height:15px;flex-shrink:0;margin-top:1px;accent-color:var(--dk);cursor:pointer}
+.lgpd-row a{color:var(--dk);font-weight:600;text-decoration:none}
+.lgpd-row a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -1657,7 +1677,12 @@ document.querySelectorAll('.faq-q').forEach(q=>{
     <!-- SIGNUP PANEL -->
     <div class="am-panel" id="panel-signup">
       <div id="trial-banner">✓ 7 dias grátis incluídos</div>
-      <button onclick="signInWithGoogle()" style="width:100%;padding:12px;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;font-family:Geist,sans-serif;font-size:14px;font-weight:600;color:#0E0E0E;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continuar com Google</button>
+      <!-- LGPD consent — required for both Google OAuth and email/password signup -->
+      <label class="lgpd-row" id="lgpd-signup-row">
+        <input type="checkbox" id="signup-lgpd">
+        Li e aceito os <a href="/termos" target="_blank" onclick="event.stopPropagation()">Termos de Uso</a> e a <a href="/privacidade" target="_blank" onclick="event.stopPropagation()">Política de Privacidade</a>, incluindo o tratamento dos meus dados conforme a LGPD.
+      </label>
+      <button id="google-signup-btn" onclick="signInWithGoogleSignup()" disabled style="width:100%;padding:12px;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;font-family:Geist,sans-serif;font-size:14px;font-weight:600;color:#0E0E0E;cursor:not-allowed;opacity:0.45;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity .15s"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continuar com Google</button>
       <div class="am-divider">ou use seu e-mail</div>
       <div class="am-field">
         <label for="signup-name">Nome completo</label>
@@ -1668,8 +1693,16 @@ document.querySelectorAll('.faq-q').forEach(q=>{
         <input type="email" id="signup-email" placeholder="seu@email.com" autocomplete="email">
       </div>
       <div class="am-field">
-        <label for="signup-phone">WhatsApp</label>
-        <input type="tel" id="signup-phone" placeholder="(11) 99999-9999" autocomplete="tel" maxlength="15">
+        <label>WhatsApp</label>
+        <div class="ddi-wrap" id="ddi-wrap">
+          <button type="button" id="ddi-btn" class="ddi-btn">
+            <span id="ddi-flag">🇧🇷</span>
+            <span id="ddi-code">+55</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <input type="tel" id="signup-phone" placeholder="(11) 99999-9999" autocomplete="tel">
+          <div id="ddi-dropdown" class="ddi-dropdown"></div>
+        </div>
       </div>
       <div class="am-field">
         <label for="signup-password">Senha</label>
@@ -1933,6 +1966,18 @@ function closeAuth() {
   document.getElementById('signup-btn').textContent = 'Criar conta grátis';
   document.getElementById('login-btn').disabled = false;
   document.getElementById('login-btn').textContent = 'Entrar';
+  // Reset phone field state
+  phoneRaw = '';
+  selectedCountry = PAISES[0];
+  document.getElementById('ddi-flag').textContent = PAISES[0].flag;
+  document.getElementById('ddi-code').textContent = PAISES[0].dialCode;
+  document.getElementById('signup-phone').value = '';
+  document.getElementById('signup-phone').placeholder = PAISES[0].ph;
+  // Reset LGPD checkbox and Google button
+  const lgpdCb = document.getElementById('signup-lgpd');
+  if (lgpdCb) { lgpdCb.checked = false; }
+  const gBtn = document.getElementById('google-signup-btn');
+  if (gBtn) { gBtn.disabled = true; gBtn.style.opacity = '0.45'; gBtn.style.cursor = 'not-allowed'; }
   clearAuthErrors();
 }
 function clearAuthErrors() {
@@ -1975,6 +2020,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth();
 // The callback then redirects back to flowlance.com.br (from=landing), and the session
 // cookie (.flowlance.com.br domain) is readable here via cookieStorage.
 async function signInWithGoogle() {
+  // Login panel — returning users, no consent gate needed
   await sb.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -1983,33 +2029,112 @@ async function signInWithGoogle() {
   });
 }
 
-// ── Phone mask ────────────────────────────────────────────────
-const phoneInput = document.getElementById('signup-phone');
-let phoneRaw = '';
+// Signup panel — new accounts; gated by the LGPD consent checkbox
+async function signInWithGoogleSignup() {
+  const lgpdChecked = document.getElementById('signup-lgpd').checked;
+  if (!lgpdChecked) {
+    showErr('signup-err', 'Aceite os Termos de Uso e a Política de Privacidade para continuar.');
+    return;
+  }
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: isTrialSignup
+        ? 'https://app.flowlance.com.br/auth/callback?from=landing&trial=1'
+        : 'https://app.flowlance.com.br/auth/callback?from=landing',
+    },
+  });
+}
 
-phoneInput.addEventListener('keydown', function(e) {
-  if (e.key === 'Backspace') {
-    e.preventDefault();
-    phoneRaw = phoneRaw.slice(0, -1);
-    this.value = formatPhone(phoneRaw);
+// ── LGPD checkbox wires the Google signup button ───────────────
+document.getElementById('signup-lgpd').addEventListener('change', function() {
+  const btn = document.getElementById('google-signup-btn');
+  btn.disabled = !this.checked;
+  btn.style.opacity = this.checked ? '1' : '0.45';
+  btn.style.cursor = this.checked ? 'pointer' : 'not-allowed';
+});
+
+// ── DDI country selector + phone field ────────────────────────
+const PAISES = [
+  { code:'BR', dialCode:'+55',  flag:'🇧🇷', name:'Brasil',          ph:'(11) 99999-9999' },
+  { code:'US', dialCode:'+1',   flag:'🇺🇸', name:'EUA / Canadá',    ph:'(555) 123-4567' },
+  { code:'PT', dialCode:'+351', flag:'🇵🇹', name:'Portugal',         ph:'912 345 678' },
+  { code:'AR', dialCode:'+54',  flag:'🇦🇷', name:'Argentina',        ph:'11 1234-5678' },
+  { code:'CL', dialCode:'+56',  flag:'🇨🇱', name:'Chile',            ph:'9 1234 5678' },
+  { code:'CO', dialCode:'+57',  flag:'🇨🇴', name:'Colômbia',         ph:'321 123 4567' },
+  { code:'MX', dialCode:'+52',  flag:'🇲🇽', name:'México',           ph:'55 1234 5678' },
+  { code:'ES', dialCode:'+34',  flag:'🇪🇸', name:'Espanha',          ph:'612 34 56 78' },
+  { code:'GB', dialCode:'+44',  flag:'🇬🇧', name:'Reino Unido',      ph:'7700 900000' },
+  { code:'FR', dialCode:'+33',  flag:'🇫🇷', name:'França',           ph:'6 12 34 56 78' },
+  { code:'DE', dialCode:'+49',  flag:'🇩🇪', name:'Alemanha',         ph:'151 12345678' },
+  { code:'IT', dialCode:'+39',  flag:'🇮🇹', name:'Itália',           ph:'312 345 6789' },
+];
+
+let selectedCountry = PAISES[0]; // Brazil default
+let phoneRaw = ''; // raw local digits (no dial code)
+
+// Populate dropdown
+const ddiDropdown = document.getElementById('ddi-dropdown');
+PAISES.forEach(p => {
+  const item = document.createElement('div');
+  item.className = 'ddi-item';
+  item.innerHTML = '<span>' + p.flag + '</span><span>' + p.name + '</span><span class="ddi-item-code">' + p.dialCode + '</span>';
+  item.addEventListener('click', () => selectCountry(p));
+  ddiDropdown.appendChild(item);
+});
+
+function selectCountry(p) {
+  selectedCountry = p;
+  document.getElementById('ddi-flag').textContent = p.flag;
+  document.getElementById('ddi-code').textContent = p.dialCode;
+  const phoneInput = document.getElementById('signup-phone');
+  phoneInput.placeholder = p.ph;
+  // Re-format existing digits for new country
+  phoneInput.value = p.dialCode === '+55' ? formatPhone55(phoneRaw) : phoneRaw;
+  ddiDropdown.classList.remove('open');
+}
+
+// Toggle dropdown
+document.getElementById('ddi-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  ddiDropdown.classList.toggle('open');
+});
+// Close on outside click
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('ddi-wrap').contains(e.target)) {
+    ddiDropdown.classList.remove('open');
   }
 });
 
-phoneInput.addEventListener('input', function(e) {
-  if (e.inputType === 'deleteContentBackward') return;
-  const added = e.data ? e.data.replace(/\D/g, '') : '';
-  if (added && phoneRaw.length < 11) {
-    phoneRaw += added;
-  }
-  this.value = formatPhone(phoneRaw);
-});
-
-function formatPhone(v) {
+// Brazilian format: (DDD) XXXXX-XXXX
+function formatPhone55(v) {
   if (v.length > 6) return '(' + v.substring(0,2) + ') ' + v.substring(2,7) + '-' + v.substring(7);
   if (v.length > 2) return '(' + v.substring(0,2) + ') ' + v.substring(2);
   if (v.length > 0) return '(' + v;
   return '';
 }
+
+// Returns E.164 for the current input (+dialCode + localDigits)
+function getE164() {
+  return phoneRaw ? selectedCountry.dialCode + phoneRaw : '';
+}
+
+const phoneInput = document.getElementById('signup-phone');
+
+phoneInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    phoneRaw = phoneRaw.slice(0, -1);
+    this.value = selectedCountry.dialCode === '+55' ? formatPhone55(phoneRaw) : phoneRaw;
+  }
+});
+phoneInput.addEventListener('input', function(e) {
+  if (e.inputType === 'deleteContentBackward') return;
+  const added = e.data ? e.data.replace(/\D/g, '') : '';
+  const maxLen = selectedCountry.dialCode === '+55' ? 11 : 15;
+  if (added && phoneRaw.length < maxLen) phoneRaw += added;
+  this.value = selectedCountry.dialCode === '+55' ? formatPhone55(phoneRaw) : phoneRaw;
+});
 
 // ── Show confirmation panel inside modal ──────────────────────
 function showConfirmPanel({ title, msgHtml, email } = {}) {
@@ -2091,21 +2216,43 @@ document.getElementById('login-btn').addEventListener('click', async function() 
 document.getElementById('signup-btn').addEventListener('click', async function() {
   const name     = document.getElementById('signup-name').value.trim();
   const email    = document.getElementById('signup-email').value.trim();
-  const phone    = document.getElementById('signup-phone').value.trim();
   const password = document.getElementById('signup-password').value;
+  const lgpd     = document.getElementById('signup-lgpd').checked;
 
-  if (!name || !email || !phone || !password) { showErr('signup-err', 'Preencha todos os campos.'); return; }
-  if (phone.replace(/\D/g,'').length < 10) { showErr('signup-err', 'Número de telefone inválido.'); return; }
+  if (!lgpd) { showErr('signup-err', 'Aceite os Termos de Uso e a Política de Privacidade para continuar.'); return; }
+  if (!name || !email || !phoneRaw || !password) { showErr('signup-err', 'Preencha todos os campos.'); return; }
+
+  const minDigits = selectedCountry.dialCode === '+55' ? 10 : 7;
+  if (phoneRaw.length < minDigits) { showErr('signup-err', 'Número de telefone inválido.'); return; }
   if (password.length < 6) { showErr('signup-err', 'Senha muito curta (mínimo 6 caracteres).'); return; }
 
+  const e164 = getE164(); // e.g. "+5511999999999"
+
   const btn = this;
-  btn.disabled = true; btn.textContent = 'Criando conta…';
+  btn.disabled = true; btn.textContent = 'Validando…';
 
   try {
-    const phoneDigits = phone.replace(/\D/g,'');
+    // Abstract API validation — server-side call via app API (keeps key secret)
+    try {
+      const valRes = await fetch('https://app.flowlance.com.br/api/validar-telefone', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telefone: e164 }),
+      });
+      if (valRes.ok) {
+        const valJson = await valRes.json();
+        if (valJson.valid === false) {
+          showErr('signup-err', valJson.erro || 'Esse número não parece válido. Confira o DDI e os dígitos.');
+          return;
+        }
+      }
+      // If fetch fails or returns non-ok: allow through (don't block signups on infra issues)
+    } catch { /* network error — proceed */ }
 
-    // Check phone duplicate
-    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', phoneDigits).maybeSingle();
+    btn.textContent = 'Criando conta…';
+
+    // Check phone duplicate (E.164 format)
+    const { data: existing } = await sb.from('usuarios').select('id').eq('telefone', e164).maybeSingle();
     if (existing) {
       showErr('signup-err', 'Este número já está cadastrado.');
       return;
@@ -2118,7 +2265,7 @@ document.getElementById('signup-btn').addEventListener('click', async function()
       email,
       password,
       options: {
-        data: { nome: name, telefone: phoneDigits },
+        data: { nome: name, telefone: e164 },
         emailRedirectTo: isTrialSignup ? callbackBase + '?trial=1' : callbackBase,
       },
     });
