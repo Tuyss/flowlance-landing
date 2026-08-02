@@ -194,7 +194,7 @@ body{font-family:'Geist',sans-serif;background:#fff;color:var(--tx);overflow-x:h
 .pc.feat .pc-feats li{color:rgba(255,255,255,.75)}
 .pc-chk{width:18px;height:18px;flex-shrink:0}
 .pc-chk svg{width:18px;height:18px}
-.pc-cta{width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;border:1.5px solid var(--y);font-family:'Geist',sans-serif;transition:all .2s;background:var(--y);color:var(--dk)}
+.pc-cta{display:block;width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;border:1.5px solid var(--y);font-family:'Geist',sans-serif;transition:all .2s;background:var(--y);color:var(--dk);text-align:center;text-decoration:none;box-sizing:border-box}
 .pc-cta:hover{background:var(--yd);border-color:var(--yd)}
 .pc.feat .pc-cta{background:var(--y);color:var(--dk);border-color:var(--y)}
 .pc.feat .pc-cta:hover{background:var(--yd);border-color:var(--yd)}
@@ -472,8 +472,8 @@ const PLANOS = {
     ],
     chkColor: '#059669',
     feat: false,
-    ctaText: 'Começar trial gratuito no Starter',
-    ctaLink: 'https://app.flowlance.com.br/cadastro?utm_source=consultoria&utm_plan=starter',
+    ctaText: 'Começar trial gratuito',
+    ctaLink: 'https://flowlance.com.br/?plano=starter#planos',
     note: '7 dias grátis, sem cartão. Cancele quando quiser.',
     badgeText: null,
     iconSvg: '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>'
@@ -491,9 +491,9 @@ const PLANOS = {
     ],
     chkColor: '#F5C842',
     feat: true,
-    ctaText: 'Começar trial gratuito no Pro',
-    ctaLink: 'https://app.flowlance.com.br/cadastro?utm_source=consultoria&utm_plan=pro',
-    note: '7 dias grátis, sem cartão. Cancele quando quiser.',
+    ctaText: 'Assinar plano Pro',
+    ctaLink: 'https://flowlance.com.br/?plano=pro#planos',
+    note: 'Cobrança imediata. Cancele quando quiser.',
     badgeText: 'Mais popular',
     iconSvg: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>'
   },
@@ -510,9 +510,9 @@ const PLANOS = {
     ],
     chkColor: '#059669',
     feat: false,
-    ctaText: 'Começar trial gratuito no Agência',
-    ctaLink: 'https://app.flowlance.com.br/cadastro?utm_source=consultoria&utm_plan=agencia',
-    note: '7 dias grátis, sem cartão. Cancele quando quiser.',
+    ctaText: 'Assinar plano Agência',
+    ctaLink: 'https://flowlance.com.br/?plano=agencia#planos',
+    note: 'Assine direto. Cancele quando quiser.',
     badgeText: null,
     iconSvg: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>'
   }
@@ -545,8 +545,12 @@ function gerarInsight(ans, planoId) {
 }
 
 function gerarTitulo(planoId) {
-  const emojis = { starter: '✅', pro: '⭐', agencia: '🏆' };
-  return `${emojis[planoId]} Seu plano ideal: ${PLANOS[planoId].nome}`;
+  // Return HTML — caller must use innerHTML, not textContent.
+  // Icon matches the site's stroke-based SVG system; Pro uses dark stroke on yellow bg.
+  const bgCor    = { starter: '#059669', pro: '#F5C842', agencia: '#059669' }[planoId];
+  const strokeCor = planoId === 'pro' ? '#0E0E0E' : '#fff';
+  const icon = `<span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:${bgCor};border-radius:50%;flex-shrink:0;vertical-align:middle;margin-right:10px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${strokeCor}" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>`;
+  return `${icon}Seu plano ideal: ${PLANOS[planoId].nome}`;
 }
 
 function gerarSubtitulo(planoId) {
@@ -730,7 +734,7 @@ function showResult() {
   const planoId = recomendarPlano(answers);
 
   // Personalized copy
-  document.getElementById('result-title').textContent = gerarTitulo(planoId);
+  document.getElementById('result-title').innerHTML = gerarTitulo(planoId);
   document.getElementById('result-subtitle').textContent = gerarSubtitulo(planoId);
   document.getElementById('result-insight-text').innerHTML = gerarInsight(answers, planoId);
 
