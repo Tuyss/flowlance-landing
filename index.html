@@ -2703,9 +2703,42 @@ async function handlePlanClick(planId, billing) {
     }
   };
 
-  if (planId === 'starter') {
-    const { data: perfil } = await sb.from('usuarios').select('trial_expira_em, plano, plano_status').eq('id', session.user.id).maybeSingle();
+  // Fetch plan status once — needed for the paying-subscriber guard that now
+  // runs for ALL plan clicks, not just Starter.
+  const { data: perfil } = await sb
+    .from('usuarios')
+    .select('trial_expira_em, plano, plano_status')
+    .eq('id', session.user.id)
+    .maybeSingle();
 
+  // ── Active paying subscriber guard ────────────────────────────────────────
+  // If this user already has a paid subscription, do NOT open a new Stripe
+  // Checkout session — that would create a second subscription and double-bill
+  // them. Redirect to the Customer Portal instead, where Stripe handles plan
+  // switching with correct proration (upgrade or downgrade).
+  // This guard covers ALL planId values (Starter, Pro, Agência).
+  const planoAtivo = perfil?.plano_status === 'ativo' && perfil?.plano !== 'trial';
+  if (planoAtivo) {
+    try {
+      const res = await fetch(APP_URL + '/api/stripe/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // sends domain=.flowlance.com.br auth cookies
+        body: JSON.stringify({ returnUrl: APP_URL + '/configuracoes?tab=pagamentos' }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.url) { window.location.href = json.url; return; }
+      }
+    } catch {}
+    // Portal call failed (e.g., no stripe_customer_id yet) — send to configuracoes
+    // where they can use "Gerenciar assinatura" once the webhook has run.
+    window.location.href = APP_URL + '/configuracoes?tab=pagamentos';
+    return;
+  }
+
+  // ── Starter-specific flow (non-paying users only reach here) ──────────────
+  if (planId === 'starter') {
     const jaUsouTrial = perfil?.trial_expira_em !== null && perfil?.trial_expira_em !== undefined;
 
     if (!jaUsouTrial) {
@@ -2713,12 +2746,10 @@ async function handlePlanClick(planId, billing) {
       return;
     }
 
-    // Guard: don't send to checkout if they already have an active trial or plan
+    // Only an active trial user can reach this point (planoAtivo already handled above).
     const trialAtivo = perfil?.plano === 'trial' && new Date(perfil.trial_expira_em) > new Date();
-    const planoAtivo = perfil?.plano_status === 'ativo' && perfil?.plano !== 'trial';
-
-    if (trialAtivo || planoAtivo) {
-      showToastComLink('Você já tem um plano ativo.', 'Abrir o app', APP_URL);
+    if (trialAtivo) {
+      showToastComLink('Você já tem um trial ativo.', 'Abrir o app', APP_URL);
       return;
     }
 
@@ -2726,6 +2757,7 @@ async function handlePlanClick(planId, billing) {
     return;
   }
 
+  // Pro or Agência for a non-paying user (trial or no plan) → new checkout
   window.location.href = links[planId][billingType] + '?prefilled_email=' + encodeURIComponent(session.user.email);
 }
 </script>
