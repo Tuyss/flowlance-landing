@@ -366,18 +366,21 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .how-callout-btn{font-family:'Geist',sans-serif;font-size:13px;font-weight:700;color:var(--dk);background:var(--y);border:none;padding:10px 20px;border-radius:8px;cursor:pointer;white-space:nowrap;text-decoration:none;margin-left:auto;flex-shrink:0;transition:background .15s}
 .how-callout-btn:hover{background:var(--yd)}
 
-/* ── TESTIMONIALS ── */
+/* ── BEFORE / AFTER PROOF SECTION (replaced fake testimonials) ── */
 .testi-wrap{background:var(--gl);padding:100px 60px;overflow:hidden}
 .testi-inner{max-width:1100px;margin:0 auto}
 .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
 .tc{background:#fff;border-radius:18px;padding:28px;border:1px solid var(--br);transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s}
 .tc:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.08)}
-.tc-stars{color:var(--yd);letter-spacing:2px;font-size:15px;margin-bottom:14px}
-.tc-text{font-size:15px;color:var(--t2);line-height:1.72;margin-bottom:22px}
-.tc-auth{display:flex;align-items:center;gap:12px}
-.tc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
-.tc-name{font-size:14px;font-weight:700;color:var(--dk)}
-.tc-role{font-size:12px;color:var(--gr)}
+.tc-icon{width:44px;height:44px;background:var(--y);border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;flex-shrink:0}
+.tc-icon svg{width:21px;height:21px;stroke:var(--dk);stroke-width:2;fill:none}
+.tc-topic{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gr);margin-bottom:16px}
+.tc-before{background:#F5F5F5;border-radius:10px;padding:14px 16px;margin-bottom:8px}
+.tc-after{background:var(--yb);border:1px solid rgba(245,200,66,.3);border-radius:10px;padding:14px 16px}
+.tc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9CA3AF;display:block;margin-bottom:6px}
+.tc-label-after{color:#A16207}
+.tc-before p,.tc-after p{font-size:14px;color:var(--t2);line-height:1.6;margin:0}
+.tc-arrow{font-size:13px;font-weight:700;color:var(--y);text-align:center;margin:4px 0;display:block}
 
 /* ── FAQ ── */
 .faq-wrap{background:#fff;padding:100px 60px}
@@ -786,8 +789,8 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <p class="eyebrow">Gestão completa para freelancers brasileiros</p>
-    <h1>Propostas, clientes<br>e cobranças — num só lugar.</h1>
-    <p class="hero-sub">Crie propostas profissionais, gerencie seus clientes e receba pagamentos via Pix — tudo pelo Flowlance, sem planilha e sem bagunça.</p>
+    <h1>Propostas, clientes<br>e cobranças no mesmo lugar.</h1>
+    <p class="hero-sub">Crie propostas profissionais, gerencie seus clientes e receba pagamentos via Pix. Tudo pelo Flowlance, sem planilha e sem bagunça.</p>
     <div class="hero-cta">
       <button class="btn-yellow" onclick="openTrial()">Começar grátis por 7 dias</button>
       <a href="/consultoria" class="btn-outline" style="text-decoration:none">Fazer consultoria grátis →</a>
@@ -835,7 +838,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <div class="sticky-block" data-section="0">
       <p class="feat-eye">Dashboard</p>
       <h2>Chega de abrir três abas para saber quanto vai entrar esse mês.</h2>
-      <p>Receita recebida, cobranças pendentes, propostas aceitas e meta do mês — tudo num painel que se atualiza em tempo real. Você vê a situação do seu negócio antes de tomar o café.</p>
+      <p>Receita recebida, cobranças pendentes, propostas aceitas e meta do mês: tudo num painel que se atualiza em tempo real. Você vê a situação do seu negócio antes de tomar o café.</p>
       <div class="feat-tabs">
         <button class="ftab active" data-screen="dash-overview"><span class="ftab-dot"></span>Visão geral</button>
         <button class="ftab" data-screen="dash-goal"><span class="ftab-dot"></span>Meta mensal</button>
@@ -845,7 +848,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <div class="sticky-block" data-section="1">
       <p class="feat-eye">Propostas</p>
       <h2>Você gasta 20 minutos no Word. O cliente nem responde. Isso acaba.</h2>
-      <p>Escolha um template, preencha os valores e envie o link em 2 minutos. O cliente abre numa página que passa credibilidade — sem PDF para baixar — e aprova com um clique.</p>
+      <p>Escolha um template, preencha os valores e envie o link em 2 minutos. O cliente abre numa página profissional, sem precisar baixar PDF, e aprova com um clique.</p>
       <div class="feat-tabs">
         <button class="ftab active" data-screen="prop-list"><span class="ftab-dot"></span>Templates prontos</button>
         <button class="ftab" data-screen="prop-whatsapp"><span class="ftab-dot"></span>Envio por WhatsApp</button>
@@ -854,8 +857,8 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     </div>
     <div class="sticky-block" data-section="2">
       <p class="feat-eye">Rastreamento</p>
-      <h2>"Ainda estou pensando" — mas você não sabe se ele nem abriu.</h2>
-      <p>Você recebe uma notificação no segundo em que o cliente abrir a proposta. Com dispositivo, horário e tempo de leitura — para você ligar na hora certa, quando o interesse está no pico.</p>
+      <h2>"Ainda estou pensando." Você não sabe se ele sequer abriu.</h2>
+      <p>Você recebe uma notificação no segundo em que o cliente abrir a proposta. Com dispositivo, horário e tempo de leitura: ligue na hora certa, quando o interesse está no pico.</p>
       <div class="feat-tabs">
         <button class="ftab active" data-screen="track-stats"><span class="ftab-dot"></span>Visualizações em tempo real</button>
         <button class="ftab" data-screen="track-hist"><span class="ftab-dot"></span>Histórico de acessos</button>
@@ -1051,14 +1054,14 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
         <div class="feat-card-title">Histórico por cliente, sem vasculhar</div>
-        <div class="feat-card-desc">Você vasculha o WhatsApp tentando lembrar o que combinou. Com a Flowlance, cada cliente tem histórico completo de propostas e cobranças — em segundos.</div>
+        <div class="feat-card-desc">Você vasculha o WhatsApp tentando lembrar o que combinou. Com a Flowlance, cada cliente tem histórico completo de propostas e cobranças. Em segundos.</div>
       </div>
 
       <div class="feat-card reveal d3">
         <div class="feat-card-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
         </div>
-        <div class="feat-card-title">Cobrança gerada ao aceitar — Pix</div>
+        <div class="feat-card-title">Cobrança Pix gerada ao aceitar</div>
         <div class="feat-card-desc">Cobrar o cliente é sempre constrangedor. Quando a proposta é aceita, a cobrança Pix é gerada automaticamente. Você recebe e sabe na hora que o dinheiro entrou.</div>
       </div>
 
@@ -1067,7 +1070,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </div>
         <div class="feat-card-title">Saiba quando o cliente abriu</div>
-        <div class="feat-card-desc">"Ainda estou pensando" — mas você não sabe se ele nem abriu. Rastreamento em tempo real: hora, dispositivo e tempo de leitura. Você liga na hora certa.</div>
+        <div class="feat-card-desc">Saiba quando ele abriu. Rastreamento em tempo real: hora, dispositivo e tempo de leitura. Você liga no momento certo.</div>
       </div>
 
       <div class="feat-card reveal d1">
@@ -1099,7 +1102,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         </div>
         <div class="feat-card-title">Meta do mês, visível em segundos</div>
-        <div class="feat-card-desc">Você chega ao fim do mês sem saber exatamente quanto entrou. O dashboard mostra receita, pendências e meta em tempo real — sem planilha, sem cálculo na cabeça.</div>
+        <div class="feat-card-desc">Você chega ao fim do mês sem saber exatamente quanto entrou. O dashboard mostra receita, pendências e meta em tempo real. Sem planilha, sem cálculo na cabeça.</div>
       </div>
 
     </div>
@@ -1204,7 +1207,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <div class="mobile-copy">
       <p class="eyebrow reveal">Acesso mobile</p>
       <h2 class="reveal d1">Você está em reunião. O cliente acabou de aceitar. Você vai saber.</h2>
-      <p class="reveal d2">A Flowlance funciona igual no celular e no computador — sem versão reduzida. Pagamento confirmado, nota emitida, proposta aceita: tudo chega como notificação, onde você estiver.</p>
+      <p class="reveal d2">A Flowlance funciona igual no celular e no computador. Sem versão reduzida. Pagamento confirmado, nota emitida, proposta aceita: tudo chega como notificação, onde você estiver.</p>
       <div class="mobile-feats reveal d3">
         <div class="mf"><div class="mf-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div><div class="mf-t">Notificação no instante certo</div><div class="mf-d">Proposta aberta, aceita ou paga — você recebe na hora, sem precisar checar</div></div></div>
         <div class="mf"><div class="mf-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="mf-t">Receita e saldo em tempo real</div><div class="mf-d">Veja quanto entrou, quanto está pendente e bata a meta do mês pelo celular</div></div></div>
@@ -1238,7 +1241,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
       <div class="how-step reveal d1">
         <div class="how-num">01</div>
         <h3>Crie sua conta</h3>
-        <p>Preencha email e senha, ou entre com o Google. Menos de 1 minuto — sem burocracia.</p>
+        <p>Preencha email e senha, ou entre com o Google. Menos de 1 minuto, sem burocracia.</p>
       </div>
 
       <div class="how-step reveal d2">
@@ -1250,7 +1253,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
       <div class="how-step reveal d3">
         <div class="how-num">03</div>
         <h3>Acesse o aplicativo</h3>
-        <p>Após o cadastro você entra direto no app, pelo celular ou computador — mesmo login.</p>
+        <p>Após o cadastro você entra direto no app, pelo celular ou computador, com o mesmo login.</p>
       </div>
 
       <div class="how-step reveal d4">
@@ -1305,37 +1308,59 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   </div>
 </div>
 
-<!-- TESTIMONIALS -->
+<!-- BEFORE / AFTER PROOF SECTION -->
 <div class="testi-wrap">
   <div class="testi-inner">
-    <p class="sl reveal">Depoimentos</p>
-    <h2 class="sh2 reveal d1">Freelancers que pararam de improvisar.</h2>
+    <p class="sl reveal">Na prática</p>
+    <h2 class="sh2 reveal d1">O que muda no seu dia a dia.</h2>
+    <p class="reveal d2" style="font-size:17px;color:var(--gr);max-width:560px;line-height:1.65;margin-bottom:52px">Cada automação da Flowlance existe porque alguém já perdeu tempo, dinheiro ou cliente fazendo isso no braço.</p>
     <div class="testi-grid">
 
       <div class="tc reveal d1">
-        <div class="tc-stars">★★★★★</div>
-        <p class="tc-text">"Antes eu ficava 20 minutos montando proposta no Word, mandava por email, o cliente não abria. Agora levo 2 minutos na Flowlance, mando o link pelo WhatsApp e o cliente aprova pelo celular mesmo. Fechei 3 projetos em uma semana."</p>
-        <div class="tc-auth">
-          <div class="tc-av" style="background:#FDE68A;color:#78350F">MS</div>
-          <div><div class="tc-name">Marina Souza</div><div class="tc-role">Designer Freelance · São Paulo</div></div>
+        <div class="tc-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        </div>
+        <div class="tc-topic">Proposta</div>
+        <div class="tc-before">
+          <span class="tc-label">Antes</span>
+          <p>20 minutos no Word, email que o cliente não abre, você não sabe se ele recebeu.</p>
+        </div>
+        <span class="tc-arrow">↓</span>
+        <div class="tc-after">
+          <span class="tc-label tc-label-after">Com a Flowlance</span>
+          <p>Template pronto em 2 minutos. Link pelo WhatsApp. O cliente aprova pelo celular com 1 clique.</p>
         </div>
       </div>
 
       <div class="tc reveal d2">
-        <div class="tc-stars">★★★★★</div>
-        <p class="tc-text">"Eu perdia clientes porque não sabia a hora certa de fazer follow-up. Com o rastreamento da Flowlance, recebo notificação exata quando o cliente abre — e ligo enquanto ainda está com a proposta na frente. Mudou completamente como eu fecho."</p>
-        <div class="tc-auth">
-          <div class="tc-av" style="background:#BFDBFE;color:#1E3A8A">RT</div>
-          <div><div class="tc-name">Rafael Teixeira</div><div class="tc-role">Desenvolvedor Web · Curitiba</div></div>
+        <div class="tc-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <div class="tc-topic">Cobrança</div>
+        <div class="tc-before">
+          <span class="tc-label">Antes</span>
+          <p>Chave Pix mandada no WhatsApp, esperando comprovante, sem saber se o dinheiro entrou.</p>
+        </div>
+        <span class="tc-arrow">↓</span>
+        <div class="tc-after">
+          <span class="tc-label tc-label-after">Com a Flowlance</span>
+          <p>Pix gerado automaticamente ao aceitar a proposta. Você recebe e sabe na hora que entrou.</p>
         </div>
       </div>
 
       <div class="tc reveal d3">
-        <div class="tc-stars">★★★★★</div>
-        <p class="tc-text">"O que eu mais odiava era cobrar — parecia que eu estava incomodando. Agora a cobrança Pix vai automática quando o cliente aceita a proposta. Nunca mais precisei mandar chave de Pix no WhatsApp e ficar esperando comprovante chegar."</p>
-        <div class="tc-auth">
-          <div class="tc-av" style="background:#D1FAE5;color:#064E3B">CA</div>
-          <div><div class="tc-name">Camila Andrade</div><div class="tc-role">Social Media Manager · Rio de Janeiro</div></div>
+        <div class="tc-icon">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="tc-topic">Rastreamento</div>
+        <div class="tc-before">
+          <span class="tc-label">Antes</span>
+          <p>"Ainda estou pensando." Você não sabe se ele sequer abriu, nem quando ligar.</p>
+        </div>
+        <span class="tc-arrow">↓</span>
+        <div class="tc-after">
+          <span class="tc-label tc-label-after">Com a Flowlance</span>
+          <p>Notificação na hora que ele abre, com dispositivo e tempo de leitura. Você liga no momento certo.</p>
         </div>
       </div>
 
