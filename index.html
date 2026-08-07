@@ -465,6 +465,7 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .pc-cta:hover{border-color:var(--dk);background:var(--gl)}
 .pc-cta.cta-y{background:var(--y);color:var(--dk);border-color:var(--y)}
 .pc-cta.cta-y:hover{background:var(--yd);border-color:var(--yd)}
+.pc-cta.cta-current{background:#F3F4F6!important;color:#9CA3AF!important;border-color:#E5E7EB!important;cursor:default!important;pointer-events:none}
 .pc.feat .pc-cta{background:var(--y);color:var(--dk);border-color:var(--y)}
 .pc.feat .pc-cta:hover{background:var(--yd);border-color:var(--yd)}
 .pc-note{font-size:12px;color:var(--gr);text-align:center;margin-top:10px}
@@ -1424,7 +1425,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>15 NFS-e inclusas/mês</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Dashboard e Gestão de Clientes</li>
         </ul>
-        <button class="pc-cta" onclick="handlePlanClick('starter', currentBilling)">Começar trial gratuito</button>
+        <button id="plan-btn-starter" class="pc-cta" onclick="handlePlanClick('starter', currentBilling)">Começar trial gratuito</button>
         <p class="pc-note">Após 7 dias, escolha um plano para continuar. Conta bloqueada se não assinar.</p>
       </div>
 
@@ -1453,7 +1454,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#F5C842" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Follow-up via WhatsApp</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#F5C842" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Módulo de Reuniões (agendamento integrado)</li>
         </ul>
-        <button class="pc-cta" onclick="handlePlanClick('pro', currentBilling)">Assinar agora</button>
+        <button id="plan-btn-pro" class="pc-cta" onclick="handlePlanClick('pro', currentBilling)">Assinar agora</button>
         <p class="pc-note">Cobrança imediata. Cancele quando quiser.</p>
       </div>
 
@@ -1482,7 +1483,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Relatórios Avançados</li>
           <li><div class="pc-chk"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>Custom Branding (remoção da marca Flowlance em páginas públicas)</li>
         </ul>
-        <button class="pc-cta cta-y" onclick="handlePlanClick('agencia', currentBilling)">Assinar agora</button>
+        <button id="plan-btn-agencia" class="pc-cta cta-y" onclick="handlePlanClick('agencia', currentBilling)">Assinar agora</button>
         <p class="pc-note">Assine direto. Cancele quando quiser.</p>
       </div>
 
@@ -2542,6 +2543,7 @@ function updateNavForLoggedUser(userEmail, userName) {
       sb.from('usuarios').select('plano').eq('id', user.id).maybeSingle().then(({ data }) => {
         const labels = { trial: 'Trial', starter: 'Starter', pro: 'Pro', agencia: 'Agência' };
         planDiv.textContent = labels[data?.plano] || 'Sem plano';
+        updatePlanButtons(data?.plano || null);
       });
     });
 
@@ -2700,6 +2702,30 @@ async function confirmTrial() {
     setTimeout(() => el.classList.remove('highlighted'), 6000);
   }, 600);
 })();
+
+// ── Plan-aware button labels (logged-in users only) ───────────────────────────
+const _PLANO_ORDER = { trial: 0, starter: 1, pro: 2, agencia: 3 };
+
+function updatePlanButtons(currentPlano) {
+  // Trial or no plan → keep original labels (no current plan to compare)
+  if (!currentPlano || currentPlano === 'trial') return;
+
+  ['starter', 'pro', 'agencia'].forEach(function(planId) {
+    var btn = document.getElementById('plan-btn-' + planId);
+    if (!btn) return;
+    var curr = _PLANO_ORDER[currentPlano] ?? -1;
+    var tgt  = _PLANO_ORDER[planId] ?? 0;
+    if (curr === tgt) {
+      btn.textContent = 'Seu plano atual';
+      btn.classList.add('cta-current');
+      btn.onclick = null;
+    } else if (tgt > curr) {
+      btn.textContent = 'Fazer upgrade';
+    } else {
+      btn.textContent = 'Fazer downgrade';
+    }
+  });
+}
 
 async function handlePlanClick(planId, billing) {
   const { data: { session } } = await sb.auth.getSession();
