@@ -2540,10 +2540,33 @@ function updateNavForLoggedUser(userEmail, userName) {
 
     sb.auth.getUser().then(({ data: { user } }) => {
       if (!user) return;
-      sb.from('usuarios').select('plano').eq('id', user.id).maybeSingle().then(({ data }) => {
+      sb.from('usuarios').select('plano').eq('id', user.id).maybeSingle().then(async ({ data }) => {
+        const plano = data?.plano;
+        if (!plano) {
+          // No plan: check if this user is an active workspace member.
+          // Members have plano=null because they inherit Agência from the owner.
+          const { data: mRow } = await sb.from('workspace_membros')
+            .select('workspace_id')
+            .eq('usuario_id', user.id)
+            .eq('papel', 'member')
+            .eq('status', 'ativo')
+            .maybeSingle();
+          if (mRow) {
+            const { data: owner } = await sb.from('usuarios')
+              .select('nome_empresa, nome')
+              .eq('id', mRow.workspace_id)
+              .maybeSingle();
+            const empresa = (owner && (owner.nome_empresa || owner.nome)) || 'equipe';
+            _isMemberOfTeam = true;
+            _memberTeamEmpresa = empresa;
+            planDiv.textContent = 'Membro da equipe de ' + empresa;
+            updatePlanButtons('member');
+            return;
+          }
+        }
         const labels = { trial: 'Trial', starter: 'Starter', pro: 'Pro', agencia: 'Agência' };
-        planDiv.textContent = labels[data?.plano] || 'Sem plano';
-        updatePlanButtons(data?.plano || null);
+        planDiv.textContent = labels[plano] || 'Sem plano';
+        updatePlanButtons(plano || null);
       });
     });
 
@@ -2705,10 +2728,28 @@ async function confirmTrial() {
 
 // ── Plan-aware button labels (logged-in users only) ───────────────────────────
 const _PLANO_ORDER = { trial: 0, starter: 1, pro: 2, agencia: 3 };
+// Workspace member state — set by updateNavForLoggedUser once the async plan
+// fetch resolves. handlePlanClick reads these to block checkout without a
+// second round-trip when the cache is warm; it re-queries when plano=null and
+// the cache hasn't resolved yet (e.g. user clicks a CTA immediately after login).
+let _isMemberOfTeam = false;
+let _memberTeamEmpresa = '';
 
 function updatePlanButtons(currentPlano) {
   // Trial or no plan → keep original labels (no current plan to compare)
   if (!currentPlano || currentPlano === 'trial') return;
+
+  // Workspace members cannot subscribe independently — disable all plan CTAs.
+  if (currentPlano === 'member') {
+    ['starter', 'pro', 'agencia'].forEach(function(planId) {
+      var btn = document.getElementById('plan-btn-' + planId);
+      if (!btn) return;
+      btn.textContent = 'Indisponível para membros';
+      btn.classList.add('cta-current');
+      btn.onclick = null;
+    });
+    return;
+  }
 
   ['starter', 'pro', 'agencia'].forEach(function(planId) {
     var btn = document.getElementById('plan-btn-' + planId);
@@ -2760,6 +2801,37 @@ async function handlePlanClick(planId, billing) {
     .select('trial_expira_em, plano, plano_status')
     .eq('id', session.user.id)
     .maybeSingle();
+
+  // ── Workspace member guard ────────────────────────────────────────────────
+  // Members (plano=null) already have a paid seat via their team — block any
+  // checkout/trial attempt and show a clear explanation.
+  // Use the cached state from updateNavForLoggedUser when warm; re-query inline
+  // only when the cache hasn't resolved yet (early click before async finishes).
+  let _memberEmpresa = _isMemberOfTeam ? _memberTeamEmpresa : null;
+  if (!_memberEmpresa && !perfil?.plano) {
+    const { data: mRow } = await sb.from('workspace_membros')
+      .select('workspace_id')
+      .eq('usuario_id', session.user.id)
+      .eq('papel', 'member')
+      .eq('status', 'ativo')
+      .maybeSingle();
+    if (mRow) {
+      const { data: owner } = await sb.from('usuarios')
+        .select('nome_empresa, nome')
+        .eq('id', mRow.workspace_id)
+        .maybeSingle();
+      _memberEmpresa = (owner && (owner.nome_empresa || owner.nome)) || 'equipe';
+      _isMemberOfTeam = true;
+      _memberTeamEmpresa = _memberEmpresa;
+    }
+  }
+  if (_memberEmpresa) {
+    showToastComLink(
+      'Você já faz parte da equipe de ' + _memberEmpresa + ' no plano Agência. Para assinar um plano próprio, primeiro saia da equipe atual.',
+      null, null
+    );
+    return;
+  }
 
   // ── Active paying subscriber guard ────────────────────────────────────────
   // If this user already has a paid subscription, do NOT open a new Stripe
