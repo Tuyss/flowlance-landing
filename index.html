@@ -1938,11 +1938,16 @@ const cookieStorage = {
     return raw;
   },
   setItem(key, value) {
+    // Add Secure in production (HTTPS) to match @supabase/ssr's cookie attributes
+    // on app.flowlance.com.br — mismatched Secure flags can cause the browser to
+    // treat them as different cookies and fail cross-domain session reads.
+    const secure = location.protocol === 'https:' ? '; Secure' : '';
     document.cookie = key + '=' + encodeURIComponent(value) +
       '; domain=' + COOKIE_DOMAIN +
       '; path=/' +
       '; max-age=' + COOKIE_MAX_AGE +
-      '; SameSite=Lax';
+      '; SameSite=Lax' +
+      secure;
   },
   removeItem(key) {
     document.cookie = key + '=; domain=' + COOKIE_DOMAIN + '; path=/; max-age=0';
@@ -2561,12 +2566,21 @@ function updateNavForLoggedUser(userEmail, userName) {
             _memberTeamEmpresa = empresa;
             planDiv.textContent = 'Membro da equipe de ' + empresa;
             updatePlanButtons('member');
+            updateCtaLabels('Abrir app da equipe →');
             return;
           }
         }
         const labels = { trial: 'Trial', starter: 'Starter', pro: 'Pro', agencia: 'Agência' };
         planDiv.textContent = labels[plano] || 'Sem plano';
         updatePlanButtons(plano || null);
+        // Update generic page CTAs so logged-in users never see "Criar conta grátis"
+        if (plano && plano !== 'trial') {
+          updateCtaLabels('Acessar minha conta →');
+        } else if (plano === 'trial') {
+          updateCtaLabels('Continuar meu trial →');
+        } else {
+          updateCtaLabels('Escolher meu plano →');
+        }
       });
     });
 
@@ -2582,12 +2596,13 @@ function updateNavForLoggedUser(userEmail, userName) {
     logoutBtn.onmouseout = () => logoutBtn.style.background = 'none';
     logoutBtn.addEventListener('click', async () => {
       await sb.auth.signOut();
-      const btn = document.getElementById('open-app-btn');
-      btn.textContent = 'Abrir app →';
-      btn.style.display = 'none';
-      wrapper.remove();
-      if (navLogin) navLogin.style.display = '';
-      if (navCta) navCta.style.display = '';
+      // Reset module-level auth state so any subsequent login on the same page
+      // doesn't inherit the previous user's member status or empresa name.
+      _isMemberOfTeam = false;
+      _memberTeamEmpresa = '';
+      // Reload the page: cleanest way to restore all CTA labels and pricing
+      // button states to their logged-out defaults without tracking each mutation.
+      window.location.reload();
     });
     dropdown.appendChild(logoutBtn);
 
@@ -2728,6 +2743,16 @@ async function confirmTrial() {
 
 // ── Plan-aware button labels (logged-in users only) ───────────────────────────
 const _PLANO_ORDER = { trial: 0, starter: 1, pro: 2, agencia: 3 };
+
+// Updates every generic CTA button (.btn-yellow / .btn-dk-big) on the page
+// to context-appropriate copy for logged-in users.  Pricing-section plan
+// buttons (#plan-btn-*) are managed separately by updatePlanButtons().
+function updateCtaLabels(labelText) {
+  document.querySelectorAll('.btn-yellow, .btn-dk-big').forEach(function(btn) {
+    if (btn.id && btn.id.startsWith('plan-btn-')) return;
+    btn.textContent = labelText;
+  });
+}
 // Workspace member state — set by updateNavForLoggedUser once the async plan
 // fetch resolves. handlePlanClick reads these to block checkout without a
 // second round-trip when the cache is warm; it re-queries when plano=null and
