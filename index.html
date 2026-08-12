@@ -1893,17 +1893,36 @@ const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const COOKIE_DOMAIN = '.flowlance.com.br';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days — match Supabase JWT expiry
 
-// Decode a value that @supabase/ssr wrote with cookieEncoding:"base64url" (the
-// server-client default). The server prefixes the value with "base64-" and then
-// base64url-encodes the raw JSON so it survives cookie size limits cleanly.
-// supabase-js (browser) calls storage.getItem() and expects plain JSON, so we
-// must strip the prefix and decode before returning.
+// ── Base64url codec (mirrors @supabase/ssr's cookieEncoding:"base64url") ─────
+// Writing sessions in base64url format has two benefits over encodeURIComponent:
+//   1. Size: base64 expands by ~33% vs 200-300% for URL-encoding JSON. A 2 KB
+//      session JSON encodes to ~2.7 KB in base64url but ~5 KB URL-encoded —
+//      exceeding the browser's 4096-byte per-cookie limit and silently failing.
+//   2. Compatibility: the app.flowlance.com.br server client (via @supabase/ssr)
+//      also writes cookies in this format, so both sides read each other's cookies
+//      without any additional decoding step.
+
 function _fromBase64URL(b64url) {
   const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
   const padded = b64.padEnd(b64.length + (4 - b64.length % 4) % 4, '=');
   const bytes = Uint8Array.from(atob(padded), c => c.charCodeAt(0));
   return new TextDecoder().decode(bytes);
 }
+
+function _toBase64URL(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+  const b64 = btoa(binary);
+  return 'base64-' + b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+// Controls cookie max-age: true = 7-day persistent (checked "Lembrar de mim"),
+// false = session cookie that expires when the browser closes (unchecked).
+// Set by the login handler based on the checkbox state before calling signIn.
+let _rememberMe = true;
+
+const COOKIE_CHUNK_SIZE = 3500; // safe per-chunk limit (4096 - name - attrs headroom)
 
 const cookieStorage = {
   getItem(key) {
@@ -1914,11 +1933,14 @@ const cookieStorage = {
     const allCookies = document.cookie.split(';').map(c => c.trim());
     const findCookie = (k) => {
       const match = allCookies.find(c => c.startsWith(k + '='));
-      return match ? decodeURIComponent(match.slice(k.length + 1)) : null;
+      // Cookies written by this adapter are NOT URL-encoded (base64url is cookie-safe).
+      // Cookies written by legacy setItem were URL-encoded — try both.
+      if (!match) return null;
+      const raw = match.slice(k.length + 1);
+      try { return decodeURIComponent(raw); } catch { return raw; }
     };
     // Try non-chunked (single cookie) first
-    const direct = findCookie(key);
-    let raw = direct;
+    let raw = findCookie(key);
     if (!raw) {
       // Reassemble chunked cookies: key.0, key.1, key.2, ...
       const chunks = [];
@@ -1930,33 +1952,56 @@ const cookieStorage = {
       raw = chunks.length > 0 ? chunks.join('') : null;
     }
     if (!raw) return null;
-    // Decode the "base64-" prefix that @supabase/ssr adds when cookieEncoding is
-    // "base64url" (the server-client default) so supabase-js can JSON.parse it.
+    // Decode the "base64-" prefix (written by both this adapter and @supabase/ssr).
     if (raw.startsWith('base64-')) {
       try { return _fromBase64URL(raw.slice(7)); } catch { return null; }
     }
     return raw;
   },
+
   setItem(key, value) {
-    // Add Secure in production (HTTPS) to match @supabase/ssr's cookie attributes
-    // on app.flowlance.com.br — mismatched Secure flags can cause the browser to
-    // treat them as different cookies and fail cross-domain session reads.
     const secure = location.protocol === 'https:' ? '; Secure' : '';
-    document.cookie = key + '=' + encodeURIComponent(value) +
-      '; domain=' + COOKIE_DOMAIN +
-      '; path=/' +
-      '; max-age=' + COOKIE_MAX_AGE +
-      '; SameSite=Lax' +
-      secure;
+    // Use max-age only when "Lembrar de mim" is checked; omit it for a session cookie.
+    const maxAgePart = _rememberMe ? '; max-age=' + COOKIE_MAX_AGE : '';
+    const attrs = '; domain=' + COOKIE_DOMAIN + '; path=/' + maxAgePart + '; SameSite=Lax' + secure;
+
+    // Encode as base64url (same format as @supabase/ssr) — stays well under the
+    // 4096-byte per-cookie limit even for large sessions with Google identities.
+    const encoded = _toBase64URL(value);
+
+    if (encoded.length <= COOKIE_CHUNK_SIZE) {
+      // Single cookie — erase any stale chunks from a previous large session first.
+      for (let i = 0; ; i++) {
+        const n = key + '.' + i;
+        if (!document.cookie.split(';').some(c => c.trim().startsWith(n + '='))) break;
+        document.cookie = n + '=; domain=' + COOKIE_DOMAIN + '; path=/; max-age=0';
+      }
+      document.cookie = key + '=' + encoded + attrs;
+    } else {
+      // Split into chunks (mirrors @supabase/ssr's chunking strategy).
+      // Erase any existing single-cookie first so getItem doesn't pick it up.
+      document.cookie = key + '=; domain=' + COOKIE_DOMAIN + '; path=/; max-age=0';
+      for (let i = 0; i * COOKIE_CHUNK_SIZE < encoded.length; i++) {
+        const chunk = encoded.slice(i * COOKIE_CHUNK_SIZE, (i + 1) * COOKIE_CHUNK_SIZE);
+        document.cookie = key + '.' + i + '=' + chunk + attrs;
+      }
+    }
   },
+
   removeItem(key) {
     document.cookie = key + '=; domain=' + COOKIE_DOMAIN + '; path=/; max-age=0';
+    // Also remove any chunks that may exist for this key.
+    for (let i = 0; ; i++) {
+      const n = key + '.' + i;
+      if (!document.cookie.split(';').some(c => c.trim().startsWith(n + '='))) break;
+      document.cookie = n + '=; domain=' + COOKIE_DOMAIN + '; path=/; max-age=0';
+    }
   }
 };
 
 const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
   auth: {
-    autoRefreshToken: false,
+    autoRefreshToken: true,    // refresh the access token before it expires (1 h default)
     persistSession: true,      // store session in cookieStorage so it survives page reloads
     detectSessionInUrl: false, // callback is on app.flowlance.com.br, not here
     storage: cookieStorage,    // use parent-domain cookies instead of localStorage
@@ -2261,6 +2306,9 @@ document.getElementById('login-btn').addEventListener('click', async function() 
   if (!email || !password) { showErr('login-err', 'Preencha email e senha.'); return; }
   const btn = this;
   btn.disabled = true; btn.textContent = 'Verificando…';
+
+  // Wire "Lembrar de mim": checked → 7-day persistent cookie; unchecked → session cookie.
+  _rememberMe = document.getElementById('login-remember')?.checked !== false;
 
   try {
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
