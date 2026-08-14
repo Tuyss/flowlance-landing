@@ -2628,6 +2628,7 @@ function updateNavForLoggedUser(userEmail, userName) {
           updateCtaLabels('Continuar meu trial →');
         } else {
           updateCtaLabels('Escolher meu plano →');
+          applyNoplanCtaStyle();
         }
       });
     });
@@ -2792,6 +2793,12 @@ async function confirmTrial() {
 // ── Plan-aware button labels (logged-in users only) ───────────────────────────
 const _PLANO_ORDER = { trial: 0, starter: 1, pro: 2, agencia: 3 };
 
+// Smooth-scrolls to the pricing section.
+function scrollToPlanos() {
+  var el = document.getElementById('planos');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // Updates every generic CTA button (.btn-yellow / .btn-dk-big) on the page
 // to context-appropriate copy for logged-in users.  Pricing-section plan
 // buttons (#plan-btn-*) are managed separately by updatePlanButtons().
@@ -2799,6 +2806,31 @@ function updateCtaLabels(labelText) {
   document.querySelectorAll('.btn-yellow, .btn-dk-big').forEach(function(btn) {
     if (btn.id && btn.id.startsWith('plan-btn-')) return;
     btn.textContent = labelText;
+  });
+}
+
+// Transforms generic CTA buttons for the no-plan logged-in user:
+//   • Changes click handler to scroll to the plan cards instead of opening
+//     the trial signup modal (openTrial → scrollToPlanos).
+//   • Restyled to match the visual weight of the adjacent "Fazer consultoria
+//     grátis" outline button so both CTAs look like a coherent pair.
+//   • .btn-yellow appears on the dark hero/pain background → white outline.
+//   • .btn-dk-big appears on the yellow cta-final background → dark outline.
+function applyNoplanCtaStyle() {
+  document.querySelectorAll('.btn-yellow').forEach(function(btn) {
+    if (btn.id && btn.id.startsWith('plan-btn-')) return;
+    btn.style.background = 'none';
+    btn.style.color = 'rgba(255,255,255,0.85)';
+    btn.style.border = '1.5px solid rgba(255,255,255,0.35)';
+    btn.style.fontWeight = '600';
+    btn.onclick = function(e) { e.stopPropagation(); scrollToPlanos(); };
+  });
+  document.querySelectorAll('.btn-dk-big').forEach(function(btn) {
+    btn.style.background = 'none';
+    btn.style.color = 'rgba(0,0,0,0.65)';
+    btn.style.border = '1.5px solid rgba(0,0,0,0.25)';
+    btn.style.fontWeight = '600';
+    btn.onclick = function(e) { e.stopPropagation(); scrollToPlanos(); };
   });
 }
 // Workspace member state — set by updateNavForLoggedUser once the async plan
