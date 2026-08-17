@@ -2883,21 +2883,7 @@ async function handlePlanClick(planId, billing) {
   }
 
   const billingType = billing || 'mensal';
-
-  const links = {
-    starter: {
-      mensal: 'https://buy.stripe.com/test_5kQaEQbNc5PX1hFc7D57W05',
-      anual:  'https://buy.stripe.com/test_5kQbIU7wW5PX8K7b3z57W00'
-    },
-    pro: {
-      mensal: 'https://buy.stripe.com/test_eVq28k3gfqxbWj1sZ57W01',
-      anual:  'https://buy.stripe.com/test_dRmaEQbNcdip2lJ7Rn57W04'
-    },
-    agencia: {
-      mensal: 'https://buy.stripe.com/test_3cIfZa6sS0vDbWjfjP57W02',
-      anual:  'https://buy.stripe.com/test_bJedR27wW929gcz5Jf57W03'
-    }
-  };
+  const interval = billingType === 'anual' ? 'yearly' : 'monthly';
 
   // Fetch plan status once — needed for the paying-subscriber guard that now
   // runs for ALL plan clicks, not just Starter.
@@ -2939,27 +2925,11 @@ async function handlePlanClick(planId, billing) {
   }
 
   // ── Active paying subscriber guard ────────────────────────────────────────
-  // If this user already has a paid subscription, do NOT open a new Stripe
-  // Checkout session — that would create a second subscription and double-bill
-  // them. Redirect to the Customer Portal instead, where Stripe handles plan
-  // switching with correct proration (upgrade or downgrade).
-  // This guard covers ALL planId values (Starter, Pro, Agência).
+  // Prevent double-billing: existing paid users go to billing settings.
+  // STRIPE (dormant): was /api/stripe/portal → Stripe Customer Portal.
+  // Asaas has no hosted portal equivalent — billing settings handles plan changes.
   const planoAtivo = perfil?.plano_status === 'ativo' && perfil?.plano !== 'trial';
   if (planoAtivo) {
-    try {
-      const res = await fetch(APP_URL + '/api/stripe/portal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // sends domain=.flowlance.com.br auth cookies
-        body: JSON.stringify({ returnUrl: APP_URL + '/configuracoes?tab=pagamentos' }),
-      });
-      if (res.ok) {
-        const json = await res.json();
-        if (json.url) { window.location.href = json.url; return; }
-      }
-    } catch {}
-    // Portal call failed (e.g., no stripe_customer_id yet) — send to configuracoes
-    // where they can use "Gerenciar assinatura" once the webhook has run.
     window.location.href = APP_URL + '/configuracoes?tab=pagamentos';
     return;
   }
@@ -2979,13 +2949,25 @@ async function handlePlanClick(planId, billing) {
       showToastComLink('Você já tem um trial ativo.', 'Abrir o app', APP_URL);
       return;
     }
-
-    window.location.href = links.starter[billingType] + '?prefilled_email=' + encodeURIComponent(session.user.email);
-    return;
+    // Trial already used — fall through to Asaas checkout for starter paid plan
   }
 
-  // Pro or Agência for a non-paying user (trial or no plan) → new checkout
-  window.location.href = links[planId][billingType] + '?prefilled_email=' + encodeURIComponent(session.user.email);
+  // ── Asaas checkout for non-paying users (Pro, Agência, or trial-expired Starter) ──
+  // STRIPE (dormant): was window.location.href = links[planId][billingType] + '?prefilled_email=...'
+  try {
+    const res = await fetch(APP_URL + '/api/asaas/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // sends domain=.flowlance.com.br auth cookies
+      body: JSON.stringify({ planId, interval }),
+    });
+    if (!res.ok) throw new Error('checkout failed');
+    const json = await res.json();
+    if (json.url) { window.location.href = json.url; return; }
+    throw new Error('no url in response');
+  } catch (e) {
+    showToastComLink('Erro ao iniciar checkout. Tente novamente.', null, null);
+  }
 }
 </script>
 
