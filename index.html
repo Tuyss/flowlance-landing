@@ -14,6 +14,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flowlance — Gestão para freelancers brasileiros">
 <meta name="twitter:description" content="Propostas, cobranças Pix e follow-up pelo WhatsApp. Grátis por 7 dias, sem cartão.">
+<meta name="twitter:image" content="https://flowlance.com.br/flowlance-logo-transparent.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -743,6 +744,26 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 .lgpd-row input[type=checkbox]{width:15px;height:15px;flex-shrink:0;margin-top:1px;accent-color:var(--dk);cursor:pointer}
 .lgpd-row a{color:var(--dk);font-weight:600;text-decoration:none}
 .lgpd-row a:hover{text-decoration:underline}
+
+/* ── MOBILE STICKY CTA ─────────────────────────────────── */
+#mob-sticky-cta{
+  display:none; /* JS shows it after scroll */
+  position:fixed;bottom:0;left:0;right:0;
+  padding:12px 20px 20px; /* 20px bottom for home-indicator on iPhone */
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--br);
+  z-index:250;
+}
+#mob-sticky-cta button{
+  width:100%;padding:15px;
+  background:var(--dk);color:#fff;
+  border:none;border-radius:12px;
+  font-family:'Geist',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;
+}
+@media(min-width:769px){#mob-sticky-cta{display:none!important}}
 </style>
 </head>
 <body>
@@ -2550,6 +2571,9 @@ function updateNavForLoggedUser(userEmail, userName) {
   const navCta = document.getElementById('nav-cta');
   if (navLogin) navLogin.style.display = 'none';
   if (navCta) navCta.style.display = 'none';
+  // Hide mobile sticky CTA for authenticated users
+  const mobBar = document.getElementById('mob-sticky-cta');
+  if (mobBar) { mobBar.style.display = 'none'; mobBar.setAttribute('aria-hidden','true'); }
 
   // Personalized greeting: "Olá, {primeiro nome} →" if name is available
   const firstName = userName ? userName.trim().split(/\s+/)[0] : null;
@@ -2989,6 +3013,31 @@ async function handlePlanClick(planId, billing) {
       body: JSON.stringify({ path: window.location.pathname })
     }).catch(function(){});
   } catch(e) {}
+})();
+</script>
+
+<!-- Mobile sticky CTA — only shown on mobile after scrolling past hero -->
+<div id="mob-sticky-cta" aria-hidden="true">
+  <button onclick="openTrial()">Começar grátis por 7 dias →</button>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('mob-sticky-cta');
+  if (!bar) return;
+  var shown = false;
+  // Show after scrolling ~80% past hero (auth check handled in updateNavForLoggedUser)
+  function onScroll() {
+    if (bar.style.display === 'none' && shown) return; // already hidden by auth
+    var hero = document.querySelector('.hero');
+    var threshold = hero ? hero.offsetHeight * 0.8 : 500;
+    if (!shown && window.scrollY > threshold) {
+      shown = true;
+      bar.style.display = 'block';
+      bar.setAttribute('aria-hidden','false');
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 })();
 </script>
 </body>
