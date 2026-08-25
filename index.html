@@ -477,6 +477,8 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .pc.feat .pc-cta:hover{background:var(--yd);border-color:var(--yd)}
 .pc-note{font-size:12px;color:var(--gr);text-align:center;margin-top:10px}
 .pc.feat .pc-note{color:rgba(255,255,255,.3)}
+.pc-skip-trial{display:block;width:100%;background:none;border:none;font-family:'Geist',sans-serif;font-size:12px;color:rgba(0,0,0,.38);text-align:center;margin-top:6px;padding:4px 0;cursor:pointer;transition:color .15s}
+.pc-skip-trial:hover{color:rgba(0,0,0,.65);text-decoration:underline}
 
 /* Plan highlight — applied when arriving from /consultoria?plano=X */
 @keyframes plan-pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,0)}50%{box-shadow:0 0 0 6px rgba(245,200,66,.35)}}
@@ -1629,6 +1631,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
         </ul>
         <button id="plan-btn-starter" class="pc-cta" onclick="handlePlanClick('starter', currentBilling)">Começar trial gratuito</button>
         <p class="pc-note">Após 7 dias, escolha um plano para continuar. Conta bloqueada se não assinar.</p>
+        <button id="starter-direct-btn" class="pc-skip-trial" onclick="handleDirectPay('starter', currentBilling)">Já decidiu? Assinar direto, sem trial →</button>
       </div>
 
       <!-- PRO (featured) -->
@@ -2250,6 +2253,9 @@ function openAuth(tab) {
   switchTab(tab === 'signup' ? 'signup' : 'login');
 }
 async function openTrial() {
+  // Discard any pending direct-pay intent — user switched to the trial path
+  try { localStorage.removeItem('fl_checkout_intent'); } catch(e) {}
+
   // If the user is already logged in, route through handlePlanClick so we
   // respect their current plan state (active trial, active paid plan, etc.)
   // rather than blindly showing the signup modal.
@@ -2941,6 +2947,22 @@ async function submitResetPassword() {
     const meta = session.user.user_metadata;
     const name = meta?.full_name || meta?.name || null;
     updateNavForLoggedUser(session.user.email, name);
+
+    // Resume a direct-pay intent stored before account creation.
+    // The user clicked "Assinar direto, sem trial →", created their account,
+    // confirmed their email, and was redirected back here — now logged in.
+    // We consume the intent immediately to prevent double-triggering.
+    try {
+      const intentStr = localStorage.getItem('fl_checkout_intent');
+      if (intentStr) {
+        localStorage.removeItem('fl_checkout_intent');
+        const intent = JSON.parse(intentStr);
+        if (intent && intent.planId) {
+          // Brief delay so updateNavForLoggedUser finishes rendering
+          setTimeout(() => handleDirectPay(intent.planId, intent.billing || 'mensal'), 600);
+        }
+      }
+    } catch(e) {}
   }
 })();
 
@@ -3077,6 +3099,8 @@ function updatePlanButtons(currentPlano) {
       btn.classList.add('cta-current');
       btn.onclick = null;
     });
+    var d = document.getElementById('starter-direct-btn');
+    if (d) d.style.display = 'none';
     return;
   }
 
@@ -3095,6 +3119,59 @@ function updatePlanButtons(currentPlano) {
       btn.textContent = 'Fazer downgrade';
     }
   });
+  // Hide the secondary "Assinar direto" link when user already has Starter or higher
+  var directBtn = document.getElementById('starter-direct-btn');
+  if (directBtn) {
+    var currOrder = _PLANO_ORDER[currentPlano] ?? -1;
+    directBtn.style.display = currOrder >= (_PLANO_ORDER['starter'] ?? 1) ? 'none' : '';
+  }
+}
+
+// ── Direct subscribe (skip trial) ─────────────────────────────────────────────
+// Called by "Já decidiu? Assinar direto →" on the Starter card.
+// Logged-in users: go straight to Asaas checkout for the selected plan.
+// Not-logged-in users: save intent in localStorage, open the signup modal
+// (without isTrialSignup=true so no trial period is granted), then auto-resume
+// checkout once the user is redirected back to this page after account creation.
+async function handleDirectPay(planId, billing) {
+  const { data: { session } } = await sb.auth.getSession();
+
+  if (!session) {
+    // Persist intent across the signup + email-confirmation redirect loop
+    try { localStorage.setItem('fl_checkout_intent', JSON.stringify({ planId, billing: billing || 'mensal' })); } catch(e) {}
+    openAuth('signup'); // isTrialSignup stays false → no trial granted
+    return;
+  }
+
+  const billingType = billing || 'mensal';
+  const interval = billingType === 'anual' ? 'yearly' : 'monthly';
+
+  // Guard: already a paying subscriber → billing settings instead of new checkout
+  const { data: perfil } = await sb
+    .from('usuarios')
+    .select('plano, plano_status')
+    .eq('id', session.user.id)
+    .maybeSingle();
+  const planoAtivo = perfil?.plano_status === 'ativo' && perfil?.plano && perfil.plano !== 'trial';
+  if (planoAtivo) {
+    window.location.href = APP_URL + '/configuracoes?tab=pagamentos';
+    return;
+  }
+
+  try {
+    const res = await fetch(APP_URL + '/api/asaas/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ planId, interval }),
+    });
+    if (!res.ok) throw new Error('checkout failed');
+    const json = await res.json();
+    if (json.url) { window.location.href = json.url; return; }
+    throw new Error('no url');
+  } catch(e) {
+    showToastComLink('Erro ao iniciar checkout. Tente novamente.', null, null);
+  }
 }
 
 async function handlePlanClick(planId, billing) {
