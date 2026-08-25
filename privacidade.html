@@ -11,13 +11,7 @@
 <meta property="og:description" content="Política de privacidade da plataforma Flowlance. Como coletamos, usamos e protegemos seus dados.">
 <meta property="og:image" content="https://flowlance.com.br/flowlance-logo-transparent.png">
 <link rel="icon" type="image/png" href="/flowlance-logo-transparent.png">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5LH1KQ2PC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-C5LH1KQ2PC');
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -118,7 +112,7 @@ a{color:var(--dk);text-decoration:underline}
   <h2>3. Compartilhamento de dados</h2>
   <p>A Flowlance não vende dados pessoais. Compartilhamos dados apenas com:</p>
   <ul>
-    <li><strong>Stripe:</strong> para processamento de pagamentos via cartão e boleto</li>
+    <li><strong>Asaas:</strong> para processamento de pagamentos de assinaturas da plataforma (Pix, cartão, boleto)</li>
     <li><strong>Supabase:</strong> nosso provedor de banco de dados e autenticação, com servidores na AWS</li>
     <li><strong>Autoridades legais:</strong> quando exigido por lei ou ordem judicial</li>
   </ul>
@@ -139,7 +133,12 @@ a{color:var(--dk);text-decoration:underline}
   <p>Para exercer qualquer um desses direitos, entre em contato pelo e-mail <a href="mailto:suporte@flowlance.com.br">suporte@flowlance.com.br</a>.</p>
 
   <h2>6. Cookies</h2>
-  <p>Utilizamos apenas cookies estritamente necessários para manter sua sessão autenticada. Não utilizamos cookies de rastreamento ou publicidade de terceiros.</p>
+  <p>Utilizamos dois tipos de cookies:</p>
+  <ul>
+    <li><strong>Cookies estritamente necessários:</strong> mantêm sua sessão autenticada no app. Não requerem consentimento e não podem ser desativados.</li>
+    <li><strong>Cookies analíticos (Google Analytics):</strong> coletam dados de navegação anonimizados para nos ajudar a entender como a plataforma é usada e melhorá-la. Só são ativados após seu consentimento explícito, por meio do banner de cookies exibido na primeira visita. Você pode recusar ou revogar o consentimento a qualquer momento — sem prejuízo ao uso da plataforma.</li>
+  </ul>
+  <p>Não utilizamos cookies de publicidade ou retargeting de terceiros.</p>
 
   <h2>7. Dados de menores</h2>
   <p>A Flowlance não é direcionada a menores de 18 anos e não coletamos intencionalmente dados de crianças ou adolescentes.</p>
@@ -169,5 +168,14 @@ a{color:var(--dk);text-decoration:underline}
   <div class="fcopy">© 2026 Flowlance. Todos os direitos reservados.</div>
 </footer>
 
+<!-- Cookie consent banner (LGPD) -->
+<div id="fl-cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0E0E0E;color:#fff;padding:14px 24px;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid rgba(255,255,255,.1)">
+  <p style="font-size:13px;color:rgba(255,255,255,.75);margin:0;flex:1;line-height:1.5">Usamos cookies analíticos para melhorar a plataforma. <a href="/privacidade" style="color:#F5C842;font-weight:600;text-decoration:none">Política de Privacidade</a></p>
+  <div style="display:flex;gap:10px;flex-shrink:0">
+    <button id="fl-cookie-recusar" style="font-family:inherit;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);background:none;border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:8px 16px;cursor:pointer">Recusar</button>
+    <button id="fl-cookie-aceitar" style="font-family:inherit;font-size:13px;font-weight:700;color:#0E0E0E;background:#F5C842;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">Aceitar</button>
+  </div>
+</div>
+<script src="/public/cookie-consent.js"></script>
 </body>
 </html>

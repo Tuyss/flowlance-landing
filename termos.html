@@ -11,13 +11,7 @@
 <meta property="og:description" content="Termos de uso da plataforma Flowlance.">
 <meta property="og:image" content="https://flowlance.com.br/flowlance-logo-transparent.png">
 <link rel="icon" type="image/png" href="/flowlance-logo-transparent.png">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5LH1KQ2PC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-C5LH1KQ2PC');
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -141,5 +135,14 @@ a{color:var(--dk);text-decoration:underline}
   <div class="fcopy">© 2026 Flowlance. Todos os direitos reservados.</div>
 </footer>
 
+<!-- Cookie consent banner (LGPD) -->
+<div id="fl-cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0E0E0E;color:#fff;padding:14px 24px;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid rgba(255,255,255,.1)">
+  <p style="font-size:13px;color:rgba(255,255,255,.75);margin:0;flex:1;line-height:1.5">Usamos cookies analíticos para melhorar a plataforma. <a href="/privacidade" style="color:#F5C842;font-weight:600;text-decoration:none">Política de Privacidade</a></p>
+  <div style="display:flex;gap:10px;flex-shrink:0">
+    <button id="fl-cookie-recusar" style="font-family:inherit;font-size:13px;font-weight:600;color:rgba(255,255,255,.55);background:none;border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:8px 16px;cursor:pointer">Recusar</button>
+    <button id="fl-cookie-aceitar" style="font-family:inherit;font-size:13px;font-weight:700;color:#0E0E0E;background:#F5C842;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">Aceitar</button>
+  </div>
+</div>
+<script src="/public/cookie-consent.js"></script>
 </body>
 </html>
