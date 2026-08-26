@@ -479,6 +479,20 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .pc.feat .pc-note{color:rgba(255,255,255,.3)}
 .pc-skip-trial{display:block;width:100%;background:none;border:none;font-family:'Geist',sans-serif;font-size:12px;color:rgba(0,0,0,.38);text-align:center;margin-top:6px;padding:4px 0;cursor:pointer;transition:color .15s}
 .pc-skip-trial:hover{color:rgba(0,0,0,.65);text-decoration:underline}
+/* CPF/CNPJ inline modal */
+#cpf-modal{display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px}
+.cpf-box{background:#fff;border-radius:18px;padding:32px 28px;max-width:400px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.cpf-title{font-size:18px;font-weight:800;color:#0E0E0E;margin:0 0 6px}
+.cpf-sub{font-size:13px;color:#6B7280;margin:0 0 20px;line-height:1.5}
+.cpf-field{width:100%;box-sizing:border-box;border:1.5px solid #E5E7EB;border-radius:10px;padding:12px 14px;font-size:16px;font-family:'Geist Mono','Courier New',monospace;outline:none;transition:border-color .15s}
+.cpf-field:focus{border-color:#0E0E0E}
+.cpf-field.cpf-field-err{border-color:#EF4444}
+.cpf-err-msg{font-size:12px;color:#EF4444;margin:5px 0 0;min-height:16px}
+.cpf-btn{width:100%;margin-top:14px;height:48px;background:#F5C842;border:none;border-radius:10px;font-family:'Geist',sans-serif;font-size:15px;font-weight:700;color:#0E0E0E;cursor:pointer;transition:background .15s}
+.cpf-btn:hover:not(:disabled){background:#E0B320}
+.cpf-btn:disabled{opacity:.55;cursor:not-allowed}
+.cpf-cancel-link{display:block;text-align:center;margin-top:10px;font-size:13px;color:#9CA3AF;cursor:pointer;background:none;border:none;font-family:'Geist',sans-serif;width:100%;padding:4px 0}
+.cpf-cancel-link:hover{color:#6B7280}
 
 /* Plan highlight — applied when arriving from /consultoria?plano=X */
 @keyframes plan-pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,0)}50%{box-shadow:0 0 0 6px rgba(245,200,66,.35)}}
@@ -3127,6 +3141,115 @@ function updatePlanButtons(currentPlano) {
   }
 }
 
+// ── CPF/CNPJ validation & inline modal ───────────────────────────────────────
+function _validarCPF(d) {
+  if (d.length !== 11 || /^(\d)\1+$/.test(d)) return false;
+  const s = (w) => w.reduce((a,p,i) => a + parseInt(d[i])*p, 0);
+  const r1 = s([10,9,8,7,6,5,4,3,2]) % 11, r2 = s([11,10,9,8,7,6,5,4,3,2]) % 11;
+  return (r1<2?0:11-r1) === parseInt(d[9]) && (r2<2?0:11-r2) === parseInt(d[10]);
+}
+function _validarCNPJ(d) {
+  if (d.length !== 14 || /^(\d)\1+$/.test(d)) return false;
+  const c = (w) => { const s=w.reduce((a,p,i)=>a+parseInt(d[i])*p,0),r=s%11; return r<2?0:11-r; };
+  return c([5,4,3,2,9,8,7,6,5,4,3,2])===parseInt(d[12]) && c([6,5,4,3,2,9,8,7,6,5,4,3,2])===parseInt(d[13]);
+}
+function validarCpfCnpjLanding(v) {
+  const d = v.replace(/\D/g,'');
+  return d.length===11 ? _validarCPF(d) : d.length===14 ? _validarCNPJ(d) : false;
+}
+function maskCpfCnpjLanding(v) {
+  const d = v.replace(/\D/g,'').slice(0,14);
+  if (d.length<=11) return d.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  return d.replace(/(\d{2})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1/$2').replace(/(\d{4})(\d{1,2})$/,'$1-$2');
+}
+
+let _cpfModalPending = null; // { planId, billing }
+
+function openCpfModal(planId, billing) {
+  _cpfModalPending = { planId, billing };
+  const inp = document.getElementById('cpf-modal-input');
+  const err = document.getElementById('cpf-modal-err');
+  const btn = document.getElementById('cpf-modal-btn');
+  inp.value = '';
+  inp.classList.remove('cpf-field-err');
+  err.textContent = '';
+  btn.disabled = false;
+  btn.textContent = 'Confirmar e ir para pagamento →';
+  const modal = document.getElementById('cpf-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => inp.focus(), 50);
+}
+function closeCpfModal() {
+  document.getElementById('cpf-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  _cpfModalPending = null;
+}
+async function submitCpfModal() {
+  if (!_cpfModalPending) return;
+  const { planId, billing } = _cpfModalPending;
+  const inp = document.getElementById('cpf-modal-input');
+  const err = document.getElementById('cpf-modal-err');
+  const btn = document.getElementById('cpf-modal-btn');
+  const raw = inp.value;
+  inp.classList.remove('cpf-field-err');
+  err.textContent = '';
+  if (!validarCpfCnpjLanding(raw)) {
+    inp.classList.add('cpf-field-err');
+    err.textContent = 'CPF ou CNPJ inválido — verifique os dígitos.';
+    inp.focus();
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Processando...';
+  const billingType = billing || currentBilling || 'mensal';
+  const interval = billingType === 'anual' ? 'yearly' : 'monthly';
+  const cpfCnpj = raw.replace(/\D/g,'');
+  try {
+    const res = await fetch(APP_URL + '/api/asaas/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ planId, interval, cpfCnpj }),
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      err.textContent = body.error || 'Erro ao processar. Tente novamente.';
+      btn.disabled = false;
+      btn.textContent = 'Confirmar e ir para pagamento →';
+      return;
+    }
+    const json = await res.json();
+    if (json.url) { closeCpfModal(); window.location.href = json.url; return; }
+    err.textContent = 'Erro ao obter URL de pagamento. Tente novamente.';
+    btn.disabled = false;
+    btn.textContent = 'Confirmar e ir para pagamento →';
+  } catch(e) {
+    err.textContent = 'Erro de conexão. Tente novamente.';
+    btn.disabled = false;
+    btn.textContent = 'Confirmar e ir para pagamento →';
+  }
+}
+
+// Wire CPF modal buttons (script is at bottom, DOM already ready)
+document.addEventListener('DOMContentLoaded', function() {
+  const inp = document.getElementById('cpf-modal-input');
+  if (inp) {
+    inp.addEventListener('input', function() {
+      this.value = maskCpfCnpjLanding(this.value);
+      this.classList.remove('cpf-field-err');
+      document.getElementById('cpf-modal-err').textContent = '';
+    });
+    inp.addEventListener('keydown', function(e) { if (e.key==='Enter') submitCpfModal(); });
+  }
+  const btn = document.getElementById('cpf-modal-btn');
+  if (btn) btn.addEventListener('click', submitCpfModal);
+  const cancel = document.getElementById('cpf-modal-cancel');
+  if (cancel) cancel.addEventListener('click', closeCpfModal);
+  const backdrop = document.getElementById('cpf-modal');
+  if (backdrop) backdrop.addEventListener('click', function(e) { if (e.target===this) closeCpfModal(); });
+});
+
 // ── Direct subscribe (skip trial) ─────────────────────────────────────────────
 // Called by "Já decidiu? Assinar direto →" on the Starter card.
 // Logged-in users: go straight to Asaas checkout for the selected plan.
@@ -3169,7 +3292,7 @@ async function handleDirectPay(planId, billing) {
       const errBody = await res.json().catch(() => ({}));
       console.error('[handleDirectPay] checkout HTTP', res.status, errBody);
       if (errBody.code === 'missing_cpf') {
-        showToastComLink(errBody.error, 'Ir para Configurações →', APP_URL + '/configuracoes?tab=empresa');
+        openCpfModal(planId, billing);
         return;
       }
       throw new Error('checkout ' + res.status);
@@ -3275,7 +3398,7 @@ async function handlePlanClick(planId, billing) {
       const errBody = await res.json().catch(() => ({}));
       console.error('[handlePlanClick] checkout HTTP', res.status, errBody);
       if (errBody.code === 'missing_cpf') {
-        showToastComLink(errBody.error, 'Ir para Configurações →', APP_URL + '/configuracoes?tab=empresa');
+        openCpfModal(planId, billingType);
         return;
       }
       throw new Error('checkout ' + res.status);
@@ -3335,6 +3458,18 @@ async function handlePlanClick(planId, billing) {
   window.addEventListener('scroll', onScroll, { passive: true });
 })();
 </script>
+<!-- CPF/CNPJ inline modal — shown when checkout requires identification -->
+<div id="cpf-modal" role="dialog" aria-modal="true" aria-labelledby="cpf-modal-title">
+  <div class="cpf-box">
+    <h2 class="cpf-title" id="cpf-modal-title">Identificação necessária</h2>
+    <p class="cpf-sub">O Asaas exige CPF ou CNPJ para processar cobranças via Pix e cartão. Será salvo na sua conta para não pedir novamente.</p>
+    <input id="cpf-modal-input" class="cpf-field" type="text" inputmode="numeric" placeholder="000.000.000-00 ou 00.000.000/0001-00" autocomplete="off">
+    <div id="cpf-modal-err" class="cpf-err-msg"></div>
+    <button id="cpf-modal-btn" class="cpf-btn">Confirmar e ir para pagamento →</button>
+    <button id="cpf-modal-cancel" class="cpf-cancel-link">Cancelar</button>
+  </div>
+</div>
+
 <!-- Cookie consent banner (LGPD — analytics only loaded after acceptance) -->
 <div id="fl-cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0E0E0E;color:#fff;padding:14px 24px;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid rgba(255,255,255,.1)">
   <p style="font-size:13px;color:rgba(255,255,255,.75);margin:0;flex:1;line-height:1.5">Usamos cookies analíticos para melhorar a plataforma. <a href="/privacidade" style="color:#F5C842;font-weight:600;text-decoration:none">Política de Privacidade</a></p>
