@@ -3168,6 +3168,10 @@ async function handleDirectPay(planId, billing) {
     if (!res.ok) {
       const errBody = await res.json().catch(() => ({}));
       console.error('[handleDirectPay] checkout HTTP', res.status, errBody);
+      if (errBody.code === 'missing_cpf') {
+        showToastComLink(errBody.error, 'Ir para Configurações →', APP_URL + '/configuracoes?tab=empresa');
+        return;
+      }
       throw new Error('checkout ' + res.status);
     }
     const json = await res.json();
@@ -3270,6 +3274,10 @@ async function handlePlanClick(planId, billing) {
     if (!res.ok) {
       const errBody = await res.json().catch(() => ({}));
       console.error('[handlePlanClick] checkout HTTP', res.status, errBody);
+      if (errBody.code === 'missing_cpf') {
+        showToastComLink(errBody.error, 'Ir para Configurações →', APP_URL + '/configuracoes?tab=empresa');
+        return;
+      }
       throw new Error('checkout ' + res.status);
     }
     const json = await res.json();
