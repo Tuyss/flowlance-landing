@@ -3165,11 +3165,16 @@ async function handleDirectPay(planId, billing) {
       credentials: 'include',
       body: JSON.stringify({ planId, interval }),
     });
-    if (!res.ok) throw new Error('checkout failed');
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      console.error('[handleDirectPay] checkout HTTP', res.status, errBody);
+      throw new Error('checkout ' + res.status);
+    }
     const json = await res.json();
     if (json.url) { window.location.href = json.url; return; }
     throw new Error('no url');
   } catch(e) {
+    console.error('[handleDirectPay] error:', e);
     showToastComLink('Erro ao iniciar checkout. Tente novamente.', null, null);
   }
 }
@@ -3262,11 +3267,16 @@ async function handlePlanClick(planId, billing) {
       credentials: 'include', // sends domain=.flowlance.com.br auth cookies
       body: JSON.stringify({ planId, interval }),
     });
-    if (!res.ok) throw new Error('checkout failed');
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      console.error('[handlePlanClick] checkout HTTP', res.status, errBody);
+      throw new Error('checkout ' + res.status);
+    }
     const json = await res.json();
     if (json.url) { window.location.href = json.url; return; }
     throw new Error('no url in response');
   } catch (e) {
+    console.error('[handlePlanClick] error:', e);
     showToastComLink('Erro ao iniciar checkout. Tente novamente.', null, null);
   }
 }
