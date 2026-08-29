@@ -851,6 +851,56 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   cursor:pointer;
 }
 @media(min-width:769px){#mob-sticky-cta{display:none!important}}
+
+/* ── PROPOSTA JOURNEY — real screenshot alternating narrative ── */
+.journey-wrap{background:#fff;padding:120px 60px;overflow:hidden;border-top:1px solid var(--br)}
+.journey-inner{max-width:1100px;margin:0 auto}
+.journey-sub{font-size:17px;color:var(--gr);max-width:520px;line-height:1.7;margin-bottom:80px}
+.journey-step{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;margin-bottom:96px}
+.journey-step:last-child{margin-bottom:0}
+/* Alternate image/text sides on even-numbered steps */
+.journey-step.even .journey-label{order:2}
+.journey-step.even .journey-screen{order:1}
+.journey-num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:var(--y);border-radius:9px;font-size:13px;font-weight:800;color:var(--dk);margin-bottom:16px;flex-shrink:0}
+.journey-label h3{font-size:clamp(22px,2.4vw,32px);font-weight:800;letter-spacing:-1px;line-height:1.15;color:var(--dk);margin-bottom:12px}
+.journey-label p{font-size:16px;color:var(--gr);line-height:1.72}
+/* Browser chrome frame */
+.ss-browser{background:#fff;border-radius:14px;box-shadow:0 22px 64px rgba(0,0,0,.13),0 0 0 1px rgba(0,0,0,.06);overflow:hidden}
+.ss-bar{background:#F4F4F4;padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(0,0,0,.07)}
+.ss-dots{display:flex;gap:5px}
+.ss-dot{width:10px;height:10px;border-radius:50%}
+.ss-dot-r{background:#FF5F57}.ss-dot-y{background:#FEBC2E}.ss-dot-g{background:#28C840}
+.ss-url{flex:1;background:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-family:'Geist Mono',monospace;color:#aaa;text-align:center;border:1px solid rgba(0,0,0,.08)}
+.ss-img{width:100%;display:block}
+/* Phone frame for narrow/portrait screenshots */
+.ss-phone{background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.13),0 0 0 1px rgba(0,0,0,.06);overflow:hidden;max-width:360px;margin:0 auto}
+@media(max-width:1024px){.journey-wrap{padding:80px 32px}.journey-step{gap:48px}}
+@media(max-width:768px){
+  .journey-wrap{padding:64px 20px}
+  .journey-sub{font-size:15px;margin-bottom:48px}
+  .journey-step{grid-template-columns:1fr;gap:24px;margin-bottom:56px}
+  .journey-step.even .journey-label{order:1}
+  .journey-step.even .journey-screen{order:2}
+}
+
+/* ── FEATURE SHOWCASE — alternating left/right with real screenshots ── */
+.showcase-wrap{background:#F7F7F5;padding:120px 60px;overflow:hidden}
+.showcase-inner{max-width:1100px;margin:0 auto}
+.showcase-row{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:64px 0;border-top:1px solid var(--br)}
+.showcase-row:first-child{border-top:none;padding-top:0}
+.showcase-row.even .showcase-copy{order:2}
+.showcase-row.even .showcase-visual{order:1}
+.showcase-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gr);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.showcase-eyebrow::before{content:'';width:16px;height:2px;background:var(--y)}
+.showcase-copy h3{font-size:clamp(22px,2.4vw,32px);font-weight:800;letter-spacing:-1px;line-height:1.15;color:var(--dk);margin-bottom:13px}
+.showcase-copy p{font-size:16px;color:var(--gr);line-height:1.75}
+@media(max-width:1024px){.showcase-wrap{padding:80px 32px}.showcase-row{gap:48px}}
+@media(max-width:768px){
+  .showcase-wrap{padding:64px 20px}
+  .showcase-row{grid-template-columns:1fr;gap:28px;padding:40px 0}
+  .showcase-row.even .showcase-copy{order:1}
+  .showcase-row.even .showcase-visual{order:2}
+}
 </style>
 </head>
 <body>
@@ -920,6 +970,102 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <div class="rr pain-img-order">
       <img src="/public/pain-point.png" alt="Freelancer sobrecarregado com burocracia" class="pain-img">
     </div>
+  </div>
+</div>
+
+<!-- PROPOSTA JOURNEY — real screenshots, client's full experience -->
+<div class="journey-wrap">
+  <div class="journey-inner">
+    <p class="sl reveal">Veja na prática</p>
+    <h2 class="sh2 reveal d1">Da proposta à reunião,<br>tudo numa só tela.</h2>
+    <p class="journey-sub reveal d2">Enquanto você trabalha no projeto, o cliente passa por um fluxo completo — proposta, pagamento e reunião — sem trocar uma única mensagem manual.</p>
+
+    <!-- Step 1: proposta profissional -->
+    <div class="journey-step">
+      <div class="journey-label rl">
+        <div class="journey-num">01</div>
+        <h3>O cliente recebe uma<br>proposta profissional</h3>
+        <p>Link limpo, itens detalhados, valores claros. Funciona igual no celular ou no computador, sem baixar PDF, sem abrir email.</p>
+      </div>
+      <div class="journey-screen rr">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">flowlance.com.br/p/identidade-visual</div>
+          </div>
+          <img src="/public/Proposta.png" class="ss-img" alt="Proposta profissional Flowlance">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: aceitar com 1 clique -->
+    <div class="journey-step even">
+      <div class="journey-screen rl">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">flowlance.com.br/p/identidade-visual</div>
+          </div>
+          <img src="/public/Proposta2.png" class="ss-img" alt="Aceitar proposta com 1 clique">
+        </div>
+      </div>
+      <div class="journey-label rr">
+        <div class="journey-num">02</div>
+        <h3>Aceita com<br>1 clique</h3>
+        <p>Sem assinar papel, sem ligar pra confirmar. O cliente clica em "Aceitar" e a cobrança Pix é gerada automaticamente na mesma hora.</p>
+      </div>
+    </div>
+
+    <!-- Step 3: pagamento via Pix -->
+    <div class="journey-step">
+      <div class="journey-label rl">
+        <div class="journey-num">03</div>
+        <h3>Paga na hora,<br>sem sair da tela</h3>
+        <p>QR code e código Pix copia e cola aparecem ali mesmo. O cliente paga sem precisar te pedir a chave Pix no WhatsApp. Você recebe e sabe na hora.</p>
+      </div>
+      <div class="journey-screen rr">
+        <div class="ss-phone">
+          <img src="/public/Proposta3.png" class="ss-img" alt="Pagamento via Pix gerado automaticamente">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: agendar reunião -->
+    <div class="journey-step even">
+      <div class="journey-screen rl">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">flowlance.com.br/p/identidade-visual</div>
+          </div>
+          <img src="/public/Proposta4.png" class="ss-img" alt="Agendamento de reunião após pagamento confirmado">
+        </div>
+      </div>
+      <div class="journey-label rr">
+        <div class="journey-num">04</div>
+        <h3>Marca a reunião<br>no mesmo instante</h3>
+        <p>Assim que o pagamento é confirmado, o cliente vê seus horários disponíveis e agenda sozinho. Sem Calendly avulso, sem vai-e-vem de mensagem pra combinar horário.</p>
+      </div>
+    </div>
+
+    <!-- Step 5: reunião confirmada -->
+    <div class="journey-step">
+      <div class="journey-label rl">
+        <div class="journey-num">05</div>
+        <h3>Confirmado — sem trocar<br>uma única mensagem</h3>
+        <p>O cliente vê data, hora e link da chamada. Você recebe a notificação. O fluxo inteiro — proposta, pagamento, reunião — aconteceu sem uma ação manual sua.</p>
+      </div>
+      <div class="journey-screen rr">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">flowlance.com.br/p/identidade-visual</div>
+          </div>
+          <img src="/public/Proposta5.png" class="ss-img" alt="Reunião agendada e confirmada">
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1391,6 +1537,119 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   </div>
 </div>
 
+<!-- FEATURE SHOWCASE — real app screenshots, alternating left/right -->
+<div class="showcase-wrap">
+  <div class="showcase-inner">
+    <p class="sl reveal">O aplicativo</p>
+    <h2 class="sh2 reveal d1" style="margin-bottom:60px">Cada tela feita para<br>economizar o seu tempo.</h2>
+
+    <!-- Dashboard -->
+    <div class="showcase-row">
+      <div class="showcase-copy rl">
+        <p class="showcase-eyebrow">Dashboard</p>
+        <h3>Tudo que importa, antes de tomar o café</h3>
+        <p>Receita do mês, cobranças pendentes, propostas aceitas e atividade recente — num painel que se atualiza em tempo real. Sem planilha, sem cálculo na cabeça.</p>
+      </div>
+      <div class="showcase-visual rr">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">app.flowlance.com.br/dashboard</div>
+          </div>
+          <img src="/public/Dashboard.png" class="ss-img" alt="Dashboard Flowlance em tempo real">
+        </div>
+      </div>
+    </div>
+
+    <!-- Clientes -->
+    <div class="showcase-row even">
+      <div class="showcase-visual rl">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">app.flowlance.com.br/clientes</div>
+          </div>
+          <img src="/public/Clientes.png" class="ss-img" alt="Lista de clientes com histórico completo">
+        </div>
+      </div>
+      <div class="showcase-copy rr">
+        <p class="showcase-eyebrow">Clientes</p>
+        <h3>Histórico completo, sem vasculhar o WhatsApp</h3>
+        <p>Cada cliente tem nome, email, telefone e histórico de todas as propostas e cobranças. Em segundos você sabe tudo o que foi combinado — sem pesquisar conversa antiga.</p>
+      </div>
+    </div>
+
+    <!-- Cobrança -->
+    <div class="showcase-row">
+      <div class="showcase-copy rl">
+        <p class="showcase-eyebrow">Cobranças</p>
+        <h3>Confirmação de pagamento com um clique</h3>
+        <p>Pix recebido, comprovante enviado pelo cliente, você confirma. A cobrança muda para "Pago" e o cliente é avisado automaticamente. Sem checar extrato, sem mensagem manual.</p>
+      </div>
+      <div class="showcase-visual rr">
+        <div class="ss-phone" style="max-width:320px">
+          <img src="/public/Cobran%C3%A7a.png" class="ss-img" alt="Detalhes da cobrança — pagamento confirmado">
+        </div>
+      </div>
+    </div>
+
+    <!-- Contratos -->
+    <div class="showcase-row even">
+      <div class="showcase-visual rl">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">app.flowlance.com.br/contratos</div>
+          </div>
+          <img src="/public/Contratos1.png" class="ss-img" alt="Contrato digital gerado e assinado no app">
+        </div>
+      </div>
+      <div class="showcase-copy rr">
+        <p class="showcase-eyebrow">Contratos digitais</p>
+        <h3>Gerado ao aceitar, assinado sem imprimir</h3>
+        <p>A proposta foi aceita e o contrato já está pronto. Cliente assina pelo link, você assina no app. Validade jurídica real — sem cartório, sem PDF enviado por email.</p>
+      </div>
+    </div>
+
+    <!-- Reuniões -->
+    <div class="showcase-row">
+      <div class="showcase-copy rl">
+        <p class="showcase-eyebrow">Reuniões</p>
+        <h3>Agenda integrada, sem Calendly avulso</h3>
+        <p>Configure seus horários disponíveis por dia da semana. O cliente vê só os slots livres e agenda direto pela proposta aceita. Você gerencia tudo numa lista limpa — próximas e anteriores.</p>
+      </div>
+      <div class="showcase-visual rr">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">app.flowlance.com.br/reunioes</div>
+          </div>
+          <img src="/public/Reuni%C3%B5es.png" class="ss-img" alt="Gerenciamento de reuniões agendadas">
+        </div>
+      </div>
+    </div>
+
+    <!-- Relatórios -->
+    <div class="showcase-row even">
+      <div class="showcase-visual rl">
+        <div class="ss-browser">
+          <div class="ss-bar">
+            <div class="ss-dots"><span class="ss-dot ss-dot-r"></span><span class="ss-dot ss-dot-y"></span><span class="ss-dot ss-dot-g"></span></div>
+            <div class="ss-url">app.flowlance.com.br/relatorios</div>
+          </div>
+          <img src="/public/Relatorios.png" class="ss-img" alt="Relatório de receita e conversão de propostas">
+        </div>
+      </div>
+      <div class="showcase-copy rr">
+        <p class="showcase-eyebrow">Relatórios</p>
+        <h3>Veja seu crescimento em números reais</h3>
+        <p>Receita por mês, conversão de propostas, comparativo com o período anterior. Você enxerga onde estão as oportunidades — sem abrir uma planilha sequer.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- INTEGRATIONS — sem emojis, sem mencionar nome de API -->
 <div class="int-wrap">
   <div class="int-inner">
@@ -1587,23 +1846,6 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   </div>
 </div>
 
-<!-- FAQ -->
-<div class="faq-wrap">
-  <div class="faq-inner">
-    <p class="sl reveal">FAQ</p>
-    <h2 class="sh2 reveal d1">Perguntas frequentes.</h2>
-    <div class="faq-list reveal d2">
-      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">O trial de 7 dias é realmente grátis?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim, completamente grátis. Você não precisa informar cartão de crédito para começar. Após os 7 dias, você escolhe um plano — caso não assine, a conta é bloqueada mas seus dados ficam salvos por 30 dias.</div></div></div>
-      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Como funciona o bloqueio após o trial?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Ao fim dos 7 dias, a conta é bloqueada até que você assine um plano. Você não perde nenhum dado — tudo fica salvo. Assim que assinar, o acesso é liberado imediatamente.</div></div></div>
-      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Posso cancelar quando quiser?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim. Cancele a qualquer momento sem custo. O plano continua ativo até o fim do período pago e não há cobrança extra pelo cancelamento.</div></div></div>
-      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">A NFS-e funciona para qual município?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">A integração com NFS-e está em desenvolvimento e vai suportar a maioria dos municípios brasileiros. Quando estiver disponível, avisamos pelo email do seu cadastro.</div></div></div>
-      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Qual a diferença entre Pro e Agência?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">O Pro é ideal para freelancers solo que precisam de todas as funcionalidades. O Agência adiciona multi-usuário para times, relatórios avançados e API de integração — ideal para quem tem equipe ou alto volume de projetos.</div></div></div>
-      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Meus dados e os dos meus clientes estão seguros?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim. A Flowlance usa criptografia em repouso e em trânsito, hospedagem em servidores seguros e autenticação via número de celular. Seus dados e os dos seus clientes estão protegidos conforme a LGPD.</div></div></div>
-    </div>
-    <p class="reveal d3" style="margin-top:28px;font-size:14px;color:#6B7280;text-align:center">Central de ajuda completa direto no app — para você nunca ficar perdido.</p>
-  </div>
-</div>
-
 <!-- PRICING -->
 <div id="planos" class="pricing-wrap">
   <div class="pricing-inner">
@@ -1707,6 +1949,23 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
       </div>
 
     </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-wrap">
+  <div class="faq-inner">
+    <p class="sl reveal">FAQ</p>
+    <h2 class="sh2 reveal d1">Perguntas frequentes.</h2>
+    <div class="faq-list reveal d2">
+      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">O trial de 7 dias é realmente grátis?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim, completamente grátis. Você não precisa informar cartão de crédito para começar. Após os 7 dias, você escolhe um plano — caso não assine, a conta é bloqueada mas seus dados ficam salvos por 30 dias.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Como funciona o bloqueio após o trial?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Ao fim dos 7 dias, a conta é bloqueada até que você assine um plano. Você não perde nenhum dado — tudo fica salvo. Assim que assinar, o acesso é liberado imediatamente.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Posso cancelar quando quiser?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim. Cancele a qualquer momento sem custo. O plano continua ativo até o fim do período pago e não há cobrança extra pelo cancelamento.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">A NFS-e funciona para qual município?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">A integração com NFS-e está em desenvolvimento e vai suportar a maioria dos municípios brasileiros. Quando estiver disponível, avisamos pelo email do seu cadastro.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Qual a diferença entre Pro e Agência?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">O Pro é ideal para freelancers solo que precisam de todas as funcionalidades. O Agência adiciona multi-usuário para times, relatórios avançados e API de integração — ideal para quem tem equipe ou alto volume de projetos.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><span class="faq-q-text">Meus dados e os dos meus clientes estão seguros?</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a"><div class="faq-a-inner">Sim. A Flowlance usa criptografia em repouso e em trânsito, hospedagem em servidores seguros e autenticação via número de celular. Seus dados e os dos seus clientes estão protegidos conforme a LGPD.</div></div></div>
+    </div>
+    <p class="reveal d3" style="margin-top:28px;font-size:14px;color:#6B7280;text-align:center">Central de ajuda completa direto no app — para você nunca ficar perdido.</p>
   </div>
 </div>
 
