@@ -49,8 +49,8 @@ nav{position:sticky;top:0;left:0;right:0;z-index:200;display:flex;align-items:ce
 .nav-links a{font-size:14px;font-weight:500;color:var(--gr);text-decoration:none;transition:color .15s}
 .nav-links a:hover{color:var(--dk)}
 .nav-actions{display:flex;align-items:center;gap:10px}
-.btn-ghost{font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:var(--dk);background:none;border:none;cursor:pointer;padding:8px 16px;border-radius:8px;transition:background .15s}
-.btn-ghost:hover{background:var(--gl)}
+.btn-ghost{font-family:'Geist',sans-serif;font-size:14px;font-weight:600;color:var(--dk);background:none;border:1.5px solid var(--br);cursor:pointer;padding:8px 18px;border-radius:8px;transition:background .15s,border-color .15s}
+.btn-ghost:hover{background:var(--gl);border-color:rgba(0,0,0,.2)}
 .btn-dark{font-family:'Geist',sans-serif;font-size:14px;font-weight:700;color:#fff;background:var(--dk);border:none;cursor:pointer;padding:10px 22px;border-radius:10px;transition:opacity .15s}
 .btn-dark:hover{opacity:.82}
 
@@ -551,7 +551,7 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   /* NAV */
   nav { padding: 0 20px; height: 56px; }
   .nav-links { display: none; }
-  .nav-actions .btn-ghost { display: none; }
+  .nav-actions .btn-ghost { display: flex; font-size:13px; padding:7px 14px; }
   #nav-cta { display: none; }
   #hamburger { display: flex !important; }
   .btn-dark { font-size: 13px; padding: 8px 16px; }
@@ -706,19 +706,6 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
 #trial-banner.show{display:block}
 @keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes fadeOut{from{opacity:1}to{opacity:0}}
-/* ── Features grid ────────────────────────────── */
-.feats-wrap{padding:80px 24px;background:var(--gl);position:relative;overflow:hidden}
-.feats-wrap::before{content:'';position:absolute;inset:0;background-image:url('/public/features-bg.png');background-size:cover;background-position:center;opacity:.055;pointer-events:none;z-index:0}
-.feats-inner{position:relative;z-index:1}
-.feats-inner{max-width:1120px;margin:0 auto}
-.feats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
-.feat-card{background:#fff;border-radius:14px;padding:24px 22px;border:1px solid rgba(0,0,0,.07);transition:box-shadow .2s,border-color .2s}
-.feat-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.07);border-color:rgba(0,0,0,.12)}
-.feat-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;background:var(--y);border:none;flex-shrink:0}
-.feat-card-title{font-size:14px;font-weight:800;color:var(--dk);margin-bottom:7px;line-height:1.3;letter-spacing:-.2px}
-.feat-card-desc{font-size:13px;color:var(--gr);line-height:1.65}
-@media(max-width:1024px){.feats-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.feats-grid{grid-template-columns:1fr;gap:14px}.feats-wrap{padding:56px 20px}}
 
 /* ── HERO MOCKUP IMAGE ── */
 .hero-mockup-img{width:100%;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.2),0 0 0 1px rgba(0,0,0,.06);display:block;object-fit:cover}
@@ -802,28 +789,6 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   .tc-l4 img{width:38px;height:38px}
 }
 
-/* ── DIFERENCIAIS — 6 feature cards, 3-col, premium plan tags ── */
-.dif-wrap{background:#fff;padding:100px 60px;overflow:hidden}
-.dif-inner{max-width:1100px;margin:0 auto}
-.dif-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px}
-.dif-card{background:#FAFAF9;border-radius:18px;padding:28px 26px;border:1px solid var(--br);position:relative;transition:box-shadow .22s,transform .22s,border-color .22s}
-.dif-card:hover{box-shadow:0 10px 36px rgba(0,0,0,.07);transform:translateY(-3px);border-color:rgba(0,0,0,.12)}
-.dif-icon-wrap{width:44px;height:44px;border-radius:11px;background:var(--dk);display:flex;align-items:center;justify-content:center;margin-bottom:18px;flex-shrink:0}
-.dif-icon-wrap svg{width:20px;height:20px;stroke:#fff;stroke-width:1.9;fill:none}
-/* Premium plan tag — restrained, Linear-style */
-.dif-plan-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;letter-spacing:.2px;color:#6B7280;padding:3px 8px;border-radius:5px;border:1px solid #E5E7EB;background:#fff;margin-bottom:16px;line-height:1.4}
-.dif-plan-tag .pt-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.dif-plan-all .pt-dot{background:#10B981}
-.dif-plan-pro .pt-dot{background:#8B5CF6}
-.dif-plan-agency .pt-dot{background:#F59E0B}
-.dif-card-name{font-size:15px;font-weight:800;letter-spacing:-.3px;color:var(--dk);margin-bottom:8px;line-height:1.25}
-.dif-card-desc{font-size:13px;color:var(--gr);line-height:1.65;margin:0}
-@media(max-width:1024px){.dif-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){
-  .dif-wrap{padding:64px 20px}
-  .dif-grid{grid-template-columns:1fr;gap:12px}
-  .dif-card{padding:24px 20px}
-}
 
 /* ── CONFIANÇA ── */
 .trust-wrap{background:var(--dk);padding:80px 60px;text-align:center}
@@ -1301,81 +1266,6 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
             </div>
           </div>
         </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- FEATURES GRID -->
-<div id="funcionalidades" class="feats-wrap">
-  <div class="feats-inner">
-    <p class="sl reveal">Funcionalidades</p>
-    <h2 class="sh2 reveal d1">Cada problema que você tem hoje,<br>resolvido aqui.</h2>
-    <div class="feats-grid">
-
-      <div class="feat-card reveal d1">
-        <div class="feat-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="9,15 12,18 15,15"/></svg>
-        </div>
-        <div class="feat-card-title">Proposta pronta em 2 minutos</div>
-        <div class="feat-card-desc">Você gasta 20 minutos no Word e o cliente nem responde. Na Flowlance, escolhe o template, preenche e envia o link — o cliente aprova com um clique, sem baixar PDF.</div>
-      </div>
-
-      <div class="feat-card reveal d2">
-        <div class="feat-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="feat-card-title">Histórico por cliente, sem vasculhar</div>
-        <div class="feat-card-desc">Você vasculha o WhatsApp tentando lembrar o que combinou. Com a Flowlance, cada cliente tem histórico completo de propostas e cobranças. Em segundos.</div>
-      </div>
-
-      <div class="feat-card reveal d3">
-        <div class="feat-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        </div>
-        <div class="feat-card-title">Cobrança Pix gerada ao aceitar</div>
-        <div class="feat-card-desc">Cobrar o cliente é sempre constrangedor. Quando a proposta é aceita, a cobrança Pix é gerada automaticamente. Você recebe e sabe na hora que o dinheiro entrou.</div>
-      </div>
-
-      <div class="feat-card reveal d4">
-        <div class="feat-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </div>
-        <div class="feat-card-title">Saiba quando o cliente abriu</div>
-        <div class="feat-card-desc">Saiba quando ele abriu. Rastreamento em tempo real: hora, dispositivo e tempo de leitura. Você liga no momento certo.</div>
-      </div>
-
-      <div class="feat-card reveal d1">
-        <div class="feat-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        </div>
-        <div class="feat-card-title">Notificação na hora exata</div>
-        <div class="feat-card-desc">Você perde o timing certo porque não estava olhando. Alerta instantâneo quando o cliente visualiza, aceita ou paga — para você agir enquanto o interesse está quente.</div>
-      </div>
-
-      <div class="feat-card reveal d2">
-        <div class="feat-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <div class="feat-card-title">Follow-up via WhatsApp, sem medo</div>
-        <div class="feat-card-desc">Você evita cobrar por medo de parecer chato. A Flowlance avisa quando a proposta está sem resposta e envia o follow-up pelo WhatsApp — com texto pronto.</div>
-      </div>
-
-      <div class="feat-card reveal d3">
-        <div class="feat-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
-        </div>
-        <div class="feat-card-title">NF-S-e emitida automaticamente</div>
-        <div class="feat-card-desc">Você acessa o portal da prefeitura, preenche 12 campos, torce pra não errar. Com a Flowlance, a nota fiscal sai sozinha quando o pagamento é confirmado.</div>
-      </div>
-
-      <div class="feat-card reveal d4">
-        <div class="feat-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        </div>
-        <div class="feat-card-title">Meta do mês, visível em segundos</div>
-        <div class="feat-card-desc">Você chega ao fim do mês sem saber exatamente quanto entrou. O dashboard mostra receita, pendências e meta em tempo real. Sem planilha, sem cálculo na cabeça.</div>
       </div>
 
     </div>
