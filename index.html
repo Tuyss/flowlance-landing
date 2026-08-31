@@ -1783,6 +1783,8 @@ document.querySelectorAll('.faq-q').forEach(q=>{
         <label for="signup-password">Senha</label>
         <input type="password" id="signup-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
       </div>
+      <!-- Honeypot: hidden from real users, filled only by bots -->
+      <input id="hp-website" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none" aria-hidden="true">
       <div class="am-err" id="signup-err"></div>
       <button class="am-submit" id="signup-btn">Criar conta grátis</button>
       <div class="am-switch">Já tem conta? <a id="switch-to-login">Entrar</a></div>
@@ -2506,6 +2508,8 @@ document.getElementById('signup-btn').addEventListener('click', async function()
   const password = document.getElementById('signup-password').value;
   const lgpd     = document.getElementById('signup-lgpd').checked;
 
+  // Honeypot check: bots fill this field, real users never see it
+  if (document.getElementById('hp-website')?.value) { return; }
   if (!lgpd) { showErr('signup-err', 'Aceite os Termos de Uso e a Política de Privacidade para continuar.'); return; }
   if (!name || !email || !phoneRaw || !password) { showErr('signup-err', 'Preencha todos os campos.'); return; }
 
