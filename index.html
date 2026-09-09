@@ -3,18 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flowlance — Propostas, cobranças e clientes para freelancers brasileiros</title>
-<meta name="description" content="Crie propostas em 2 minutos, receba via Pix, acompanhe quando o cliente abriu e envie follow-up pelo WhatsApp. Tudo num só app.">
+<title>Flowlance — Sistema de Gestão para Freelancers Brasileiros | Propostas, Pix e Clientes</title>
+<meta name="description" content="Gestão de propostas para freelancer em 2 minutos, cobrança Pix automática e acompanhamento em tempo real. O sistema para freelancer autônomo brasileiro que organiza clientes, propostas e recebimentos num só lugar. Grátis por 7 dias.">
+<link rel="canonical" href="https://flowlance.com.br">
 <link rel="icon" type="image/png" href="/flowlance-logo-transparent.png">
+
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://flowlance.com.br">
-<meta property="og:title" content="Flowlance — Propostas, cobranças e clientes para freelancers">
-<meta property="og:description" content="Crie propostas em 2 minutos, receba via Pix e acompanhe em tempo real quando o cliente abriu. Grátis por 7 dias.">
-<meta property="og:image" content="https://flowlance.com.br/flowlance-logo-transparent.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:site_name" content="Flowlance">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Flowlance — Sistema de Gestão para Freelancers Brasileiros">
+<meta property="og:description" content="Gestão de propostas, cobrança via Pix e acompanhamento de clientes num só app. Para freelancers e autônomos brasileiros. Grátis por 7 dias, sem cartão.">
+<meta property="og:image" content="https://flowlance.com.br/public/hero-poster.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta property="og:image:alt" content="Flowlance — plataforma de gestão para freelancers brasileiros">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Flowlance — Gestão para freelancers brasileiros">
-<meta name="twitter:description" content="Propostas, cobranças Pix e follow-up pelo WhatsApp. Grátis por 7 dias, sem cartão.">
-<meta name="twitter:image" content="https://flowlance.com.br/flowlance-logo-transparent.png">
+<meta name="twitter:description" content="Propostas profissionais, cobrança via Pix automática e follow-up pelo WhatsApp. Grátis por 7 dias, sem cartão.">
+<meta name="twitter:image" content="https://flowlance.com.br/public/hero-poster.jpg">
+
+<!-- JSON-LD structured data — SoftwareApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Flowlance",
+  "url": "https://flowlance.com.br",
+  "description": "Sistema de gestão para freelancers e autônomos brasileiros. Criação de propostas profissionais, cobrança automática via Pix, acompanhamento de clientes e follow-up via WhatsApp — tudo num só app.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "inLanguage": "pt-BR",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Trial gratuito",
+      "price": "0",
+      "priceCurrency": "BRL",
+      "description": "7 dias grátis, sem cartão de crédito"
+    },
+    {
+      "@type": "Offer",
+      "name": "Starter",
+      "price": "49",
+      "priceCurrency": "BRL",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "49",
+        "priceCurrency": "BRL",
+        "billingDuration": "P1M"
+      }
+    },
+    {
+      "@type": "Offer",
+      "name": "Pro",
+      "price": "99",
+      "priceCurrency": "BRL",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "99",
+        "priceCurrency": "BRL",
+        "billingDuration": "P1M"
+      }
+    }
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Flowlance",
+    "url": "https://flowlance.com.br"
+  },
+  "featureList": [
+    "Criação de propostas profissionais",
+    "Cobrança automática via Pix",
+    "Acompanhamento de visualizações em tempo real",
+    "Follow-up automático pelo WhatsApp",
+    "Contratos digitais com assinatura eletrônica",
+    "Emissão de NFS-e",
+    "Agendamento de reuniões integrado",
+    "Gestão de clientes ilimitados"
+  ]
+}
+</script>
+
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -784,6 +857,37 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
   .showcase-row.even .showcase-copy{order:1}
   .showcase-row.even .showcase-visual{order:2}
 }
+
+/* ── LEAD CAPTURE ────────────────────────────────────────────── */
+.lead-wrap{background:#F9FAFB;border-top:1px solid #E5E7EB;border-bottom:1px solid #E5E7EB;padding:64px 60px;text-align:center}
+.lead-inner{max-width:520px;margin:0 auto}
+.lead-wrap h3{font-size:22px;font-weight:700;letter-spacing:-.6px;color:#111827;margin-bottom:8px}
+.lead-wrap p{font-size:15px;color:#6B7280;margin-bottom:24px;line-height:1.6}
+.lead-form{display:flex;gap:10px;max-width:440px;margin:0 auto}
+.lead-form input{flex:1;height:46px;padding:0 16px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;font-family:'Geist',sans-serif;outline:none;color:#111827;background:#fff;transition:border-color .15s}
+.lead-form input:focus{border-color:#0E0E0E}
+.lead-form button{height:46px;padding:0 22px;background:#0E0E0E;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'Geist',sans-serif;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.lead-form button:hover{opacity:.82}
+.lead-form button:disabled{opacity:.5;cursor:not-allowed}
+.lead-ok{font-size:14px;color:#059669;font-weight:600;margin-top:4px}
+@media(max-width:600px){
+  .lead-wrap{padding:48px 20px}
+  .lead-form{flex-direction:column}
+  .lead-form button{width:100%}
+}
+
+/* ── WHATSAPP FLOAT ──────────────────────────────────────────── */
+#wa-float{
+  position:fixed;bottom:80px;right:20px;z-index:300;
+  width:52px;height:52px;border-radius:50%;
+  background:#25D366;color:#fff;border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 4px 16px rgba(37,211,102,.4);
+  transition:transform .15s,box-shadow .15s;
+  text-decoration:none;
+}
+#wa-float:hover{transform:scale(1.07);box-shadow:0 6px 22px rgba(37,211,102,.5)}
+@media(max-width:768px){#wa-float{bottom:76px;right:14px;width:46px;height:46px}}
 </style>
 </head>
 <body>
@@ -1580,6 +1684,25 @@ footer{background:var(--dk);padding:44px 60px;display:flex;align-items:center;ju
     <p class="reveal d3" style="margin-top:28px;font-size:14px;color:#6B7280;text-align:center">Central de ajuda completa direto no app — para você nunca ficar perdido.</p>
   </div>
 </div>
+
+<!-- LEAD CAPTURE — for visitors not ready to sign up yet -->
+<div class="lead-wrap" id="lead-capture-section">
+  <div class="lead-inner">
+    <h3>Ainda na dúvida? Faz sentido.</h3>
+    <p>Deixe seu email e te avisamos sobre novidades, atualizações e dicas para freelancers brasileiros. Sem spam — prometemos.</p>
+    <div class="lead-form" id="lead-form">
+      <input type="email" id="lead-email" placeholder="seu@email.com" autocomplete="email">
+      <button id="lead-btn" onclick="submitLead()">Me avisa</button>
+    </div>
+    <p class="lead-ok" id="lead-ok" style="display:none">✓ Email registrado! Obrigado.</p>
+  </div>
+</div>
+
+<!-- WHATSAPP FLOAT — support/sales contact -->
+<!-- ⚠️ ACTION REQUIRED: replace the number below with your actual WhatsApp number (55 + DDD + number, no spaces/dashes) -->
+<a id="wa-float" href="https://wa.me/5511999999999?text=Oi%2C%20tenho%20uma%20d%C3%BAvida%20sobre%20o%20Flowlance" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp" title="Falar no WhatsApp" style="display:none">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
 
 <!-- CTA FINAL -->
 <div class="cta-final">
@@ -3283,6 +3406,82 @@ async function handlePlanClick(planId, billing) {
   </div>
 </div>
 <script src="/public/cookie-consent.js"></script>
+<script>
+// ── Referral code capture ──────────────────────────────────────────────────
+(function(){
+  var ref=new URLSearchParams(window.location.search).get('ref');
+  if(ref&&/^[a-z0-9]{4,16}$/i.test(ref)){try{sessionStorage.setItem('fl_ref',ref);}catch(e){}}
+})();
+function getRefCode(){try{return new URLSearchParams(window.location.search).get('ref')||sessionStorage.getItem('fl_ref')||'';}catch(e){return '';}}
+
+// ── Inject ref into all signup callback URLs ───────────────────────────────
+// The original signUp() and OAuth calls build their redirect URLs inline.
+// We patch the sb object's auth methods after DOMContentLoaded to intercept
+// the emailRedirectTo option and append &ref=<code> when present.
+document.addEventListener('DOMContentLoaded',function(){
+  if(!window.sb||!window.sb.auth)return;
+  var _origSignUp=sb.auth.signUp.bind(sb.auth);
+  sb.auth.signUp=function(opts){
+    var ref=getRefCode();
+    if(ref&&opts&&opts.options&&opts.options.emailRedirectTo){
+      opts.options.emailRedirectTo+=(opts.options.emailRedirectTo.includes('?')?'&':'?')+'ref='+encodeURIComponent(ref);
+    }
+    return _origSignUp(opts);
+  };
+  var _origOAuth=sb.auth.signInWithOAuth.bind(sb.auth);
+  sb.auth.signInWithOAuth=function(opts){
+    var ref=getRefCode();
+    if(ref&&opts&&opts.options&&opts.options.redirectTo){
+      opts.options.redirectTo+=(opts.options.redirectTo.includes('?')?'&':'?')+'ref='+encodeURIComponent(ref);
+    }
+    return _origOAuth(opts);
+  };
+});
+
+// ── Lead capture ───────────────────────────────────────────────────────────
+var _leadDone=false;
+async function submitLead(){
+  if(_leadDone)return;
+  var el=document.getElementById('lead-email');
+  var btn=document.getElementById('lead-btn');
+  var ok=document.getElementById('lead-ok');
+  var email=el?el.value.trim():'';
+  if(!email||!/\S+@\S+\.\S+/.test(email)){el&&(el.style.borderColor='#EF4444',setTimeout(function(){el.style.borderColor='';},1800));return;}
+  btn.disabled=true;btn.textContent='Enviando…';
+  try{
+    await fetch('https://ikdguipxrkhuaojzduzy.supabase.co/rest/v1/leads_email',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo',
+        'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo',
+        'Prefer':'return=minimal'
+      },
+      body:JSON.stringify({email:email,source:'landing_capture',ref_code:getRefCode()||null})
+    });
+    _leadDone=true;
+    var form=document.getElementById('lead-form');if(form)form.style.display='none';
+    if(ok)ok.style.display='block';
+  }catch(e){btn.disabled=false;btn.textContent='Me avisa';}
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var el=document.getElementById('lead-email');
+  if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')submitLead();});
+});
+
+// ── WhatsApp float — show after 30% scroll ────────────────────────────────
+// ACTION REQUIRED: update the href in the #wa-float anchor to your real WhatsApp
+// number: https://wa.me/55<DDD><NUMBER> (digits only, no spaces or dashes).
+(function(){
+  var btn=document.getElementById('wa-float');if(!btn)return;
+  var shown=false;
+  window.addEventListener('scroll',function(){
+    if(!shown&&(window.scrollY/(document.body.scrollHeight-window.innerHeight))>0.3){
+      shown=true;btn.style.display='flex';
+    }
+  },{passive:true});
+})();
+</script>
 </body>
 </html>
 <!-- force redeploy qua 17 jun 2026 12:25:17 -03 -->
