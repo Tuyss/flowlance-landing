@@ -23,15 +23,86 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 60px
 .nav-logo img{width:26px;height:26px;object-fit:contain}
 @media(max-width:600px){nav{padding:0 20px}}
 
-/* HERO */
-.hero{background:var(--dk);padding:80px 60px 72px;text-align:center}
-.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px}
-.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:16px;height:1.5px;background:var(--y)}
-.hero h1{font-size:clamp(38px,6vw,72px);font-weight:800;letter-spacing:-2.5px;color:#fff;line-height:1.04;margin-bottom:18px}
+/* HERO — B2B/editorial treatment distinct from main landing hero */
+.hero{
+  background:#08080F;
+  position:relative;overflow:hidden;
+  padding:96px 60px 88px;text-align:center;
+}
+/* Golden glow bleeding in from the top — establishes premium/exclusive mood */
+.hero::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:1000px;height:360px;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%,rgba(245,200,66,.15) 0%,transparent 70%);
+}
+/* Subtle bottom fade into the next section */
+.hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:80px;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,rgba(8,8,15,.6));
+}
+.hero-inner{position:relative;max-width:660px;margin:0 auto}
+/* Editorial badge — replaces emoji pill; conveys exclusivity not product sign-up */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(245,200,66,.75);
+  margin-bottom:32px;
+  padding:8px 16px;
+  border:1px solid rgba(245,200,66,.18);
+  border-radius:4px;
+}
+.hero-badge-dot{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:#F5C842;
+  box-shadow:0 0 7px rgba(245,200,66,.9);
+}
+.hero h1{
+  font-size:clamp(40px,6vw,68px);font-weight:900;
+  letter-spacing:-2.5px;color:#fff;line-height:1.04;margin-bottom:20px;
+}
 .hero h1 span{color:var(--y)}
-.hero p{font-size:18px;color:rgba(255,255,255,.6);max-width:560px;margin:0 auto 36px;line-height:1.6}
-.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:8px 18px;font-size:13px;color:rgba(255,255,255,.7);margin-bottom:28px}
-@media(max-width:600px){.hero{padding:56px 20px 60px}}
+.hero-sub{
+  font-size:16px;color:rgba(255,255,255,.48);
+  max-width:520px;margin:0 auto 40px;line-height:1.7;font-weight:400;
+}
+/* Stats strip — grounds the pitch with concrete specifics, not generic SaaS copy */
+.hero-stats{
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 44px;
+  max-width:560px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:18px 0;
+}
+.hero-stat{
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 24px;flex:1;
+}
+.hero-stat strong{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.2px}
+.hero-stat span{font-size:11px;color:rgba(255,255,255,.38)}
+.hero-stat-div{width:1px;height:30px;background:rgba(255,255,255,.10);flex-shrink:0}
+/* CTA row — editorial button (8px radius, not 50px pill) + soft scroll link */
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.hero-cta{
+  display:inline-block;
+  background:var(--y);color:#08080F;
+  font-size:14px;font-weight:700;font-family:'Geist',sans-serif;
+  padding:14px 30px;border-radius:8px;
+  text-decoration:none;letter-spacing:-.2px;
+  transition:opacity .15s;
+}
+.hero-cta:hover{opacity:.88}
+.hero-link{
+  font-size:13px;color:rgba(255,255,255,.4);text-decoration:none;font-weight:500;
+  transition:color .15s;
+}
+.hero-link:hover{color:rgba(255,255,255,.7)}
+@media(max-width:680px){
+  .hero{padding:64px 20px 60px}
+  .hero-stats{flex-direction:column;gap:0;max-width:100%}
+  .hero-stat{padding:14px 0;width:100%}
+  .hero-stat-div{width:200px;height:1px}
+  .hero-actions{flex-direction:column;gap:14px}
+}
 
 /* HOW IT WORKS */
 .how{padding:72px 60px;background:#fff}
@@ -122,17 +193,51 @@ footer a:hover{color:var(--dk)}
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-pill">🤝 Programa de Parceiros</div>
-  <p class="hero-eyebrow">Flowlance Partners</p>
-  <h1>Você divulga.<br><span>Sua audiência se organiza.</span><br>Você recebe.</h1>
-  <p>Para criadores, educadores e profissionais de marketing que falam com freelancers brasileiros. Sem complicação — só um link e uma comissão real.</p>
-  <a href="#candidatura" style="display:inline-block;background:var(--y);color:var(--dk);font-size:15px;font-weight:700;padding:16px 36px;border-radius:50px;text-decoration:none;letter-spacing:-.2px">
-    Quero ser parceiro →
-  </a>
+  <div class="hero-inner">
+    <!-- Editorial badge — programme identity, not a product emoji pill -->
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Flowlance · Partners
+    </div>
+
+    <!-- Headline: the opportunity, not the product's value prop -->
+    <h1>Comissão real.<br><span>Por assinatura.</span></h1>
+
+    <!-- Positioning: speaks to who qualifies and what makes this exclusive -->
+    <p class="hero-sub">
+      Para criadores e profissionais de marketing com audiência no espaço
+      freelancer, MEI ou empreendedor. Trabalhamos com parceiros selecionados —
+      aprovação e comissão definidas individualmente.
+    </p>
+
+    <!-- Stats strip: concrete anchors, no hand-wavy generic copy -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>% das assinaturas</strong>
+        <span>por indicação convertida</span>
+      </div>
+      <div class="hero-stat-div"></div>
+      <div class="hero-stat">
+        <strong>Pix mensal</strong>
+        <span>sem burocracia</span>
+      </div>
+      <div class="hero-stat-div"></div>
+      <div class="hero-stat">
+        <strong>Aprovação individual</strong>
+        <span>parceiros selecionados</span>
+      </div>
+    </div>
+
+    <!-- CTA: rectangular button (B2B) + soft scroll link, not a big pill signup -->
+    <div class="hero-actions">
+      <a href="#candidatura" class="hero-cta">Candidatar-se ao programa</a>
+      <a href="#como-funciona" class="hero-link">Ver como funciona ↓</a>
+    </div>
+  </div>
 </div>
 
 <!-- HOW IT WORKS -->
-<div class="how">
+<div class="how" id="como-funciona">
   <div class="how-inner">
     <p class="sl">Como funciona</p>
     <h2 class="sh2">Três passos. Zero burocracia.</h2>
