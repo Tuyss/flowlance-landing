@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programa de Parceiros — Flowlance</title>
+<meta name="description" content="Programa de Parceiros Flowlance. Para profissionais e criadores que querem indicar a Flowlance e ganhar comissão recorrente por cada assinatura gerada.">
+<!-- Noindex: intended for direct sharing, not search traffic -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/flowlance-logo-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--y:#F5C842;--dk:#0E0E0E;--gr:#6B7280;--br:#E5E7EB;--gl:#F9FAFB;--tx:#111827;--t2:#374151}
+html{scroll-behavior:smooth}
+body{font-family:'Geist',sans-serif;background:#fff;color:var(--tx);overflow-x:hidden}
+
+/* ── NAV ─────────────────────────────────────────────────────────────────── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 60px;height:60px;border-bottom:1px solid var(--br);background:#fff}
+.nav-logo{font-size:18px;font-weight:800;color:var(--dk);text-decoration:none;display:flex;align-items:center;gap:8px;letter-spacing:-.4px}
+.nav-logo img{width:26px;height:26px;object-fit:contain}
+@media(max-width:600px){nav{padding:0 20px}}
+
+/* ── SHARED LAYOUT ───────────────────────────────────────────────────────── */
+.wrap{max-width:800px;margin:0 auto;padding:0 60px}
+@media(max-width:600px){.wrap{padding:0 20px}}
+
+/* Section label — 11px uppercase with yellow bar, same across all sections */
+.sec-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gr);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:14px;height:2px;background:var(--y);flex-shrink:0}
+
+/* Section heading — calm, proportional, not marketing-hero scale */
+.sec-h2{font-size:20px;font-weight:700;letter-spacing:-.3px;color:var(--dk);margin-bottom:6px;line-height:1.3}
+
+/* ── SECTION 1: PAGE HEADER ──────────────────────────────────────────────── */
+/* Plain header: title at 30px, subtitle below, one CTA — matches termos.html weight */
+.page-header{padding:56px 0 48px;border-bottom:1px solid var(--br)}
+.page-header h1{
+  font-size:30px;font-weight:700;letter-spacing:-.4px;
+  color:var(--dk);line-height:1.25;margin-bottom:10px
+}
+.page-subtitle{font-size:15px;color:var(--gr);line-height:1.6;max-width:520px;margin-bottom:24px}
+.btn-apply{
+  display:inline-block;
+  background:var(--dk);color:#fff;
+  font-size:14px;font-weight:600;font-family:'Geist',sans-serif;
+  padding:11px 24px;border-radius:9px;text-decoration:none;
+  transition:opacity .15s;border:none;cursor:pointer;
+}
+.btn-apply:hover{opacity:.82}
+@media(max-width:600px){.page-header{padding:40px 0 36px}.page-header h1{font-size:26px}}
+
+/* ── SECTION 2: ABOUT (context block) ───────────────────────────────────── */
+.about{padding:48px 0;border-bottom:1px solid var(--br)}
+.about p{font-size:15px;color:var(--t2);line-height:1.75;max-width:620px}
+.about p+p{margin-top:12px}
+
+/* ── SECTION 3: HOW IT WORKS ─────────────────────────────────────────────── */
+.how{padding:48px 0;border-bottom:1px solid var(--br)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.step{background:var(--gl);border:1px solid var(--br);border-radius:12px;padding:20px}
+.step-n{
+  font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--gr);margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;
+}
+.step-n::before{
+  content:'';display:inline-block;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--dk);color:#fff;
+  font-size:10px;font-weight:800;line-height:20px;text-align:center;
+  flex-shrink:0;
+}
+.step-n.s1::before{content:'1'}
+.step-n.s2::before{content:'2'}
+.step-n.s3::before{content:'3'}
+.step h3{font-size:14px;font-weight:700;color:var(--dk);margin-bottom:6px}
+.step p{font-size:13px;color:var(--gr);line-height:1.6}
+@media(max-width:680px){.steps{grid-template-columns:1fr}}
+
+/* ── SECTION 4: COMMISSION ───────────────────────────────────────────────── */
+.comm{padding:48px 0;border-bottom:1px solid var(--br);background:var(--gl)}
+.comm-note{font-size:14px;color:var(--gr);line-height:1.65;max-width:560px;margin-bottom:24px}
+.comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.comm-card{background:#fff;border:1px solid var(--br);border-radius:12px;padding:20px}
+.comm-card.yes{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.04)}
+.comm-card.no {border-color:rgba(239,68,68,.2); background:rgba(239,68,68,.03)}
+.comm-tag{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.comm-tag.yes{color:#16A34A}
+.comm-tag.no {color:#DC2626}
+.comm-card ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.comm-card li{font-size:13px;color:var(--t2);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.comm-card li::before{content:'';width:5px;height:5px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.comm-card.yes li::before{background:#16A34A}
+.comm-card.no  li::before{background:#EF4444}
+@media(max-width:600px){.comm-grid{grid-template-columns:1fr}}
+
+/* ── SECTION 5: FORM ─────────────────────────────────────────────────────── */
+.form-wrap{padding:48px 0 64px}
+.form-desc{font-size:15px;color:var(--gr);line-height:1.6;margin-bottom:32px}
+form.partner-form{display:flex;flex-direction:column;gap:18px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:13px;font-weight:600;color:var(--t2)}
+.field label span.req{color:#EF4444;margin-left:2px}
+.field label span.opt{font-weight:400;color:var(--gr);font-size:12px;margin-left:4px}
+.field input,.field select,.field textarea{
+  height:44px;padding:0 13px;border:1.5px solid var(--br);border-radius:9px;
+  font-size:14px;font-family:'Geist',sans-serif;color:var(--tx);background:#fff;
+  outline:none;transition:border-color .15s;width:100%;box-sizing:border-box
+}
+.field textarea{height:auto;padding:11px 13px;resize:vertical;min-height:96px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--dk)}
+.field input.err,.field select.err,.field textarea.err{border-color:#EF4444}
+.checkboxes{display:flex;flex-wrap:wrap;gap:8px}
+.cb-item{
+  display:flex;align-items:center;gap:6px;font-size:13px;color:var(--t2);
+  background:var(--gl);border:1.5px solid var(--br);border-radius:8px;
+  padding:7px 13px;cursor:pointer;transition:border-color .12s
+}
+.cb-item:has(input:checked){border-color:var(--dk);background:#fff}
+.cb-item input{width:13px;height:13px;accent-color:var(--dk)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.submit-btn{
+  height:48px;background:var(--dk);color:#fff;border:none;border-radius:10px;
+  font-size:15px;font-weight:700;font-family:'Geist',sans-serif;
+  cursor:pointer;transition:opacity .15s;margin-top:4px
+}
+.submit-btn:hover{opacity:.84}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.hp-field{display:none!important;visibility:hidden;position:absolute;left:-9999px}
+@media(max-width:600px){.form-row{grid-template-columns:1fr}}
+
+/* ── SUCCESS STATE ───────────────────────────────────────────────────────── */
+.success-box{text-align:center;padding:48px 24px;display:none}
+.success-box.show{display:block}
+.success-icon{
+  width:56px;height:56px;border-radius:50%;background:rgba(34,197,94,.12);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px
+}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+footer{
+  padding:28px 60px;border-top:1px solid var(--br);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--gr)
+}
+footer a{color:var(--gr);text-decoration:none}
+footer a:hover{color:var(--dk)}
+@media(max-width:600px){footer{padding:20px;flex-direction:column;gap:10px;text-align:center}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/flowlance-logo-transparent.png" alt="Flowlance">
+    Flowlance
+  </a>
+  <a href="/" style="font-size:13px;font-weight:500;color:var(--gr);text-decoration:none">
+    ← Voltar para o site
+  </a>
+</nav>
+
+<!-- ── SECTION 1: PAGE HEADER ──────────────────────────────────────────── -->
+<div class="wrap">
+  <div class="page-header">
+    <p class="sec-label">Programa de Parceiros</p>
+    <h1>Programa de Parceiros Flowlance</h1>
+    <p class="page-subtitle">
+      Para profissionais e criadores que querem indicar a Flowlance e ganhar comissão recorrente por cada assinatura gerada.
+    </p>
+    <a href="#candidatura" class="btn-apply">Candidatar-se</a>
+  </div>
+</div>
+
+<!-- ── SECTION 2: ABOUT ────────────────────────────────────────────────── -->
+<div class="wrap">
+  <div class="about">
+    <p class="sec-label">Sobre o programa</p>
+    <p>
+      O programa de parceiros da Flowlance é voltado para criadores de conteúdo, profissionais de marketing e consultores com audiência ativa no espaço freelancer, MEI ou empreendedor.
+    </p>
+    <p>
+      Parceiros aprovados recebem um link de indicação único. Cada usuário que assinar um plano pago pelo seu link gera uma comissão — negociada individualmente conforme o perfil e alcance de cada parceiro.
+    </p>
+  </div>
+</div>
+
+<!-- ── SECTION 3: HOW IT WORKS ─────────────────────────────────────────── -->
+<div class="wrap">
+  <div class="how" id="como-funciona">
+    <p class="sec-label">Como funciona</p>
+    <h2 class="sec-h2">Três etapas simples</h2>
+    <div class="steps">
+      <div class="step">
+        <p class="step-n s1">Candidatura</p>
+        <h3>Preencha o formulário</h3>
+        <p>Envie suas informações abaixo. Analisamos todas as candidaturas e respondemos em até 5 dias úteis.</p>
+      </div>
+      <div class="step">
+        <p class="step-n s2">Aprovação</p>
+        <h3>Receba seu link único</h3>
+        <p>Se aprovado, você recebe um link exclusivo <code style="font-size:12px;background:#E5E7EB;padding:1px 5px;border-radius:4px">?ref=seu-código</code> para divulgar em qualquer canal.</p>
+      </div>
+      <div class="step">
+        <p class="step-n s3">Comissão</p>
+        <h3>Ganhe por assinatura</h3>
+        <p>Cada usuário que assinar um plano pago pelo seu link gera comissão. O pagamento é feito via Pix.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 4: COMMISSION ───────────────────────────────────────────── -->
+<div style="background:var(--gl);border-top:1px solid var(--br);border-bottom:1px solid var(--br)">
+  <div class="wrap">
+    <div class="comm">
+      <p class="sec-label">Comissão</p>
+      <h2 class="sec-h2">O que é comissionável</h2>
+      <p class="comm-note">
+        A taxa de comissão é definida individualmente durante o processo de aprovação, com base no perfil e audiência de cada parceiro. Apenas assinaturas de planos pagos são comissionáveis.
+      </p>
+      <div class="comm-grid">
+        <div class="comm-card yes">
+          <div class="comm-tag yes">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Comissionável
+          </div>
+          <ul>
+            <li>Plano Starter (R$49/mês)</li>
+            <li>Plano Pro (R$99/mês)</li>
+            <li>Plano Agência (R$200/mês)</li>
+            <li>Assinatura mensal ou anual</li>
+          </ul>
+        </div>
+        <div class="comm-card no">
+          <div class="comm-tag no">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Não comissionável
+          </div>
+          <ul>
+            <li>Créditos de carteira (NFS-e avulsas)</li>
+            <li>Contratos avulsos</li>
+            <li>Taxas Pix / transações</li>
+            <li>Reativações de conta</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 5: APPLICATION FORM ─────────────────────────────────────── -->
+<div class="wrap">
+  <div class="form-wrap" id="candidatura">
+    <p class="sec-label">Candidatura</p>
+    <h2 class="sec-h2">Envie sua candidatura</h2>
+    <p class="form-desc">
+      Preencha os campos abaixo. Nossa equipe analisa todas as candidaturas individualmente e responde em até <strong>5 dias úteis</strong> no email informado.
+    </p>
+
+    <!-- Success state -->
+    <div class="success-box" id="success-box">
+      <div class="success-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 style="font-size:20px;font-weight:700;color:var(--dk);margin-bottom:8px">Candidatura recebida!</h3>
+      <p style="font-size:14px;color:var(--gr);line-height:1.65;max-width:380px;margin:0 auto">
+        Vamos analisar seu perfil e retornar em até <strong style="color:var(--dk)">5 dias úteis</strong> no email que você informou.
+      </p>
+    </div>
+
+    <form class="partner-form" id="partner-form" onsubmit="submitForm(event)" novalidate>
+
+      <!-- Honeypot — bots fill this, humans never see it -->
+      <div class="hp-field" aria-hidden="true">
+        <label>Website</label>
+        <input type="text" name="website" id="hp-website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="f-nome">Nome completo<span class="req">*</span></label>
+          <input type="text" id="f-nome" placeholder="Seu nome completo" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="f-email">Email<span class="req">*</span></label>
+          <input type="email" id="f-email" placeholder="seu@email.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="f-handle">@ principal (Instagram, YouTube etc.)<span class="req">*</span></label>
+          <input type="text" id="f-handle" placeholder="@seuhandle">
+        </div>
+        <div class="field">
+          <label for="f-seguidores">Tamanho aproximado da audiência<span class="req">*</span></label>
+          <select id="f-seguidores">
+            <option value="">Selecione…</option>
+            <option value="menos-1k">Menos de 1.000</option>
+            <option value="1k-5k">1.000 – 5.000</option>
+            <option value="5k-20k">5.000 – 20.000</option>
+            <option value="20k-100k">20.000 – 100.000</option>
+            <option value="100k+">Mais de 100.000</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Plataformas em que atua<span class="req">*</span></label>
+        <div class="checkboxes">
+          <label class="cb-item"><input type="checkbox" name="plataforma" value="Instagram"> Instagram</label>
+          <label class="cb-item"><input type="checkbox" name="plataforma" value="TikTok"> TikTok</label>
+          <label class="cb-item"><input type="checkbox" name="plataforma" value="YouTube"> YouTube</label>
+          <label class="cb-item"><input type="checkbox" name="plataforma" value="LinkedIn"> LinkedIn</label>
+          <label class="cb-item"><input type="checkbox" name="plataforma" value="Twitter/X"> Twitter/X</label>
+          <label class="cb-item"><input type="checkbox" name="plataforma" value="Newsletter"> Newsletter</label>
+          <label class="cb-item"><input type="checkbox" name="plataforma" value="Outro"> Outro</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="f-nicho">Área / nicho de atuação<span class="req">*</span></label>
+          <select id="f-nicho">
+            <option value="">Selecione…</option>
+            <option value="Freelancing">Freelancing / trabalho remoto</option>
+            <option value="Marketing">Marketing digital</option>
+            <option value="Design">Design / criação</option>
+            <option value="Desenvolvimento">Desenvolvimento / tecnologia</option>
+            <option value="Empreendedorismo">Empreendedorismo / negócios</option>
+            <option value="Finanças">Finanças pessoais / MEI</option>
+            <option value="Educação">Educação / cursos</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-portfolio">Link de perfil ou portfólio<span class="opt">(opcional)</span></label>
+          <input type="url" id="f-portfolio" placeholder="https://">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-descricao">Como pretende divulgar a Flowlance?<span class="req">*</span></label>
+        <textarea id="f-descricao" placeholder="Descreva brevemente: tipo de conteúdo, formato, frequência, como o Flowlance se encaixa na sua audiência…" rows="5"></textarea>
+      </div>
+
+      <p id="form-err" style="font-size:13px;color:#DC2626;display:none"></p>
+
+      <button type="submit" class="submit-btn" id="submit-btn">
+        Enviar candidatura
+      </button>
+
+      <p style="font-size:12px;color:var(--gr);text-align:center;margin-top:6px">
+        Analisamos todas as candidaturas individualmente. Resposta em até 5 dias úteis.
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Flowlance. Todos os direitos reservados.</span>
+  <div style="display:flex;gap:20px">
+    <a href="/">Início</a>
+    <a href="/termos">Termos de Uso</a>
+    <a href="/privacidade">Privacidade</a>
+  </div>
+</footer>
+
+<script>
+// Submits to app.flowlance.com.br/api/parceiros/candidatura (server-side, service-role).
+// This keeps the service key out of public HTML while the anon INSERT policy is being applied.
+const API_URL = 'https://app.flowlance.com.br/api/parceiros/candidatura';
+
+function getVal(id) { return document.getElementById(id)?.value.trim() ?? ''; }
+function setErr(msg) {
+  var el = document.getElementById('form-err');
+  if (el) { el.textContent = msg; el.style.display = msg ? 'block' : 'none'; }
+}
+function markErr(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('err');
+}
+function clearErrs() {
+  document.querySelectorAll('.err').forEach(function(el){ el.classList.remove('err'); });
+  setErr('');
+}
+
+async function submitForm(e) {
+  e.preventDefault();
+  clearErrs();
+
+  // Honeypot check — bots fill this, humans never see it
+  if (document.getElementById('hp-website')?.value) return;
+
+  var nome    = getVal('f-nome');
+  var email   = getVal('f-email');
+  var handle  = getVal('f-handle');
+  var seg     = getVal('f-seguidores');
+  var nicho   = getVal('f-nicho');
+  var desc    = getVal('f-descricao');
+  var port    = getVal('f-portfolio');
+  var plats   = Array.from(document.querySelectorAll('input[name="plataforma"]:checked')).map(function(c){ return c.value; });
+
+  var errMsg = '';
+  var ok = true;
+  if (!nome)  { markErr('f-nome');       ok = false; }
+  if (!email || !/\S+@\S+\.\S+/.test(email)) { markErr('f-email'); ok = false; }
+  if (!handle){ markErr('f-handle');     ok = false; }
+  if (!seg)   { markErr('f-seguidores'); ok = false; }
+  if (!nicho) { markErr('f-nicho');      ok = false; }
+  if (!desc || desc.length < 40) { markErr('f-descricao'); ok = false; }
+  if (plats.length === 0) { errMsg = 'Selecione pelo menos uma plataforma.'; ok = false; }
+  if (!ok) { setErr(errMsg || 'Preencha todos os campos obrigatórios.'); return; }
+
+  var btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  try {
+    var res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        website: '', // honeypot value (always empty for real users)
+        nome: nome,
+        email: email.toLowerCase(),
+        handle: handle,
+        plataformas: plats,
+        seguidores: seg,
+        nicho: nicho,
+        descricao: desc,
+        link_portfolio: port || null,
+      }),
+    });
+
+    if (res.ok || res.status === 201) {
+      document.getElementById('partner-form').style.display = 'none';
+      document.getElementById('success-box').classList.add('show');
+      window.scrollTo({ top: document.getElementById('candidatura').offsetTop - 40, behavior: 'smooth' });
+    } else {
+      var data = {};
+      try { data = await res.json(); } catch(e) {}
+      if (res.status === 409) {
+        setErr(data.error || 'Já recebemos uma candidatura com esse email. Você receberá nossa resposta em breve!');
+      } else {
+        setErr(data.error || 'Erro ao enviar. Tente novamente ou escreva para contato@flowlance.com.br');
+      }
+      btn.disabled = false;
+      btn.textContent = 'Enviar candidatura';
+    }
+  } catch(ex) {
+    setErr('Erro de conexão. Verifique sua internet e tente novamente.');
+    btn.disabled = false;
+    btn.textContent = 'Enviar candidatura';
+  }
+}
+
+// Smooth scroll for "Candidatar-se" button in header
+document.querySelectorAll('a[href="#candidatura"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    document.getElementById('candidatura').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

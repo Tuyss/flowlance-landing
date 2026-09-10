@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://flowlance.com.br/sitemap.xml
