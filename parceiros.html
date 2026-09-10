@@ -313,10 +313,10 @@ footer a:hover{color:var(--dk)}
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const SUPA_URL = 'https://ikdguipxrkhuaojzduzy.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZGd1aXB4cmtodWFvanpkdXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODI2MzAsImV4cCI6MjA5NjE1ODYzMH0.UqVUtCAh_e21Nx0-jJPCioA6DdQxiIVQzZ_bhDBaQMo';
+// Submits to app.flowlance.com.br/api/parceiros/candidatura (server-side, service-role).
+// This keeps the service key out of public HTML while the anon INSERT policy is being applied.
+const API_URL = 'https://app.flowlance.com.br/api/parceiros/candidatura';
 
 function getVal(id) { return document.getElementById(id)?.value.trim() ?? ''; }
 function setErr(msg) {
@@ -336,7 +336,7 @@ async function submitForm(e) {
   e.preventDefault();
   clearErrs();
 
-  // Honeypot check
+  // Honeypot check — bots fill this, humans never see it
   if (document.getElementById('hp-website')?.value) return;
 
   var nome    = getVal('f-nome');
@@ -348,6 +348,7 @@ async function submitForm(e) {
   var port    = getVal('f-portfolio');
   var plats   = Array.from(document.querySelectorAll('input[name="plataforma"]:checked')).map(function(c){ return c.value; });
 
+  var errMsg = '';
   var ok = true;
   if (!nome)  { markErr('f-nome');       ok = false; }
   if (!email || !/\S+@\S+\.\S+/.test(email)) { markErr('f-email'); ok = false; }
@@ -355,24 +356,19 @@ async function submitForm(e) {
   if (!seg)   { markErr('f-seguidores'); ok = false; }
   if (!nicho) { markErr('f-nicho');      ok = false; }
   if (!desc || desc.length < 40) { markErr('f-descricao'); ok = false; }
-  if (plats.length === 0) { setErr('Selecione pelo menos uma plataforma.'); ok = false; }
-
-  if (!ok) { setErr(getVal('form-err') || 'Preencha todos os campos obrigatórios.'); return; }
+  if (plats.length === 0) { errMsg = 'Selecione pelo menos uma plataforma.'; ok = false; }
+  if (!ok) { setErr(errMsg || 'Preencha todos os campos obrigatórios.'); return; }
 
   var btn = document.getElementById('submit-btn');
   btn.disabled = true;
   btn.textContent = 'Enviando…';
 
   try {
-    var res = await fetch(SUPA_URL + '/rest/v1/partner_applications', {
+    var res = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPA_KEY,
-        'Authorization': 'Bearer ' + SUPA_KEY,
-        'Prefer': 'return=minimal',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        website: '', // honeypot value (always empty for real users)
         nome: nome,
         email: email.toLowerCase(),
         handle: handle,
@@ -389,12 +385,12 @@ async function submitForm(e) {
       document.getElementById('success-box').classList.add('show');
       window.scrollTo({ top: document.getElementById('candidatura').offsetTop - 40, behavior: 'smooth' });
     } else {
-      var err = await res.text();
-      // Duplicate email: show a friendly message
-      if (err.includes('unique') || res.status === 409) {
-        setErr('Já recebemos uma candidatura com esse email. Você receberá nossa resposta em breve!');
+      var data = {};
+      try { data = await res.json(); } catch(e) {}
+      if (res.status === 409) {
+        setErr(data.error || 'Já recebemos uma candidatura com esse email. Você receberá nossa resposta em breve!');
       } else {
-        setErr('Erro ao enviar. Tente novamente ou entre em contato em contato@flowlance.com.br');
+        setErr(data.error || 'Erro ao enviar. Tente novamente ou escreva para contato@flowlance.com.br');
       }
       btn.disabled = false;
       btn.textContent = 'Enviar candidatura';
